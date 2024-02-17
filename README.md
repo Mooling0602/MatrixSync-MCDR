@@ -1,4 +1,4 @@
-# Matrix-MCDR
+# MatrixSync-MCDR
 一个MCDR（全称MCDReforged）插件，用于同步Matrix群组和线上游戏之间的消息。
 当前已完成预览开发版本，支持线上游戏的消息上报到群组中。
 
