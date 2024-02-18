@@ -3,7 +3,6 @@ import asyncio
 import json
 import os
 import sys
-import re
 import aiofiles
 
 from mcdreforged.api.all import *
@@ -60,7 +59,7 @@ async def init_client(server: PluginServerInterface) -> None:
         resp = await client.login(password, device_name="matrix-nio")
         
         if isinstance(resp, LoginResponse):
-            server.logger.info("登录成功, 正在写入缓存以供下次登录...")
+            server.logger.info("登录成功, 正在写入缓存以供稍后和下次登录使用...")
             cache_data(resp)
             server.logger.info("缓存写入完成! ")
         else:
@@ -96,6 +95,7 @@ async def init_client(server: PluginServerInterface) -> None:
 # 检测连接和登录情况，并反馈状态
 def on_server_startup(server: PluginServerInterface):
     asyncio.run(init_client(server))
+    asyncio.run(get_msg(server))
         
 def on_user_info(server: PluginServerInterface, info: Info):
         # server.logger.info("检测到玩家消息, 正在尝试发送到Matrix群组...")
@@ -106,10 +106,10 @@ def on_user_info(server: PluginServerInterface, info: Info):
         if test_status:
             flag = True
         if flag:
-            asyncio.run(use_client(server))
+            asyncio.run(send_msg(server))
 
 # 消息上报器 - 从线上游戏到Matrix群组
-async def use_client(server: PluginServerInterface) -> None:
+async def send_msg(server: PluginServerInterface) -> None:
     async with aiofiles.open(DATA_FILE, "r") as f:
         contents = await f.read()
     cache = json.loads(contents)
@@ -124,5 +124,27 @@ async def use_client(server: PluginServerInterface) -> None:
             message_type="m.room.message",
             content={"msgtype": "m.text", "body": f"{message}"},
     )
+
+    await client.close()
+
+# 消息接收器 - 从Matrix群组到线上游戏
+# 模块开发中，尚未正式合并Release……
+async def get_msg(server: PluginServerInterface) -> None:
+    async with aiofiles.open(DATA_FILE, "r") as f:
+        contents = await f.read()
+    cache = json.loads(contents)
+    client = AsyncClient(f"{homeserver}")
+    client.access_token = cache["token"]
+    client.user_id = config["user_id"]
+    client.device_id = "matrix-nio"
+    room_id = config["room_id"]
+
+    room_msg = await client.room_messages(room_id, limit=1)
+
+    for event in room_msg.chunk:
+        if isinstance(event, RoomMessageText):
+            sender = event.sender
+            msg_body = event.body
+            server.say(f"{sender}: {msg_body}")
 
     await client.close()
