@@ -128,23 +128,6 @@ async def send_msg(server: PluginServerInterface) -> None:
     await client.close()
 
 # 消息接收器 - 从Matrix群组到线上游戏
-# 模块开发中，尚未正式合并Release……
-async def get_msg(server: PluginServerInterface) -> None:
-    async with aiofiles.open(DATA_FILE, "r") as f:
-        contents = await f.read()
-    cache = json.loads(contents)
-    client = AsyncClient(f"{homeserver}")
-    client.access_token = cache["token"]
-    client.user_id = config["user_id"]
-    client.device_id = "matrix-nio"
-    room_id = config["room_id"]
-
-    room_msg = await client.room_messages(room_id, limit=1)
-
-    for event in room_msg.chunk:
-        if isinstance(event, RoomMessageText):
-            sender = event.sender
-            msg_body = event.body
-            server.say(f"{sender}: {msg_body}")
-
-    await client.close()
+# 模块开发中，成功率未知...
+# i18n将在首个正式版本v1.0.0或以后使用
+# Translations will be available in ver 1.0.0 or later.
