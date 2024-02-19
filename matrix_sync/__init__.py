@@ -95,7 +95,6 @@ async def init_client(server: PluginServerInterface) -> None:
 # 检测连接和登录情况，并反馈状态
 def on_server_startup(server: PluginServerInterface):
     asyncio.run(init_client(server))
-    asyncio.run(get_msg(server))
         
 def on_user_info(server: PluginServerInterface, info: Info):
         # server.logger.info("检测到玩家消息, 正在尝试发送到Matrix群组...")
