@@ -1,5 +1,5 @@
 # MatrixSync-MCDR
-一个MCDR（全称MCDReforged）插件，用于同步Matrix群组和线上游戏之间的消息。
+一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和线上游戏之间的消息。
 
 关于[Matrix](https://matrix.org/)：一个开放的去中心化的网络通讯协议，用于聊天软件。
 
