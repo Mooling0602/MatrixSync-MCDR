@@ -14,3 +14,5 @@
 - 首次加载插件会初始化配置并自动卸载插件，你需要修改完默认配置后，重启服务器或重载插件才能正常使用。
 - 不打算支持加密信息（EE2E），有需要自行修改。
 - i18n将在正式版本（v1.0.0）以后得到支持。
+- 房间消息转发到游戏内的功能还在开发，由于看不懂文档，可能还需要很长时间。
+- For English(and other languages) users, you need to use translate tools at present.
