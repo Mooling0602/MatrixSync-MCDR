@@ -1,14 +1,14 @@
 {
 	"id": "matrix_sync",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"name": "MatrixSync",
 	"description": {
-		"en_us": "Sync messages between online game and Matrix groups. First preview, just send game msg to Matrix groups.",
-		"zh_cn": "同步Matrix群组和线上游戏的消息. 首个预览版本，只能向Matrix群组上报消息."
+		"en_us": "Sync messages between online game and Matrix groups.",
+		"zh_cn": "同步Matrix群组和线上游戏的消息."
 	},
 	"dependencies": {
 		"mcdreforged": ">=2.1.0"
 	},
-	"author": "CleMooling",
+	"author": "Mooling0602",
     "link": "https://github.com/Mooling0602/MatrixSync-MCDR"
 }
