@@ -36,10 +36,6 @@ def on_load(server: PluginServerInterface, old):
 
 # Check the config.
 def check_config(server: PluginServerInterface):
-    if "user_name" not in config:
-        server.logger.info("Config needs to be updated manually.")
-        server.logger.info("Add an option user_name in the config and set your bot's display name in this new option.")
-        server.unload.plugin("matrix_sync")
     if config["homeserver"] == "https://matrix.example.org" or config["user_id"] == "@username:matrix.example.org" or config["password"] == "your_password" or config["room_id"] == "!your-room_id:matrix.example.org" or config["user_name"] == "user-display-name":
         server.logger.info("Edit default config and reload plugin!")
         server.unload_plugin("matrix_sync")
@@ -102,6 +98,7 @@ async def init_client(server: PluginServerInterface) -> None:
 
 
 # Check connection and login, feedback status.
+@new_thread
 def on_server_startup(server: PluginServerInterface):
     asyncio.run(init_client(server))
     if test_status:
