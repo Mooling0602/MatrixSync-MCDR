@@ -36,7 +36,7 @@ def on_load(server: PluginServerInterface, old):
 
 # Check the config.
 def check_config(server: PluginServerInterface):
-    if config["homeserver"] == "https://matrix.example.org" or config["user_id"] == "@username:matrix.example.org" or config["password"] == "your_password" or config["room_id"] == "!your-room_id:matrix.example.org" or config["user_name"] == "user-display-name":
+    if config["homeserver"] == "https://matrix.example.org" or config["user_id"] == "@username:matrix.example.org" or config["password"] == "your_password" or config["room_id"] == "!your-room_id:matrix.example.org" or config["user_name"] == "bot-display-name":
         server.logger.info("Edit default config and reload plugin!")
         server.unload_plugin("matrix_sync")
     else:
