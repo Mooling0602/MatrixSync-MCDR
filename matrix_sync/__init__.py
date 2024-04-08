@@ -106,17 +106,17 @@ def on_server_startup(server: PluginServerInterface):
 
         
 def on_user_info(server: PluginServerInterface, info: Info):
-        # server.logger.info("Player message detected, trying to send to Matrix group...")
-        # Uncomment the above to determine whether game messages have started to be reported.
-        global message
-        message = f"<{info.player}> {info.content}"
-        if info.player is None:
-            message = f"<Console> {info.content}"
-        flag = False
-        if test_status:
-            flag = True
-        if flag:
-            asyncio.run(send_msg(server))
+    # server.logger.info("Player message detected, trying to send to Matrix group...")
+    # Uncomment the above to determine whether game messages have started to be reported.
+    global message
+    message = f"<{info.player}> {info.content}"
+    if info.player is None:
+        message = f"<Console> {info.content}"
+    flag = False
+    if test_status:
+        flag = True
+    if flag:
+        asyncio.run(send_msg(server))
 
 # Message reporter.
 async def send_msg(server: PluginServerInterface) -> None:
@@ -156,7 +156,7 @@ async def get_msg() -> None:
     room_id = config["room_id"]
 
     client.add_event_callback(message_callback, RoomMessageText)
-    await client.sync_forever(timeout=300000)
+    await client.sync_forever(timeout=0)
 
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if server_return_code != 0:
