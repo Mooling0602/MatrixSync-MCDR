@@ -17,7 +17,7 @@ default_config = {
     "user_id": "@username:matrix.example.org",
     "password": "your_password",
     "room_id": "!your-room_id:matrix.example.org",
-    "user_name": "user-display-name"
+    "user_name": "bot-display-name"
 }
 
 # Load plugin and init default config.
