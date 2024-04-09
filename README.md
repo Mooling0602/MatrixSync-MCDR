@@ -1,4 +1,4 @@
-- 中文
+- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README_zh_cn.md)
 - English
 
 # MatrixSync-MCDR
@@ -11,7 +11,7 @@ The following project is used in the development process: [matrix-nio](https://p
 ## Usage
 Download the latest version in release, put it in the plugins folder, then follow the prompts in the plugin output in the console to modify the configuration file and reload the plugin, until test message 
 is successfully sent to the matrix groups and message-sync will start working.
-Before you using this plugin, you must know what [Matrix] is, and prepare an account to use to be a matrix bot for sync messages. In the config, "user" actually means the bot.
+Before you using this plugin, you must know what [Matrix](https://matrix.org/) is, and prepare an account to use to be a matrix bot for sync messages. In the config, "user" actually means the bot.
 
 ## Attention
 - The first time you load this plugin, it will init the config and automatically unload itself. You need to modify the default config correctly, restart the server or reload the plugin to use it normally.
