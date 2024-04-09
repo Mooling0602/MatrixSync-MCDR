@@ -22,29 +22,30 @@ default_config = {
 
 # Load plugin and init default config.
 def on_load(server: PluginServerInterface, old):
-    global config, DATA_FOLDER, DATA_FILE, homeserver
+    global config, DATA_FOLDR, TOKEN_FILE, homeserver
 
     config = server.load_config_simple("config.json", default_config)
     DATA_FOLDER = server.get_data_folder()
-    server.logger.info(f"Config path: {DATA_FOLDER}")
-    DATA_FILE = f"{DATA_FOLDER}/token.json"
+    CONFIG_PATH = server.rtr("matrix_sync.init_tips.config_path")
+    server.logger.info(f"{CONFIG_PATH}: {DATA_FOLDER}")
+    TOKEN_FILE = f"{DATA_FOLDER}/token.json"
     homeserver = config["homeserver"]
     if not (homeserver.startswith("https://") or homeserver.startswith("http://")):
         homeserver = "https://" + config["homeserver"]
 
-    check_config(server)
+    check_config()
 
 # Check the config.
-def check_config(server: PluginServerInterface):
+def check_config():
     if config["homeserver"] == "https://matrix.example.org" or config["user_id"] == "@username:matrix.example.org" or config["password"] == "your_password" or config["room_id"] == "!your-room_id:matrix.example.org" or config["user_name"] == "bot-display-name":
-        server.logger.info("Edit default config and reload plugin!")
-        server.unload_plugin("matrix_sync")
+        psi.logger.info(psi.rtr("matrix_sync.init_tips.need_change_config"))
+        psi.unload_plugin("matrix_sync")
     else:
-        server.logger.info("Applying precent config, please wait...")
+        psi.logger.info(psi.rtr("matrix_sync.init_tips.read_config"))
 
-# Cache data.
-def cache_data(resp: LoginResponse):
-    with open(DATA_FILE, "w") as f:
+# Cache Token.
+def cache_token(resp: LoginResponse):
+    with open(TOKEN_FILE, "w") as f:
         json.dump(
             {
                 "token": resp.access_token
@@ -53,9 +54,9 @@ def cache_data(resp: LoginResponse):
         )
     
 # Init Matrix bot.
-async def init_client(server: PluginServerInterface) -> None:
-    if not os.path.exists(DATA_FILE):
-        server.logger.info("First login, continuing with password...")
+async def init_client() -> None:
+    if not os.path.exists(TOKEN_FILE):
+        psi.logger.info(psi.rtr("matrix_sync.run_tips.first_time_login"))
         user_id = config["user_id"]
         password = config["password"]
         
@@ -63,17 +64,20 @@ async def init_client(server: PluginServerInterface) -> None:
         resp = await client.login(password, device_name="matrix-nio")
         
         if isinstance(resp, LoginResponse):
-            server.logger.info("Login successfully, caching data for later use...")
-            cache_data(resp)
-            server.logger.info("Cache finished! ")
+            psi.logger.info(psi.rtr("matrix_sync.run_tips.login_success"))
+            cache_token(resp)
+            psi.logger.info(psi.rtr("matrix_sync.run_tips.get_token"))
         else:
-            server.logger.info(f"Bot login failed: {resp}")
-            server.logger.info(f'Homeserver: "{homeserver}", Account: "{user_id}"')
-            server.logger.info("Please check your account, password and network conditions, you can issue in GitHub for any help.")
+            failed_tip = psi.rtr("matrix_sync.run_tips.failed")
+            homeserver_tr = psi.rtr("matrix_sync.tr.hs")
+            account_tr = psi.rtr("matrix_sync.tr.ac")
+            psi.logger.info(f"{failed_tip}: {resp}")
+            psi.logger.info(f'{homeserver_tr}: "{homeserver}", {account_tr}: "{user_id}"')
+            psi.logger.info(psi.rtr("matrix_sync.run_tips.error"))
             sys.exit(1)
 
     else:
-        async with aiofiles.open(DATA_FILE, "r") as f:
+        async with aiofiles.open(TOKEN_FILE, "r") as f:
             contents = await f.read()
         cache = json.loads(contents)
         client = AsyncClient(f"{homeserver}")
@@ -82,7 +86,7 @@ async def init_client(server: PluginServerInterface) -> None:
         client.device_id = "matrix-nio"
         room_id = config["room_id"]
 
-        message = "MC Server started successfully! "
+        message = psi.rtr("matrix_sync.sync_tips.server_started")
         
         await client.room_send(
             room_id,
@@ -93,14 +97,14 @@ async def init_client(server: PluginServerInterface) -> None:
         global test_status
         test_status = True
         if test_status:
-            server.logger.info("Bot login successfully, sent a test message.")
+            psi.logger.info(psi.rtr("matrix_sync.sync_tips.start_report"))
     await client.close()
 
 
 # Check connection and login, feedback status.
 @new_thread
 def on_server_startup(server: PluginServerInterface):
-    asyncio.run(init_client(server))
+    asyncio.run(init_client())
     if test_status:
         asyncio.run(get_msg())
 
@@ -110,17 +114,18 @@ def on_user_info(server: PluginServerInterface, info: Info):
     # Uncomment the above to determine whether game messages have started to be reported.
     global message
     message = f"<{info.player}> {info.content}"
+    console_tr = psi.rtr("matrix_sync.tr.cs")
     if info.player is None:
-        message = f"<Console> {info.content}"
+        message = f"<{console_tr}> {info.content}"
     flag = False
     if test_status:
         flag = True
     if flag:
-        asyncio.run(send_msg(server))
+        asyncio.run(send_msg())
 
 # Message reporter.
-async def send_msg(server: PluginServerInterface) -> None:
-    async with aiofiles.open(DATA_FILE, "r") as f:
+async def send_msg() -> None:
+    async with aiofiles.open(TOKEN_FILE, "r") as f:
         contents = await f.read()
     cache = json.loads(contents)
     client = AsyncClient(f"{homeserver}")
@@ -146,7 +151,7 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
         psi.broadcast(f"{room_msg}")
 
 async def get_msg() -> None:
-    async with aiofiles.open(DATA_FILE, "r") as f:
+    async with aiofiles.open(TOKEN_FILE, "r") as f:
         contents = await f.read()
     cache = json.loads(contents)
     client = AsyncClient(f"{homeserver}")
@@ -159,5 +164,5 @@ async def get_msg() -> None:
     await client.sync_forever(timeout=0)
 
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
-    if server_return_code != 0:
-        asyncio.close(get_msg())
+    if server_return_code == 0:
+        server.logger.info(server.rtr("matrix_sync.on_stop"))
