@@ -6,7 +6,7 @@ A MCDR (full name [MCDReforged](https://mcdreforged.com/)) plugin, use to sync m
 
 About [Matrix](https://matrix.org/): an open decentralized network communication protocol for chat software.
 
-The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/)。
+The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/)
 
 ## Usage
 Download the latest version in release, put it in the plugins folder, then follow the prompts in the plugin output in the console to modify the configuration file and reload the plugin, until test message 
