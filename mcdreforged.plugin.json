@@ -1,10 +1,10 @@
 {
 	"id": "matrix_sync",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"name": "MatrixSync",
 	"description": {
 		"en_us": "Sync messages between online game and Matrix groups.",
-		"zh_cn": "同步Matrix群组和线上游戏的消息."
+		"zh_cn": "同步Matrix群组和线上游戏的消息。"
 	},
 	"dependencies": {
 		"mcdreforged": ">=2.1.0"
