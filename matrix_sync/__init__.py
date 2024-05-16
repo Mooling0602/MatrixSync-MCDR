@@ -1,10 +1,10 @@
 # Import needed APIs.
 import asyncio
 import json
-import re
 import os
 import sys
 import aiofiles
+import re
 
 from mcdreforged.api.all import *
 from nio import AsyncClient, LoginResponse, MatrixRoom, RoomMessageText
@@ -17,6 +17,8 @@ default_config = {
     "user_id": "@username:matrix.example.org",
     "password": "your_password",
     "room_id": "!your-room_id:matrix.example.org",
+    "room_name": "your-room-display-name",
+    "allow_all_rooms_msg": False,
     "user_name": "bot-display-name"
 }
 
@@ -101,7 +103,7 @@ async def init_client() -> None:
     await client.close()
 
 
-# Check connection and login, feedback status.
+# Check connection and login, then feedback status.
 @new_thread
 def on_server_startup(server: PluginServerInterface):
     asyncio.run(init_client())
@@ -110,20 +112,27 @@ def on_server_startup(server: PluginServerInterface):
 
         
 def on_user_info(server: PluginServerInterface, info: Info):
-    # server.logger.info("Player message detected, trying to send to Matrix group...")
-    # Uncomment the above to determine whether game messages have started to be reported.
+    # psi.logger.info(psi.rtr("matrix_sync.sync_tips.test"))
+    # Debug code: Uncomment the above to determine whether game messages have been started to be reported.
     global message
-    message = f"<{info.player}> {info.content}"
     console_tr = psi.rtr("matrix_sync.tr.cs")
+    message = f"<{info.player}> {info.content}"
     if info.player is None:
-        message = f"<{console_tr}> {info.content}"
+        if re.fullmatch(r'say \S*', info.content):
+            msg_content = '{}'.format(info.content.rsplit(' ', 1)[1])
+            message = f"<{console_tr}> {msg_content}"
+        else:
+            option = psi.rtr("matrix_sync.on_console.commands")
+            message = f"<{console_tr}> {option} -> {info.content}"
+        if info.content == "stop":
+            message = psi.rtr("matrix_sync.sync_tips.server_stopping")
     flag = False
     if test_status:
         flag = True
     if flag:
         asyncio.run(send_msg())
 
-# Message reporter.
+# Game Message reporter.
 async def send_msg() -> None:
     async with aiofiles.open(TOKEN_FILE, "r") as f:
         contents = await f.read()
@@ -142,13 +151,18 @@ async def send_msg() -> None:
 
     await client.close()
 
-# i18n will be available in ver 1.1.0 and later.
-
-# Message receiver.
+# Matrix Room Message receiver.
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     room_msg = f"[MatrixSync] {room.user_name(event.sender)}: {event.body}"
+    transfer = True
+    if not room.display_name == config["room_name"]:
+        if config["allow_all_rooms_msg"]:
+            room_msg = f"[MatrixSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
+        else:
+            transfer = False
     if not room.user_name(event.sender) == config["user_name"]:
-        psi.broadcast(f"{room_msg}")
+        if transfer:
+            psi.broadcast(f"{room_msg}")
 
 async def get_msg() -> None:
     async with aiofiles.open(TOKEN_FILE, "r") as f:
