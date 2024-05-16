@@ -3,6 +3,8 @@ matrix_sync:
     config_path: Config path
     need_change_config: Please edit default config and reload plugin!
     read_config: Applying precent config, please waiting...
+  on_console:
+    commands: Excute command
   on_stop: Server stopped, stopping messages sync.
   run_tips:
     first_time_login: First login, continuing with password...
@@ -10,8 +12,10 @@ matrix_sync:
     get_token: Token Cached!
     error: Please check your account, password and network conditions, you can issue in GitHub for any help.
   sync_tips:
+    server_stopping: MC Server is stopping now...
     server_started: MC Server started successfully!
     start_report: Bot login successfully, sent a test message.
+    test: Player message detected, trying to send to Matrix group...
   tr:
     hs: Homeserver
     ac: Account
