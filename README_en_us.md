@@ -1,4 +1,4 @@
-- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README_zh_cn.md)
+- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README.md)
 - English
 
 # MatrixSync-MCDR
