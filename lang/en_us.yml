@@ -1,7 +1,7 @@
 matrix_sync:
   init_tips:
     config_path: Config path
-    need_change_config: Please edit default config and reload plugin!
+    need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugins_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
   on_console:
     commands: Excute command

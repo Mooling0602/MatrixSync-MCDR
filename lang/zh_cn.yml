@@ -1,7 +1,7 @@
 matrix_sync:
   init_tips:
     config_path: 配置文件所在目录
-    need_change_config: 请修改默认配置然后重载插件！
+    need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugins_enabled项后重启插件！
     read_config: 正在应用当前配置，请稍等……
   on_console:
     commands: 执行命令
