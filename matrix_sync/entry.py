@@ -60,4 +60,5 @@ def on_user_info(server: PluginServerInterface, info: Info):
 
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if server_return_code == 0:
-        server.logger.info(server.rtr("matrix_sync.on_stop"))
+        server.logger.info(server.rtr("matrix_sync.on_server_stop"))
+

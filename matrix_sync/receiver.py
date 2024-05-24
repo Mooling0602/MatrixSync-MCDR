@@ -9,6 +9,11 @@ psi = ServerInterface.psi()
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     roomMsg = f"[MatrixSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
+    # 启用消息响应 API 的前置条件，非指定房间的消息无法触发
+    if room.display_name == matrix_sync.entry.config["room_name"]:
+        reactor = True
+    else:
+        reactor = False
     transfer = True
     if not matrix_sync.entry.settings["allow_all_rooms_msg"]:
         roomMsg = f"[MatrixSync] {room.user_name(event.sender)}: {event.body}"
@@ -30,4 +35,4 @@ async def getMsg() -> None:
     room_id = matrix_sync.entry.config["room_id"]
 
     client.add_event_callback(message_callback, RoomMessageText)
-    await client.sync_forever(timeout=0)
+    await client.sync_forever(timeout=10)

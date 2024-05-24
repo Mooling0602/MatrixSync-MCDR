@@ -24,7 +24,7 @@ def formater(server: PluginServerInterface, info: Info):
         if info.content == "stop":
             message = psi.rtr("matrix_sync.sync_tips.server_stopping")
     report = False
-    if matrix_sync.client.clientStatus:
+    if matrix_sync.client.clientStatus or os.path.exists(matrix_sync.entry.TOKEN_FILE):
         report = True
 
 # Game Message reporter.

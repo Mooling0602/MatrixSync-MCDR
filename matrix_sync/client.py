@@ -1,4 +1,5 @@
 import aiofiles
+import asyncio
 import json
 import os
 import sys
@@ -42,25 +43,24 @@ async def init_client() -> None:
             sys.exit(1)
 
     else:
+        message = psi.rtr("matrix_sync.sync_tips.server_started")
         async with aiofiles.open(matrix_sync.entry.TOKEN_FILE, "r") as f:
             contents = await f.read()
         cache = json.loads(contents)
         client = AsyncClient(f"{matrix_sync.entry.homeserver}")
         client.access_token = cache["token"]
         client.user_id = matrix_sync.entry.config["user_id"]
-        client.device_id = "matrix-nio"
+        client.device_id = "mcdr"
         room_id = matrix_sync.entry.config["room_id"]
 
-        message = psi.rtr("matrix_sync.sync_tips.server_started")
-        
         await client.room_send(
-            room_id,
-            message_type="m.room.message",
-            content={"msgtype": "m.text", "body": f"{message}"},
+                room_id,
+                message_type="m.room.message",
+                content={"msgtype": "m.text", "body": f"{message}"},
         )
-        
+
+        await client.close()
         global clientStatus
         clientStatus = True
         if clientStatus:
             psi.logger.info(psi.rtr("matrix_sync.sync_tips.start_report"))
-    await client.close()
