@@ -11,24 +11,24 @@ psi = ServerInterface.psi()
 def formater(server: PluginServerInterface, info: Info):
     # psi.logger.info(psi.rtr("matrix_sync.sync_tips.test"))
     # Debug code: Uncomment the above to determine whether game messages have been started to be reported.
-    global message, report
+    global gameMsg, report
     console_tr = psi.rtr("matrix_sync.tr.cs")
-    message = f"<{info.player}> {info.content}"
+    gameMsg = f"<{info.player}> {info.content}"
     if info.player is None:
         if re.fullmatch(r'say \S*', info.content):
             msg_content = '{}'.format(info.content.rsplit(' ', 1)[1])
-            message = f"<{console_tr}> {msg_content}"
+            gameMsg = f"<{console_tr}> {msg_content}"
         else:
             option = psi.rtr("matrix_sync.on_console.commands")
-            message = f"<{console_tr}> {option} -> {info.content}"
+            gameMsg = f"<{console_tr}> {option} -> {info.content}"
         if info.content == "stop":
-            message = psi.rtr("matrix_sync.sync_tips.server_stopping")
+            gameMsg = psi.rtr("matrix_sync.sync_tips.server_stopping")
     report = False
     if matrix_sync.client.clientStatus or os.path.exists(matrix_sync.entry.TOKEN_FILE):
         report = True
 
 # Game Message reporter.
-async def sendMsg() -> None:
+async def sendMsg(message) -> None:
     async with aiofiles.open(matrix_sync.entry.TOKEN_FILE, "r") as f:
         contents = await f.read()
     cache = json.loads(contents)

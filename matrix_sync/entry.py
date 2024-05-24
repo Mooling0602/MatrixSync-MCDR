@@ -56,7 +56,7 @@ def on_server_startup(server: PluginServerInterface):
 def on_user_info(server: PluginServerInterface, info: Info):
     formater(server, info)
     if matrix_sync.reporter.report:
-        asyncio.run(sendMsg())
+        asyncio.run(sendMsg(matrix_sync.reporter.gameMsg))
 
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if server_return_code == 0:
