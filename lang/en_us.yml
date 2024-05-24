@@ -5,7 +5,7 @@ matrix_sync:
     read_config: Applying precent config, please waiting...
   on_console:
     commands: Excute command
-  on_stop: Server stopped, stopping messages sync.
+  on_server_stop: Server stopped, stopping messages sync.
   run_tips:
     first_time_login: First login, continuing with password...
     login_success: Login successfully, caching token for later uses.

@@ -5,7 +5,7 @@ matrix_sync:
     read_config: 正在应用当前配置，请稍等……
   on_console:
     commands: 执行命令
-  on_stop: 服务器已关闭，停止消息同步。
+  on_server_stop: 服务器已关闭，停止消息同步。
   run_tips:
     first_time_login: 首次登录，将使用密码继续……
     login_success: 登录成功，正在缓存Token以供后续使用。
