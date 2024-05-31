@@ -37,6 +37,7 @@ def on_load(server: PluginServerInterface, old):
     if not (homeserver.startswith("https://") or homeserver.startswith("http://")):
         homeserver = "https://" + config["homeserver"]
     check_config()
+    server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
 
 # Check the config.
 def check_config():
@@ -52,6 +53,7 @@ def on_server_startup(server: PluginServerInterface):
     asyncio.run(init_client())
     if matrix_sync.client.clientStatus:
         asyncio.run(getMsg())
+        server.logger.info(server.rtr("matrix_sync.sync_tips.warning"))
 
 def on_user_info(server: PluginServerInterface, info: Info):
     formater(server, info)
@@ -62,3 +64,5 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if server_return_code == 0:
         server.logger.info(server.rtr("matrix_sync.on_server_stop"))
 
+def on_unload(server: PluginServerInterface):
+        psi.stop_exit()
