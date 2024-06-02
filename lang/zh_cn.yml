@@ -1,19 +1,23 @@
 matrix_sync:
   init_tips:
     config_path: 配置文件所在目录
-    need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugins_enabled项后重启插件！
+    need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugin_enabled项后重启插件！
     read_config: 正在应用当前配置，请稍等……
-    hotload_tip: 如果你是在热加载插件，那么游戏内将无法接收到群组内的消息，请重启服务器和MCDR重试
+    hotload_tip: 若重载插件需要手动开启消息同步，以将Matrix的消息转发到游戏中，请执行!!msync
   on_console:
     commands: 执行命令
   on_server_stop: 服务器已关闭，停止消息同步。
+  on_unload: 正在卸载插件，等待消息同步进程退出……
   run_tips:
+    failed: 登录失败！
     first_time_login: 首次登录，将使用密码继续……
     login_success: 登录成功，正在缓存Token以供后续使用。
     get_token: Token缓存完成！
     error: 请检查你的账号密码以及网络情况，你可以在GitHub提出issue以获取任何帮助。
+  manual_sync: 
+    start_sync: 已开始消息同步！
+    error: 消息同步已在运行，非重载等特殊情况不要执行此命令！
   sync_tips:
-    warning: 消息同步已开始运行，插件不支持热重载，重载或卸载插件将导致服务器和MCDR直接关闭。
     server_stopping: MC服务器正在关闭……
     server_started: MC服务器启动成功！
     start_report: 机器人登录成功，已发送测试消息。

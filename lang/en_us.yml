@@ -1,19 +1,23 @@
 matrix_sync:
   init_tips:
     config_path: Config path
-    need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugins_enabled item in settings.json!
+    need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugin_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
-    hotload_tip: If you are hot loading the plugin, you will not be able to receive messages within the group in the game. Please restart the server and MCDR and try again.
+    hotload_tip: If reloading plugin needs to enable message sync manually, to transfer messages from matrix to the game, please execute !!msync
   on_console:
     commands: Excute command
   on_server_stop: Server stopped, stopping messages sync.
+  on_unload: Unloading plugin, waiting for message sync process to exit...
   run_tips:
+    failed: Failed to login!
     first_time_login: First login, continuing with password...
     login_success: Login successfully, caching token for later uses.
     get_token: Token Cached!
     error: Please check your account, password and network conditions, you can issue in GitHub for any help.
+  manual_sync: 
+    start_sync: Message sync started!
+    error: Message sync is already running, do not execute this command in cases not special such as non-reloading!
   sync_tips:
-    warning: Message sync has started, the plugin does not support hot reloading, and reloading or unloading the plugin will cause the server and MCDR to shut down directly.
     server_stopping: MC Server is stopping now...
     server_started: MC Server started successfully!
     start_report: Bot login successfully, sent a test message.
