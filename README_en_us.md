@@ -8,6 +8,8 @@ About [Matrix](https://matrix.org/): an open decentralized network communication
 
 The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/)。
 
+Thanks for ChatGPT's help to translate the content from Chinese, if anything wrong, please issue to feedback.
+
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
 
