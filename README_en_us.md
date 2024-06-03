@@ -52,8 +52,8 @@ Replace `message` with the custom content you want to send.
 
 ## Note
 - Support with bugs for hot reloading will produce a lot of errors, possibly with no actual impact (hoping someone can help fix, PRs are welcome; global reloading of the plugin will also cause this issue)
-- If hot reloading, you must manually execute !!msync to continue synchronizing Matrix messages to the game
+- If hot reloading, you must manually execute `!!msync` to continue synchronizing Matrix messages to the game
 - When the plugin is loaded for the first time, it will automatically initialize the configuration and unload itself. You need to correctly modify the default configuration file, then restart the server or reload the plugin to use it normally.
 - Encrypted messages (EE2E) are not planned to be supported, you can modify the plugin through secondary development if needed.
-- Currently supports only Simplified Chinese and English (translated from Chinese by Google), anyone can contact me to help translate.
+- Currently supports only Simplified Chinese and English (translated from Chinese by Google), anyone can contact me to help and improve translate.
 
