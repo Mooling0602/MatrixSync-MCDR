@@ -36,10 +36,4 @@ async def getMsg() -> None:
 
     client.add_event_callback(message_callback, RoomMessageText)
     
-    try:
-        await asyncio.wait_for(client.sync(), timeout=10)
-        unloading = matrix_sync.exit.unloading
-        if unloading:
-            await client.close()
-    except asyncio.TimeoutError as e:
-        psi.logger.info(f"Sync task timed out: {e}")
+    await client.sync_forever(timeout=5)

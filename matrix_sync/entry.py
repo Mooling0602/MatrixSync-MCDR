@@ -6,7 +6,6 @@ import matrix_sync.receiver
 import matrix_sync.reporter
 from matrix_sync.client import init_client
 from matrix_sync.config import load_config, check_config
-from matrix_sync.exit import unload
 from matrix_sync.receiver import getMsg
 from matrix_sync.reporter import formater, sendMsg
 from mcdreforged.api.all import *
@@ -69,7 +68,6 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
 
 def on_unload(server: PluginServerInterface):
     global sync_task
-    unload()
     server.logger.info(server.rtr("matrix_sync.on_unload"))
     time.sleep(3)
     try:
