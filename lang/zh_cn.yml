@@ -18,8 +18,8 @@ matrix_sync:
     start_sync: 已开始消息同步！
     error: 消息同步已在运行，非重载等特殊情况不要执行此命令！
   sync_tips:
-    server_stopping: MC服务器正在关闭……
-    server_started: MC服务器启动成功！
+    server_stopping: "[×]服务器正在关闭……"
+    server_started: "[√]服务器已启动"
     start_report: 机器人登录成功，已发送测试消息。
     test: 检测到玩家消息，正在尝试发送到Matrix群组……
   tr:
