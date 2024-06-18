@@ -20,6 +20,7 @@ matrix_sync:
   sync_tips:
     server_stopping: MC Server is stopping now...
     server_started: MC Server started successfully!
+    reporter_status: Message sync has inited on MC Server!
     start_report: Bot login successfully, sent a test message.
     test: Player message detected, trying to send to Matrix group...
   tr:

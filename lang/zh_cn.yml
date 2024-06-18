@@ -20,6 +20,7 @@ matrix_sync:
   sync_tips:
     server_stopping: "[×]服务器正在关闭……"
     server_started: "[√]服务器已启动"
+    reporter_status: "[!]消息互通已在游戏服务器上初始化完成"
     start_report: 机器人登录成功，已发送测试消息。
     test: 检测到玩家消息，正在尝试发送到Matrix群组……
   tr:
