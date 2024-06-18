@@ -7,6 +7,7 @@ matrix_sync:
   on_console:
     commands: 执行命令
   on_server_stop: 服务器已关闭，停止消息同步。
+  on_server_crash: 服务器崩溃或者非正常退出，已停止消息同步，可能出现未知报错。
   on_unload: 正在卸载插件，等待消息同步进程退出……
   run_tips:
     failed: 登录失败！
@@ -20,6 +21,7 @@ matrix_sync:
   sync_tips:
     server_stopping: "[×]服务器正在关闭……"
     server_started: "[√]服务器已启动"
+    server_crashed: "[×]服务器崩溃或非正常退出！"
     reporter_status: "[!]消息互通已在游戏服务器上初始化完成"
     start_report: 机器人登录成功，已发送测试消息。
     test: 检测到玩家消息，正在尝试发送到Matrix群组……
