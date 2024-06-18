@@ -41,6 +41,8 @@ async def init_client() -> None:
             psi.logger.info(psi.rtr("matrix_sync.run_tips.login_success"))
             cache_token(resp)
             psi.logger.info(psi.rtr("matrix_sync.run_tips.get_token"))
+
+            await test_client()
         else:
             failed_tip = psi.rtr("matrix_sync.run_tips.failed")
             homeserver_tr = psi.rtr("matrix_sync.tr.hs")
@@ -51,24 +53,10 @@ async def init_client() -> None:
             sys.exit(1)
 
     else:
-        message = psi.rtr("matrix_sync.sync_tips.server_started")
-        async with aiofiles.open(TOKEN_FILE, "r") as f:
-            contents = await f.read()
-        cache = json.loads(contents)
-        client = AsyncClient(f"{homeserver}")
-        client.access_token = cache["token"]
-        client.user_id = user_id
-        client.device_id = device_id
+        await test_client()
 
-        await client.room_send(
-            room_id,
-            message_type="m.room.message",
-            content={"msgtype": "m.text", "body": f"{message}"},
-        )
-
-        await client.close()
-
-        global clientStatus
-        clientStatus = True
-        if clientStatus:
-            psi.logger.info(psi.rtr("matrix_sync.sync_tips.start_report"))
+async def test_client():
+    message = psi.rtr("matrix_sync.sync_tips.reporter_status")
+    await sendMsg(message)
+    global clientStatus
+    clientStatus = True

@@ -19,6 +19,7 @@ def on_load(server: PluginServerInterface, old):
     load_config()
     server.logger.info(matrix_sync.config.load_tip)
     check_config()
+    asyncio.run(init_client())
     server.register_command(
         Literal('!!msync')
         .runs(
@@ -38,9 +39,10 @@ def manualSync():
 @new_thread
 def on_server_startup(server: PluginServerInterface):
     if lock.acquire(block=False):
-        asyncio.run(init_client())
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
+            message = psi.rtr("matrix_sync.sync_tips.server_started")
+            asyncio.run(sendMsg(message))
             asyncio.run(start_room_msg())
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
