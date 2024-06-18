@@ -8,7 +8,7 @@ About [Matrix](https://matrix.org/): an open decentralized network communication
 
 The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/)。
 
-Thanks for ChatGPT's help to translate the content from Chinese, if anything wrong, please issue to feedback.
+Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
@@ -50,12 +50,22 @@ def main():
     pass
     asyncio.run(sendMsg(message))
 ```
-Replace `message` with the custom content you want to send.
+Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Python dependencies in your plugin as well. Then, during development, replace `message` with the custom content you want to send.
 
-## Note
-- Support with bugs for hot reloading will produce a lot of errors, possibly with no actual impact (hoping someone can help fix, PRs are welcome; global reloading of the plugin will also cause this issue)
-- If hot reloading, you must manually execute `!!msync` to continue synchronizing Matrix messages to the game
-- When the plugin is loaded for the first time, it will automatically initialize the configuration and unload itself. You need to correctly modify the default configuration file, then restart the server or reload the plugin to use it normally.
-- Encrypted messages (EE2E) are not planned to be supported, you can modify the plugin through secondary development if needed.
-- Currently supports only Simplified Chinese and English (translated from Chinese by Google), anyone can contact me to help and improve translate.
+Please note that support for this interface is experimental, and it cannot be guaranteed that the message forwarding functionality of the main plugin (MatrixSync) will work when calling this interface (there may be situations where the bot is not properly configured, or existing login information and tokens cannot be used). If you want to call this interface, please ensure that the user has installed and configured the main plugin (MatrixSync).
 
+## Hot Reload
+
+By default, the plugin will only start the message exchange process after the game server has finished starting up. After reloading the plugin, the message exchange process will not start automatically.
+
+To start the message exchange process, execute the MCDR command `!!msync`, which can be used both in-game and in the console.
+
+This command does not require any permissions, but it sets up a process lock (a safety mechanism). Repeated execution will trigger a warning prompt, but it will not affect the normal operation of the plugin.
+
+Please note that this feature is experimental. If you encounter any errors, please provide feedback to the plugin author through GitHub Issues!
+
+## Notes
+- An error will occur when uninstalling the plugin, and the reason is unknown. However, this does not affect normal usage.
+- When the plugin is first loaded, it will automatically initialize the configuration and then unload itself. You need to correctly modify the default configuration file and enable the `plugin_enabled` configuration item in `settings.json` to enable the plugin. After that, restart the server or reload the plugin to use it normally.
+- End-to-end encryption (EE2E) is not supported. If needed, you can customize and modify the plugin yourself, or submit a pull request (PR) with your changes.
+- Version 2.1.0 has been fixed. The version number should be `2.1.0-fixed`, but for certain reasons, it was decided to change it to `2.1.1`. The next version is expected to directly jump to `2.2.0`.

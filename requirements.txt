@@ -1,3 +1,4 @@
 matrix-nio
+multiprocessing
 aiofiles
 asyncio
