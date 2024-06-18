@@ -9,7 +9,7 @@ from mcdreforged.api.all import *
 from nio import AsyncClient, LoginResponse
 
 psi = ServerInterface.psi()
-
+clientStatus = False
 
 # Cache Token.
 def cache_token(resp: LoginResponse):
@@ -35,7 +35,7 @@ async def init_client() -> None:
         psi.logger.info(psi.rtr("matrix_sync.run_tips.first_time_login"))
         
         client = AsyncClient(homeserver, user_id)
-        resp = await client.login(password, device_name="mcdr1")
+        resp = await client.login(password, device_name=f"{device_id}")
         
         if isinstance(resp, LoginResponse):
             psi.logger.info(psi.rtr("matrix_sync.run_tips.login_success"))

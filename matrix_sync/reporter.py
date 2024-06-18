@@ -30,7 +30,8 @@ def formater(server: PluginServerInterface, info: Info):
             option = psi.rtr("matrix_sync.on_console.commands")
             gameMsg = f"* {info.player} {option} -> {info.content}"
     report = False
-    if os.path.exists(TOKEN_FILE):
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
         report = True
 
 # Game Message reporter.

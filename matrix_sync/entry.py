@@ -19,14 +19,18 @@ def on_load(server: PluginServerInterface, old):
     load_config()
     server.logger.info(matrix_sync.config.load_tip)
     check_config()
-    asyncio.run(init_client())
-    server.register_command(
-        Literal('!!msync')
-        .runs(
-            lambda src: src.reply(manualSync())
+    do_unload = matrix_sync.config.do_unload
+    if do_unload:
+        server.unload_plugin("matrix_sync")
+    else:
+        asyncio.run(init_client())
+        server.register_command(
+            Literal('!!msync')
+            .runs(
+                lambda src: src.reply(manualSync())
+            )
         )
-    )
-    server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
+        server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
 
 def manualSync():
     if lock.acquire(block=False):
@@ -68,6 +72,12 @@ def on_user_info(server: PluginServerInterface, info: Info):
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if server_return_code == 0:
         server.logger.info(server.rtr("matrix_sync.on_server_stop"))
+    else:
+        server.logger.info(server.rtr("matrix_sync.on_server_crash"))
+        crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
+        clientStatus = matrix_sync.client.clientStatus
+        if clientStatus:
+            asyncio.run(sendMsg(crashTip))
 
 def on_unload(server: PluginServerInterface):
     global sync_task
@@ -79,4 +89,6 @@ def on_unload(server: PluginServerInterface):
         pass
     finally:
         sync_task = None
-        lock.release()
+        lock_is_None = matrix_sync.config.lock_is_None
+        if not lock_is_None:
+            lock.release()
