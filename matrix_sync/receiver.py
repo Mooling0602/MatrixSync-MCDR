@@ -2,18 +2,19 @@ import asyncio
 import aiofiles
 import json
 import matrix_sync.config
+from matrix_sync.reporter import sendMsg
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText
 
 psi = ServerInterface.psi()
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    roomMsg = f"[MatrixSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
+    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
     transfer = True
     if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-        roomMsg = f"[MatrixSync] {room.user_name(event.sender)}: {event.body}"
+        roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
         if not room.display_name == room_name:
             transfer = False
     if event.sender == user_id:
