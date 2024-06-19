@@ -42,13 +42,22 @@ If there is any issue with message forwarding in any direction during the messag
 The plugin provides a coroutine function `sendMsg()` for other developers to call to send custom content to the Matrix group. Its callback parameter is `message`. Here is the code reference:
 ```
 import asyncio
+import matrix_sync.client
 import ...
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 from ... import ...
 def main():
     pass
-    asyncio.run(sendMsg(message))
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
+        asyncio.run(sendMsg(message))
+
+<!-- async def main():
+    pass
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
+        await sendMsg(message) -->
 ```
 Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Python dependencies in your plugin as well. Then, during development, replace `message` with the custom content you want to send.
 
