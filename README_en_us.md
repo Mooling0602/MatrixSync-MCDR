@@ -53,11 +53,11 @@ def main():
     if clientStatus:
         asyncio.run(sendMsg(message))
 
-<!-- async def main():
-    pass
-    clientStatus = matrix_sync.client.clientStatus
-    if clientStatus:
-        await sendMsg(message) -->
+# async def main():
+#     pass
+#     clientStatus = matrix_sync.client.clientStatus
+#     if clientStatus:
+#         await sendMsg(message)
 ```
 Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Python dependencies in your plugin as well. Then, during development, replace `message` with the custom content you want to send.
 
