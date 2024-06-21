@@ -77,4 +77,3 @@ Please note that this feature is experimental. If you encounter any errors, plea
 - An error will occur when uninstalling the plugin, and the reason is unknown. However, this does not affect normal usage.
 - When the plugin is first loaded, it will automatically initialize the configuration and then unload itself. You need to correctly modify the default configuration file and enable the `plugin_enabled` configuration item in `settings.json` to enable the plugin. After that, restart the server or reload the plugin to use it normally.
 - End-to-end encryption (EE2E) is not supported. If needed, you can customize and modify the plugin yourself, or submit a pull request (PR) with your changes.
-- Version 2.1.0 has been fixed. The version number should be `2.1.0-fixed`, but for certain reasons, it was decided to change it to `2.1.1`. The next version is expected to directly jump to `2.2.0`.
