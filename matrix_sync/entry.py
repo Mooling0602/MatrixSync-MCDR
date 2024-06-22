@@ -14,6 +14,7 @@ from mcdreforged.api.all import *
 psi = ServerInterface.psi()
 lock = multiprocessing.Lock()
 sync_task = None
+asyncio_loop = None
 
 def on_load(server: PluginServerInterface, old):
     load_config()
@@ -38,8 +39,7 @@ def manualSync():
         return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
-                
-# Sync processes.
+
 @new_thread
 def on_server_startup(server: PluginServerInterface):
     if lock.acquire(block=False):
@@ -69,15 +69,32 @@ def on_user_info(server: PluginServerInterface, info: Info):
         gameMsg = matrix_sync.reporter.gameMsg
         asyncio.run(sendMsg(gameMsg))
 
+def on_enable(server: PluginServerInterface):
+    global asyncio_loop
+    asyncio_loop = asyncio.get_event_loop()
+
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
-    if server_return_code == 0:
-        server.logger.info(server.rtr("matrix_sync.on_server_stop"))
-    else:
-        server.logger.info(server.rtr("matrix_sync.on_server_crash"))
-        crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
-        clientStatus = matrix_sync.client.clientStatus
-        if clientStatus:
-            asyncio.run(sendMsg(crashTip))
+    async def stop_and_clean():
+        if server_return_code == 0:
+            server.logger.info(server.rtr("matrix_sync.on_server_stop"))
+        else:
+            server.logger.info(server.rtr("matrix_sync.on_server_crash"))
+            crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
+            clientStatus = matrix_sync.client.clientStatus
+            if clientStatus:
+                await sendMsg(crashTip)
+        
+        if sync_task is not None:
+            sync_task.cancel()
+            try:
+                await asyncio.wait_for(sync_task, timeout=5)
+            except asyncio.TimeoutError:
+                server.logger.warning("Timed out waiting for sync_task to finish.")
+            except asyncio.CancelledError:
+                pass
+
+    if asyncio_loop is not None:
+        asyncio_loop.create_task(stop_and_clean())
 
 def on_unload(server: PluginServerInterface):
     global sync_task

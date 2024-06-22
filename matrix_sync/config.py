@@ -2,7 +2,6 @@ from mcdreforged.api.all import *
 
 psi = ServerInterface.psi()
 
-# Default config.
 account_config = {
     "homeserver": "https://matrix.example.org",
     "user_id": "@username:matrix.example.org",
@@ -12,7 +11,6 @@ account_config = {
     "device_id": "mcdr"
 }
 
-# Bot manage config.
 bot_config = {
     "plugin_enabled": False,
     "allow_all_rooms_msg": False
@@ -35,7 +33,6 @@ def load_config():
     if not (homeserver.startswith("https://") or homeserver.startswith("http://")):
         homeserver = "https://" + config["homeserver"]
 
-# Check the config.
 def check_config():
     global lock_is_None, do_unload
     if not settings["plugin_enabled"]:
