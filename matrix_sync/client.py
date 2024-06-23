@@ -11,7 +11,7 @@ from nio import AsyncClient, LoginResponse
 psi = ServerInterface.psi()
 clientStatus = False
 
-# Cache Token
+# Cache Token.
 def cache_token(resp: LoginResponse):
     TOKEN_FILE = matrix_sync.config.TOKEN_FILE
     with open(TOKEN_FILE, "w") as f:
@@ -22,7 +22,7 @@ def cache_token(resp: LoginResponse):
             f,
         )
 
-# Init Matrix bot
+# Init Matrix bot.
 async def init_client() -> None:
     homeserver = matrix_sync.config.homeserver
     user_id = matrix_sync.config.user_id
