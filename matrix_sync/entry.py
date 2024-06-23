@@ -40,7 +40,6 @@ def on_load(server: PluginServerInterface, old):
 def manualSync():
     if lock.acquire(block=False):
         asyncio.run(start_room_msg())
-        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
