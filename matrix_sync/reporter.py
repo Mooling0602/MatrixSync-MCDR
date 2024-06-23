@@ -10,6 +10,8 @@ from nio import AsyncClient
 psi = ServerInterface.psi()
 
 def formater(server: PluginServerInterface, info: Info):
+    # psi.logger.info(psi.rtr("matrix_sync.sync_tips.test"))
+    # Debug code: Uncomment the above to determine whether game messages have been started to be reported.
     TOKEN_FILE = matrix_sync.config.TOKEN_FILE
     global gameMsg, report
     console_tr = psi.rtr("matrix_sync.tr.cs")
@@ -32,6 +34,7 @@ def formater(server: PluginServerInterface, info: Info):
     if clientStatus:
         report = True
 
+# Game Message reporter.
 async def sendMsg(message) -> None:
     homeserver = matrix_sync.config.homeserver
     user_id = matrix_sync.config.user_id
