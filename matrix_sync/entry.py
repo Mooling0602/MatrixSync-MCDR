@@ -16,7 +16,6 @@ psi = ServerInterface.psi()
 lock = multiprocessing.Lock()
 cleaned = False
 sync_task = None
-asyncio_loop = None
 
 def on_load(server: PluginServerInterface, old):
     load_config()
