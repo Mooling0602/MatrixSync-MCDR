@@ -15,6 +15,8 @@
 > 依赖软件包`zip`
 > 
 > 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后运行pack_plugin.sh（记得给文件设置可执行权限）
+>
+> 若无法正常访问GitHub，可以运行`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
 
 在使用此插件之前，你必须知道什么是[Matrix](https://matrix.org/)，然后准备一个账号作为matrix机器人用于消息同步，并认真阅读下面的内容以进行插件配置。
 
