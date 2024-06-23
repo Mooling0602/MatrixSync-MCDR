@@ -8,7 +8,7 @@ package_config() {
     /^\[/{in_section=0}
     /^\['$section'\]/{in_section=1}
     in_section && $1==key{print $2; exit}
-    ' "ini_file")
+    ' "$ini_file")
 
     echo $value
 }
@@ -22,3 +22,4 @@ if [ "$is_stable" -eq 1 ]; then
     zip -r "MatrixSync-v${main_ver}-${framework_ver}.mcdr" README.md README_en_us.md mcdreforged.plugin.json requirements.txt LICENSE lang matrix_sync
 else
     zip -r "MatrixSync-v${main_ver}.mcdr" README.md README_en_us.md mcdreforged.plugin.json requirements.txt LICENSE lang matrix_sync
+fi
