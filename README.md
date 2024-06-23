@@ -19,6 +19,8 @@
 > 若无法正常访问GitHub，可以运行`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
 >
 > 懒人用命令：`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
+>
+> 正常情况下，请不要修改脚本内容及所用配置（config.ini）
 
 在使用此插件之前，你必须知道什么是[Matrix](https://matrix.org/)，然后准备一个账号作为matrix机器人用于消息同步，并认真阅读下面的内容以进行插件配置。
 
