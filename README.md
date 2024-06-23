@@ -10,6 +10,10 @@
 
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
+### 使用Git拉取源代码到本地并进行打包
+在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`
+
+然后运行pack_plugin.sh（记得给文件设置可执行权限）
 
 在使用此插件之前，你必须知道什么是[Matrix](https://matrix.org/)，然后准备一个账号作为matrix机器人用于消息同步，并认真阅读下面的内容以进行插件配置。
 
