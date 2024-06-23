@@ -111,7 +111,7 @@ def on_unload(server: PluginServerInterface):
             if sync_task is not None and not sync_task.done():
                 sync_task.cancel()
                 try:
-                    await asyncio.wait_for(sync_task, timeout=5)
+                    asyncio.wait_for(sync_task, timeout=5)
                 except asyncio.TimeoutError:
                     server.logger.warning("Timed out waiting for sync_task to finish.")
                 except asyncio.CancelledError:
