@@ -92,7 +92,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if sync_task is not None:
         sync_task.cancel()
         try:
-            await asyncio.wait_for(sync_task, timeout=5)
+            asyncio.wait_for(sync_task, timeout=5)
         except asyncio.TimeoutError:
             server.logger.warning("Timed out waiting for sync_task to finish.")
         except asyncio.CancelledError:
