@@ -98,6 +98,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
     cleaned = True
 
 def on_unload(server: PluginServerInterface):
+    global sync_task, cleaned
     if cleaned:
         server.logger.info(server.rtr("matrix_sync.on_unload"))
     else:
