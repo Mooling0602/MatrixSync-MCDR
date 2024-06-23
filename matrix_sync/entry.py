@@ -105,7 +105,7 @@ def on_unload(server: PluginServerInterface):
         server.logger.info(server.rtr("matrix_sync.on_unload"))
     else:
         try:
-            await sync_task.cancel()
+            sync_task.cancel()
             try:
                 asyncio.wait_for(sync_task, timeout=5)
             except asyncio.TimeoutError:
