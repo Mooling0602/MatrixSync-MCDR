@@ -14,7 +14,7 @@
 非主线分支没有发布正式版时，也可以使用Git拉取源代码到本地并进行打包：
 > 依赖软件包`zip`
 > 
-> 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后运行pack_plugin.sh（记得给文件设置可执行权限）
+> 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行pack_plugin.sh（记得给文件设置可执行权限）
 >
 > 若无法正常访问GitHub，可以运行`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
 
