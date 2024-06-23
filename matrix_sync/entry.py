@@ -36,10 +36,11 @@ def on_load(server: PluginServerInterface, old):
         server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
 
 # Manually run sync processes.
+@new_thread
 def manualSync():
     if lock.acquire(block=False):
-        return psi.rtr("matrix_sync.manual_sync.start_sync")
         asyncio.run(start_room_msg())
+        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
