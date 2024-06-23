@@ -84,7 +84,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
         crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
-            await sendMsg(crashTip)
+            asyncio.run(sendMsg(crashTip))
         
     if sync_task is not None:
         sync_task.cancel()
