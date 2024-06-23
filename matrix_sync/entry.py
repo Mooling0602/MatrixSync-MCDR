@@ -101,13 +101,14 @@ def on_unload(server: PluginServerInterface):
     if cleaned:
         server.logger.info(server.rtr("matrix_sync.on_unload"))
     else:
-        sync_task.cancel()
-        try:
-            asyncio.wait_for(sync_task, timeout=5)
-        except asyncio.TimeoutError:
-            server.logger.warning("Timed out waiting for sync_task to finish.")
-        except asyncio.CancelledError:
-            pass
+        if sync_task is not None:
+            sync_task.cancel()
+            try:
+                asyncio.wait_for(sync_task, timeout=5)
+            except asyncio.TimeoutError:
+               server.logger.warning("Timed out waiting for sync_task to finish.")
+            except asyncio.CancelledError:
+                pass
         sync_task = None
         lock_is_None = matrix_sync.config.lock_is_None
         if not lock_is_None:
