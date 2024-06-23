@@ -11,7 +11,7 @@
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
 
-也可以使用Git拉取源代码到本地并进行打包：
+非主线分支没有发布正式版时，也可以使用Git拉取源代码到本地并进行打包：
 > 依赖软件包`zip`
 > 
 > 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后运行pack_plugin.sh（记得给文件设置可执行权限）
