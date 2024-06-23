@@ -74,7 +74,9 @@ def on_user_info(server: PluginServerInterface, info: Info):
         gameMsg = matrix_sync.reporter.gameMsg
         asyncio.run(sendMsg(gameMsg))
 
-async def stop_and_tip():
+# Exit sync process.
+def on_server_stop(server: PluginServerInterface, server_return_code: int):
+    global cleaned
     if server_return_code == 0:
         server.logger.info(server.rtr("matrix_sync.on_server_stop"))
     else:
@@ -83,11 +85,6 @@ async def stop_and_tip():
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
             await sendMsg(crashTip)
-
-# Exit sync process.
-def on_server_stop(server: PluginServerInterface, server_return_code: int):
-    global cleaned
-    asyncio.run(stop_and_tip())
         
     if sync_task is not None:
         sync_task.cancel()
