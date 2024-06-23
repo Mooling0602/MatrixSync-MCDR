@@ -11,9 +11,12 @@ from matrix_sync.receiver import getMsg
 from matrix_sync.reporter import formater, sendMsg
 from mcdreforged.api.all import *
 
+# Framwork ver: 2.2.0-4
 psi = ServerInterface.psi()
 lock = multiprocessing.Lock()
+cleaned = False
 sync_task = None
+asyncio_loop = None
 
 def on_load(server: PluginServerInterface, old):
     load_config()
@@ -32,14 +35,15 @@ def on_load(server: PluginServerInterface, old):
         )
         server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
 
+# Manually run sync processes.
 def manualSync():
     if lock.acquire(block=False):
-        asyncio.run(start_room_msg())
         return psi.rtr("matrix_sync.manual_sync.start_sync")
+        asyncio.run(start_room_msg())
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
-                
-# Sync processes.
+
+# Automatically run sync processes.
 @new_thread
 def on_server_startup(server: PluginServerInterface):
     if lock.acquire(block=False):
@@ -62,6 +66,7 @@ async def on_room_msg():
     sync_task = asyncio.create_task(getMsg())
     await sync_task
 
+# Game message reporter
 def on_user_info(server: PluginServerInterface, info: Info):
     formater(server, info)
     report = matrix_sync.reporter.report
@@ -69,7 +74,7 @@ def on_user_info(server: PluginServerInterface, info: Info):
         gameMsg = matrix_sync.reporter.gameMsg
         asyncio.run(sendMsg(gameMsg))
 
-def on_server_stop(server: PluginServerInterface, server_return_code: int):
+async def stop_and_tip():
     if server_return_code == 0:
         server.logger.info(server.rtr("matrix_sync.on_server_stop"))
     else:
@@ -77,18 +82,45 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
         crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
-            asyncio.run(sendMsg(crashTip))
+            await sendMsg(crashTip)
+
+# Exit sync process.
+def on_server_stop(server: PluginServerInterface, server_return_code: int):
+    global cleaned
+    asyncio.run(stop_and_tip())
+        
+    if sync_task is not None:
+        sync_task.cancel()
+        try:
+            await asyncio.wait_for(sync_task, timeout=5)
+        except asyncio.TimeoutError:
+            server.logger.warning("Timed out waiting for sync_task to finish.")
+        except asyncio.CancelledError:
+            pass
+
+    if asyncio_loop is not None:
+        asyncio_loop.create_task(stop_and_clean())
+        
+    cleaned = True
 
 def on_unload(server: PluginServerInterface):
-    global sync_task
-    server.logger.info(server.rtr("matrix_sync.on_unload"))
-    try:
-        if sync_task is not None and not sync_task.done():
-            sync_task.cancel()
-    except Exception:
-        pass
-    finally:
-        sync_task = None
-        lock_is_None = matrix_sync.config.lock_is_None
-        if not lock_is_None:
-            lock.release()
+    if cleaned:
+        server.logger.info(server.rtr("matrix_sync.on_unload"))
+    else:
+        try:
+            if sync_task is not None and not sync_task.done():
+                sync_task.cancel()
+                try:
+                    await asyncio.wait_for(sync_task, timeout=5)
+                except asyncio.TimeoutError:
+                    server.logger.warning("Timed out waiting for sync_task to finish.")
+                except asyncio.CancelledError:
+                    pass
+        finally:
+            sync_task = None
+            lock_is_None = matrix_sync.config.lock_is_None
+            if asyncio_loop is not None:
+                asyncio_loop.create_task(stop_and_clean())
+            if not lock_is_None:
+                lock.release()
+                server.logger.info(server.rtr("matrix_sync.on_unload"))

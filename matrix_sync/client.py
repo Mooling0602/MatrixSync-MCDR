@@ -55,6 +55,7 @@ async def init_client() -> None:
     else:
         await test_client()
 
+# Send test messages.
 async def test_client():
     message = psi.rtr("matrix_sync.sync_tips.reporter_status")
     await sendMsg(message)
