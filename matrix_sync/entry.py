@@ -41,7 +41,7 @@ def on_load(server: PluginServerInterface, old):
 def manualSync():
     global clientLocked
     if not clientLocked:
-        start_room_msg()
+        asyncio.run(start_room_msg())
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
@@ -54,16 +54,18 @@ def on_server_startup(server: PluginServerInterface):
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
             asyncio.run(sendMsg(message))
-            start_room_msg()
+            asyncio.run(start_room_msg())
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
 def start_room_msg():
     global clientLocked
-    if lock.acquire(block=False):
-        asyncio.run(on_room_msg())
-    else:
+    async with lock:
+        if clientLocked:
+            return
         clientLocked = True
+        await on_room_msg()
+        clientLocked = False
 
 async def on_room_msg():
     global sync_task
