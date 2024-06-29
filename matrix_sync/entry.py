@@ -58,7 +58,7 @@ def on_server_startup(server: PluginServerInterface):
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
-def start_room_msg():
+async def start_room_msg():
     global clientLocked
     async with lock:
         if clientLocked:
