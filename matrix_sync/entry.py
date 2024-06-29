@@ -1,4 +1,5 @@
 import asyncio
+import threading
 import matrix_sync.config
 import matrix_sync.client
 import matrix_sync.receiver
@@ -12,7 +13,8 @@ from mcdreforged.api.all import *
 
 # Framwork ver: 2.2.0-stable
 psi = ServerInterface.psi()
-lock = asyncio.Lock()
+asyncLock = asyncio.Lock()
+threadLock = threading.Lock()
 cleaned = False
 sync_task = None
 asyncio_loop = None
@@ -37,8 +39,10 @@ def on_load(server: PluginServerInterface, old):
 # Manually run sync processes.
 @new_thread
 def manualSync():
-    if not lock.locked():
-        asyncio.run(start_room_msg())
+    if not threadLock.locked():
+        with threadLock.acquire(block=True):
+            if not asyncLock.locked():
+                asyncio.run(start_room_msg())
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
@@ -46,16 +50,18 @@ def manualSync():
 @new_thread
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
-    if not lock.locked():
-        if clientStatus:
-            message = psi.rtr("matrix_sync.sync_tips.server_started")
-            asyncio.run(sendMsg(message))
-            asyncio.run(start_room_msg())
+    if not threadLock.locked():
+        with threadLock.acquire(block=True):
+            if not asyncLock.locked():
+                if clientStatus:
+                    message = psi.rtr("matrix_sync.sync_tips.server_started")
+                    asyncio.run(sendMsg(message))
+                    asyncio.run(start_room_msg())
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
 async def start_room_msg():
-    async with lock:
+    async with asyncLock:
         await on_room_msg()
 
 async def on_room_msg():
@@ -113,4 +119,5 @@ def on_unload(server: PluginServerInterface):
         sync_task = None
         lock_is_None = matrix_sync.config.lock_is_None
         if not lock_is_None:
+            threadLock.release()
             server.logger.info(server.rtr("matrix_sync.on_unload"))
