@@ -13,14 +13,14 @@
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
 
-非主线分支没有发布正式版时，也可以使用Git拉取源代码到本地并进行打包：
+### 使用 Git
 > 依赖软件包`zip`
 > 
-> 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行`pack_plugin.sh`（记得给文件设置可执行权限）
+> 在终端上运行`git clone https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行`pack_plugin.sh`（记得给文件设置可执行权限）
 >
-> 若无法正常访问GitHub，可以运行`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
+> 若无法正常访问GitHub，可以运行`git clone https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
 >
-> 懒人用命令：`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
+> 懒人用命令：`git clone https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
 >
 > 正常情况下，请不要修改脚本内容及所用配置（config.ini）
 
