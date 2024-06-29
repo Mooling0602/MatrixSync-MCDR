@@ -58,12 +58,12 @@ def on_server_startup(server: PluginServerInterface):
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
-async def start_room_msg():
+def start_room_msg():
     global clientLocked
     if clientLocked:
         return
     clientLocked = True
-    await on_room_msg()
+    asyncio.run(on_room_msg())
     clientLocked = False
 
 async def on_room_msg():
