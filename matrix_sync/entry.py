@@ -11,11 +11,12 @@ from matrix_sync.receiver import getMsg
 from matrix_sync.reporter import formater, sendMsg
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.2.0-4
+# Framwork ver: 2.2.0-stable
 psi = ServerInterface.psi()
 lock = multiprocessing.Lock()
 cleaned = False
 sync_task = None
+asyncio_loop = None
 
 def on_load(server: PluginServerInterface, old):
     load_config()
@@ -39,6 +40,7 @@ def on_load(server: PluginServerInterface, old):
 def manualSync():
     if lock.acquire(block=False):
         asyncio.run(start_room_msg())
+        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
