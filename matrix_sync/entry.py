@@ -40,7 +40,7 @@ def on_load(server: PluginServerInterface, old):
 @new_thread
 def manualSync():
     if not threadLock.locked():
-        with threadLock.acquire(block=True):
+        with threadLock.acquire(blocking=True):
             if not asyncLock.locked():
                 asyncio.run(start_room_msg())
     else:
@@ -51,7 +51,7 @@ def manualSync():
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
     if not threadLock.locked():
-        with threadLock.acquire(block=True):
+        with threadLock.acquire(blocking=True):
             if not asyncLock.locked():
                 if clientStatus:
                     message = psi.rtr("matrix_sync.sync_tips.server_started")
