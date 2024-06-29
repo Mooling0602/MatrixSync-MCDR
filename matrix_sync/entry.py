@@ -1,5 +1,4 @@
 import asyncio
-import multiprocessing
 import matrix_sync.config
 import matrix_sync.client
 import matrix_sync.receiver
@@ -13,7 +12,7 @@ from mcdreforged.api.all import *
 
 # Framwork ver: 2.2.0-stable
 psi = ServerInterface.psi()
-lock = multiprocessing.Lock()
+lock = asyncio.Lock()
 cleaned = False
 sync_task = None
 asyncio_loop = None
@@ -38,21 +37,22 @@ def on_load(server: PluginServerInterface, old):
 # Manually run sync processes.
 @new_thread
 def manualSync():
-    start_room_msg()
+    asyncio.run(start_room_msg())
 
 # Automatically run sync processes.
+@new_thread
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
     if clientStatus:
         message = psi.rtr("matrix_sync.sync_tips.server_started")
         asyncio.run(sendMsg(message))
-        start_room_msg()
+        asyncio.run(start_room_msg())
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
-@new_thread
-def start_room_msg():
-    asyncio.run(on_room_msg())
+async def start_room_msg():
+    async with lock:
+        await on_room_msg()
 
 async def on_room_msg():
     global sync_task
