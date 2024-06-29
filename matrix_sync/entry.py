@@ -15,6 +15,7 @@ from mcdreforged.api.all import *
 psi = ServerInterface.psi()
 lock = multiprocessing.Lock()
 cleaned = False
+clientLocked = False
 sync_task = None
 asyncio_loop = None
 
@@ -38,15 +39,17 @@ def on_load(server: PluginServerInterface, old):
 # Manually run sync processes.
 @new_thread
 def manualSync():
-    if lock.acquire(block=False):
-        asyncio.run(start_room_msg())
+    global clientLocked
+    if not clientLocked:
+        start_room_msg()
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
 # Automatically run sync processes.
 @new_thread
 def on_server_startup(server: PluginServerInterface):
-    if lock.acquire(block=False):
+    global clientLocked
+    if not clientLocked:
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
@@ -56,7 +59,11 @@ def on_server_startup(server: PluginServerInterface):
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
 def start_room_msg():
-    asyncio.run(on_room_msg())
+    global clientLocked
+    if lock.acquire(block=False):
+        asyncio.run(on_room_msg())
+    else:
+        clientLocked = True
 
 async def on_room_msg():
     global sync_task
@@ -113,5 +120,6 @@ def on_unload(server: PluginServerInterface):
         sync_task = None
         lock_is_None = matrix_sync.config.lock_is_None
         if not lock_is_None:
+            clientLocked = False
             lock.release()
             server.logger.info(server.rtr("matrix_sync.on_unload"))
