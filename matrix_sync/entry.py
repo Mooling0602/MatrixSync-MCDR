@@ -60,12 +60,11 @@ def on_server_startup(server: PluginServerInterface):
 
 async def start_room_msg():
     global clientLocked
-    async with lock:
-        if clientLocked:
-            return
-        clientLocked = True
-        await on_room_msg()
-        clientLocked = False
+    if clientLocked:
+        return
+    clientLocked = True
+    await on_room_msg()
+    clientLocked = False
 
 async def on_room_msg():
     global sync_task
