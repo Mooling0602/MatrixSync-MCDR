@@ -10,6 +10,8 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
+Present branch version: master@2.2.0
+
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
 
@@ -74,6 +76,5 @@ This command does not require any permissions, but it sets up a process lock (a 
 Please note that this feature is experimental. If you encounter any errors, please provide feedback to the plugin author through GitHub Issues!
 
 ## Notes
-- An error will occur when uninstalling the plugin, and the reason is unknown. However, this does not affect normal usage.
 - When the plugin is first loaded, it will automatically initialize the configuration and then unload itself. You need to correctly modify the default configuration file and enable the `plugin_enabled` configuration item in `settings.json` to enable the plugin. After that, restart the server or reload the plugin to use it normally.
 - End-to-end encryption (EE2E) is not supported. If needed, you can customize and modify the plugin yourself, or submit a pull request (PR) with your changes.
