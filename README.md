@@ -8,8 +8,21 @@
 
 开发过程中用到的项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
+当前分支版本：主线@2.2.0
+
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
+
+非主线分支没有发布正式版时，也可以使用Git拉取源代码到本地并进行打包：
+> 依赖软件包`zip`
+> 
+> 在终端上运行`git clone -b 2.2.0 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行`pack_plugin.sh`（记得给文件设置可执行权限）
+>
+> 若无法正常访问GitHub，可以运行`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
+>
+> 懒人用命令：`git clone -b 2.2.0 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
+>
+> 正常情况下，请不要修改脚本内容及所用配置（config.ini）
 
 在使用此插件之前，你必须知道什么是[Matrix](https://matrix.org/)，然后准备一个账号作为matrix机器人用于消息同步，并认真阅读下面的内容以进行插件配置。
 
@@ -48,9 +61,55 @@ def main():
     pass
     asyncio.run(sendMsg(message))
 ```
+如果要在协程内调用该接口：
+```
+import asyncio
+import ...
+from mcdreforged.api.all import *
+from matrix_sync.reporter import sendMsg
+from ... import ...
+async def main():
+    pass
+    await sendMsg(message)
+```
 将主插件（MatrixSync）添加到MCDR依赖中，并将其Python依赖一并添加到自己的插件中，然后在开发过程中把`message`替换成你想要发送的自定义内容即可。
 
-请注意，该接口的支持是实验性的，调用此接口时无法确定主插件（MatrixSync）的消息转发功能是否能够工作（可能存在未配置好bot、已有的登录信息和token无法正常使用的情况），若要调用此接口，请确保用户安装并配置好了主插件（MatrixSync）。
+请注意，该接口的支持是实验性的，若要调用此接口，请确保用户安装并配置好了主插件（MatrixSync）。
+
+2.2.0版本以后，机器人的初始化将直接在加载插件时进行，所以如果需要判断主插件的消息上报器是否能够正常工作，可以在调用函数前导入相关的全局变量并加入判断条件，下面是示例代码：
+```
+import asyncio
+import matrix_sync.client
+import ...
+from mcdreforged.api.all import *
+from matrix_sync.reporter import sendMsg
+
+def main():
+    pass
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
+        asyncio.run(sendMsg(message))
+    else:
+        # 可以在此自定义报错的内容，也可以直接删除此部分忽略该接口
+        server.logger.info("error")
+```
+协程函数示例：
+```
+import asyncio
+import matrix_sync.client
+import ...
+from mcdreforged.api.all import *
+from matrix_sync.reporter import sendMsg
+
+async def main():
+    pass
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
+        await sendMsg(message)
+    else:
+        # 可以在此自定义报错的内容，也可以直接删除此部分忽略该接口
+        server.logger.info("error")
+```
 
 ## 热重载（reload）
 插件默认在游戏服务端启动完成时才会自动启动消息互通进程，重新加载插件后，消息互通进程并不会自动启动。
@@ -62,8 +121,6 @@ def main():
 请注意，该功能是实验性的，若发现任何错误请及时通过GitHub Issue向插件作者反馈！
 
 ## 注意
-- 卸载插件时会报错，原因未知，不会影响正常使用。
 - 首次加载插件的时候，插件将自动初始化配置并卸载自己。你需要正确修改默认的配置文件，并在settings.json中启用plugin_enabled配置项以启用插件，然后重启服务器或着重载插件以正常使用。
 - 不打算支持加密信息（EE2E），有需要可以二次开发修改插件，也欢迎PR。
 - 多语言目前只支持中文（简体）和英语（用谷歌和ChatGPT从中文翻译），任何人都可以联系我帮助完善翻译，欢迎PR到/lang语言文件中。
-- 2.1.0版本已经修复，版本号应为2.1.0-fixed，但出于某些原因最后决定修改为2.1.1，下个版本号预计直接跳到2.2.0。

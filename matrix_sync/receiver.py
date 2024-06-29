@@ -37,4 +37,7 @@ async def getMsg() -> None:
 
     client.add_event_callback(message_callback, RoomMessageText)
     
-    await client.sync_forever(timeout=5)
+    try:
+        await client.sync_forever(timeout=5)
+    except asyncio.CancelledError:
+        await client.close()

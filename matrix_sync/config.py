@@ -37,8 +37,12 @@ def load_config():
 
 # Check the config.
 def check_config():
+    global lock_is_None, do_unload
     if not settings["plugin_enabled"]:
+        lock_is_None = True
         psi.logger.info(psi.rtr("matrix_sync.init_tips.need_edit_config"))
-        psi.unload_plugin("matrix_sync")
+        do_unload = True
     else:
+        lock_is_None = False
+        do_unload = False
         psi.logger.info(psi.rtr("matrix_sync.init_tips.read_config"))

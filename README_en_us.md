@@ -10,6 +10,8 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
+Present branch version: stable@2.2.0
+
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
 
@@ -42,13 +44,22 @@ If there is any issue with message forwarding in any direction during the messag
 The plugin provides a coroutine function `sendMsg()` for other developers to call to send custom content to the Matrix group. Its callback parameter is `message`. Here is the code reference:
 ```
 import asyncio
+import matrix_sync.client
 import ...
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 from ... import ...
 def main():
     pass
-    asyncio.run(sendMsg(message))
+    clientStatus = matrix_sync.client.clientStatus
+    if clientStatus:
+        asyncio.run(sendMsg(message))
+
+# async def main():
+#     pass
+#     clientStatus = matrix_sync.client.clientStatus
+#     if clientStatus:
+#         await sendMsg(message)
 ```
 Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Python dependencies in your plugin as well. Then, during development, replace `message` with the custom content you want to send.
 
@@ -65,7 +76,5 @@ This command does not require any permissions, but it sets up a process lock (a 
 Please note that this feature is experimental. If you encounter any errors, please provide feedback to the plugin author through GitHub Issues!
 
 ## Notes
-- An error will occur when uninstalling the plugin, and the reason is unknown. However, this does not affect normal usage.
 - When the plugin is first loaded, it will automatically initialize the configuration and then unload itself. You need to correctly modify the default configuration file and enable the `plugin_enabled` configuration item in `settings.json` to enable the plugin. After that, restart the server or reload the plugin to use it normally.
 - End-to-end encryption (EE2E) is not supported. If needed, you can customize and modify the plugin yourself, or submit a pull request (PR) with your changes.
-- Version 2.1.0 has been fixed. The version number should be `2.1.0-fixed`, but for certain reasons, it was decided to change it to `2.1.1`. The next version is expected to directly jump to `2.2.0`.
