@@ -41,7 +41,6 @@ def manualSync():
     start_room_msg()
 
 # Automatically run sync processes.
-@new_thread
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
     if clientStatus:
@@ -51,8 +50,8 @@ def on_server_startup(server: PluginServerInterface):
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
+@new_thread
 def start_room_msg():
-    lock.acquire(block=True)
     asyncio.run(on_room_msg())
 
 async def on_room_msg():
