@@ -35,6 +35,7 @@ def on_load(server: PluginServerInterface, old):
         server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
 
 # Manually run sync processes.
+@new_thread
 def manualSync():
     if not lock.locked():
         asyncio.run(start_room_msg())
@@ -42,6 +43,7 @@ def manualSync():
         return psi.rtr("matrix_sync.manual_sync.error")
 
 # Automatically run sync processes.
+@new_thread
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
     if not lock.locked():
@@ -111,5 +113,4 @@ def on_unload(server: PluginServerInterface):
         sync_task = None
         lock_is_None = matrix_sync.config.lock_is_None
         if not lock_is_None:
-            lock.release()
             server.logger.info(server.rtr("matrix_sync.on_unload"))
