@@ -40,7 +40,6 @@ def on_load(server: PluginServerInterface, old):
 def manualSync():
     if lock.acquire(block=False):
         asyncio.run(start_room_msg())
-        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
@@ -52,12 +51,12 @@ def on_server_startup(server: PluginServerInterface):
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
             asyncio.run(sendMsg(message))
-            asyncio.run(start_room_msg())
+            start_room_msg()
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
-async def start_room_msg():
-    await on_room_msg()
+def start_room_msg():
+    asyncio.run(on_room_msg())
 
 async def on_room_msg():
     global sync_task
