@@ -52,8 +52,8 @@ def on_server_startup(server: PluginServerInterface):
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
 def start_room_msg():
-    lock.acquire(block=True):
-        asyncio.run(on_room_msg())
+    lock.acquire(block=True)
+    asyncio.run(on_room_msg())
 
 async def on_room_msg():
     global sync_task
