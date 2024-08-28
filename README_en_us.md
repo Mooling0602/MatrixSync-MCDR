@@ -10,7 +10,7 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
-Present branch version: main@2.2.0
+Present branch version: testing@2.2.1
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
