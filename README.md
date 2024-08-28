@@ -8,7 +8,7 @@
 
 开发过程中用到的项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
-当前分支版本：主线@2.2.0
+当前分支版本：测试中@2.2.1
 
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
@@ -18,11 +18,11 @@
 > 
 > 依赖软件包`zip`
 > 
-> 在终端上运行`git clone https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行`pack_plugin.sh`（记得给文件设置可执行权限）
+> 在终端上运行`git clone -b 2.2.1 https://github.com/Mooling0602/MatrixSync-MCDR.git`，然后进入`MatrixSync-MCDR`目录下并运行`pack_plugin.sh`（记得给文件设置可执行权限）
 >
-> 若无法正常访问GitHub，可以运行`git clone https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
+> 若无法正常访问GitHub，可以运行`git clone -b 2.2.1 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git`
 >
-> 懒人用命令：`git clone https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
+> 懒人用命令：`git clone -b 2.2.1 https://mirror.ghproxy.com/https://github.com/Mooling0602/MatrixSync-MCDR.git && cd MatrixSync-MCDR && chmod +x pack_plugin.sh && ./pack_plugin.sh`
 >
 > 正常情况下，请不要修改脚本内容及所用配置（config.ini）
 
