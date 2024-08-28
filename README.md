@@ -1,5 +1,5 @@
 - 中文
-- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README_en_us.md)
+- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/2.2.1/README_en_us.md)
 
 # MatrixSync-MCDR
 一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和《我的世界》服务器的线上游戏之间的消息。
