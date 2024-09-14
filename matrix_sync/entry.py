@@ -11,13 +11,11 @@ from matrix_sync.receiver import getMsg
 from matrix_sync.reporter import formater, sendMsg
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.2.0-stable
+# Framwork ver: 2.2.1-stable
 psi = ServerInterface.psi()
-asyncLock = asyncio.Lock()
-threadLock = threading.Lock()
+tLock = threading.Lock()
 cleaned = False
 sync_task = None
-asyncio_loop = None
 
 def on_load(server: PluginServerInterface, old):
     load_config()
@@ -38,25 +36,27 @@ def on_load(server: PluginServerInterface, old):
 
 # Manually run sync processes.
 def manualSync():
-    if not asyncLock.locked():
-        asyncio.run(start_room_msg())
+    if not tLock.locked():
+        start_room_msg()
+        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.error")
 
 # Automatically run sync processes.
 def on_server_startup(server: PluginServerInterface):
     clientStatus = matrix_sync.client.clientStatus
-    if not asyncLock.locked():
+    if not tLock.locked():
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
             asyncio.run(sendMsg(message))
-            asyncio.run(start_room_msg())
+            start_room_msg()
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.error"))
 
-async def start_room_msg():
-    async with asyncLock:
-        await on_room_msg()
+@new_thread('MatrixReceiver')
+def start_room_msg():
+    with tLock:
+        asyncio.run(on_room_msg())
 
 async def on_room_msg():
     global sync_task
@@ -89,7 +89,7 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
     if sync_task is not None:
         sync_task.cancel()
         try:
-            asyncio.wait_for(sync_task, timeout=5)
+            pass
         except asyncio.TimeoutError:
             server.logger.warning("Timed out waiting for sync_task to finish.")
         except asyncio.CancelledError:
@@ -105,7 +105,7 @@ def on_unload(server: PluginServerInterface):
         if sync_task is not None:
             sync_task.cancel()
             try:
-                asyncio.wait_for(sync_task, timeout=5)
+                pass
             except asyncio.TimeoutError:
                server.logger.warning("Timed out waiting for sync_task to finish.")
             except asyncio.CancelledError:
@@ -113,5 +113,4 @@ def on_unload(server: PluginServerInterface):
         sync_task = None
         lock_is_None = matrix_sync.config.lock_is_None
         if not lock_is_None:
-            threadLock.release()
             server.logger.info(server.rtr("matrix_sync.on_unload"))

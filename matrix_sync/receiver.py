@@ -4,7 +4,7 @@ import json
 import matrix_sync.config
 from matrix_sync.reporter import sendMsg
 from mcdreforged.api.all import *
-from nio import AsyncClient, MatrixRoom, RoomMessageText
+from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
 
 psi = ServerInterface.psi()
 
@@ -22,6 +22,15 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     if transfer:
         psi.broadcast(f"{roomMsg}")
 
+def on_sync_response(response: SyncResponse):
+    global server_is_online
+    server_is_online = True
+
+def on_sync_error(response: SyncError):
+    global server_is_online
+    if response.status_code >= 500:
+        server_is_online = False
+
 async def getMsg() -> None:
     user_id = matrix_sync.config.user_id
     homeserver = matrix_sync.config.homeserver
@@ -35,6 +44,8 @@ async def getMsg() -> None:
     client.user_id = user_id
     client.device_id = device_id
 
+    client.add_response_callback(on_sync_response, SyncResponse)
+    client.add_response_callback(on_sync_error, SyncError)
     client.add_event_callback(message_callback, RoomMessageText)
     
     try:
