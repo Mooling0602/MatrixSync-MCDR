@@ -8,7 +8,9 @@
 
 开发过程中用到的项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
-当前分支版本：测试中@2.2.1
+当前分支版本：已发布@2.2.1
+
+请注意，插件在加载时会阻塞MCDR主线程，如果MCDR被阻塞并且无法继续正常启动，请检查强制结束所有进程并检查插件配置是否正确、Matrix根服务器是否在线等或禁用插件后重新启动。
 
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
