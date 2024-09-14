@@ -22,13 +22,13 @@ def formater(server: PluginServerInterface, info: Info):
             gameMsg = f"<{console_tr}> {msg_content}"
         else:
             option = psi.rtr("matrix_sync.on_console.commands")
-            gameMsg = f"* {console_tr} {option} -> {info.content}"
+            gameMsg = f"[!] {console_tr} {option} -> {info.content}"
         if info.content == "stop":
             gameMsg = psi.rtr("matrix_sync.sync_tips.server_stopping")
     else:
         if info.content.startswith("!!"):
             option = psi.rtr("matrix_sync.on_console.commands")
-            gameMsg = f"* {info.player} {option} -> {info.content}"
+            gameMsg = f"[!] {info.player} {option} -> {info.content}"
     report = False
     clientStatus = matrix_sync.client.clientStatus
     if clientStatus:
