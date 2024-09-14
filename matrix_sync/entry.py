@@ -11,7 +11,7 @@ from matrix_sync.receiver import getMsg
 from matrix_sync.reporter import formater, sendMsg
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.2.0-stable
+# Framwork ver: 2.2.1-stable
 psi = ServerInterface.psi()
 tLock = threading.Lock()
 cleaned = False
