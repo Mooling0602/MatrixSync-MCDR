@@ -10,7 +10,9 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
-Present branch version: testing@2.2.1
+Present branch version: released@2.2.1
+
+Please note that the plugin will block the MCDR main thread during loading. If MCDR is blocked and cannot continue its normal startup, please check by forcibly terminating all processes and verifying whether the plugin configuration is correct, whether the Matrix root server is online, etc., or restart after disabling the plugin.
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
