@@ -17,7 +17,7 @@ matrix_sync:
     error: Please check your account, password and network conditions, you can issue in GitHub for any help.
   manual_sync: 
     start_sync: Message sync started!
-    error: Message sync is already running, do not execute this command in cases not special such as non-reloading!
+    error: Message sync is already running, do not restart it in cases not special such as non-reloading!
   sync_tips:
     server_stopping: MC Server is stopping now...
     server_started: MC Server started successfully!
