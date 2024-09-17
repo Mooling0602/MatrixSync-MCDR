@@ -20,6 +20,7 @@ matrix_sync:
     stop_sync: 已关闭消息同步！
     start_error: 消息同步已在运行，非重载等特殊情况不要再次尝试启动！
     stop_error: 关闭消息同步时发生未知错误！
+    stop_denied: 请在控制台执行！
     not_running: 消息同步未在运行！
   sync_tips:
     server_stopping: "[!]服务器正在关闭……"
