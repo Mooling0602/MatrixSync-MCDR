@@ -47,7 +47,7 @@ def on_load(server: PluginServerInterface, old):
             .then(
                 Literal('stop')
                 .runs(
-                    lambda src: src.reply(stopSync())
+                    lambda src: src.reply(stopSync(src))
                 )
             )
         )
