@@ -70,7 +70,7 @@ def manualSync():
         return psi.rtr("matrix_sync.manual_sync.start_error")
 
 # Manually stop sync processes.
-def stopSync():
+def stopSync(src):
     global sync_task
     if src.is_console:
         try:
