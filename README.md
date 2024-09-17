@@ -1,5 +1,5 @@
 - 中文
-- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/2.2.1/README_en_us.md)
+- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/2.3.0/README_en_us.md)
 
 # MatrixSync-MCDR
 一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和《我的世界》服务器的线上游戏之间的消息。
@@ -55,23 +55,27 @@
 
 ## 接口（API）
 插件提供了一个协程函数`sendMsg()`供其他开发者调用以实现向Matrix群组发送自定义内容，其回调参数为`message`下面是代码参考：
-```
+```python
 import asyncio
 import ...
+
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 from ... import ...
+
 def main():
     pass
     asyncio.run(sendMsg(message))
 ```
 如果要在协程内调用该接口：
-```
+```python
 import asyncio
 import ...
+
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 from ... import ...
+
 async def main():
     pass
     await sendMsg(message)
@@ -81,10 +85,11 @@ async def main():
 请注意，该接口的支持是实验性的，若要调用此接口，请确保用户安装并配置好了主插件（MatrixSync）。
 
 2.2.0版本以后，机器人的初始化将直接在加载插件时进行，所以如果需要判断主插件的消息上报器是否能够正常工作，可以在调用函数前导入相关的全局变量并加入判断条件，下面是示例代码：
-```
+```python
 import asyncio
 import matrix_sync.client
 import ...
+
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 
@@ -98,10 +103,11 @@ def main():
         server.logger.info("error")
 ```
 协程函数示例：
-```
+```python
 import asyncio
 import matrix_sync.client
 import ...
+
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 
@@ -115,10 +121,14 @@ async def main():
         server.logger.info("error")
 ```
 
-## 热重载（reload）
-插件默认在游戏服务端启动完成时才会自动启动消息互通进程，重新加载插件后，消息互通进程并不会自动启动。
+## 热重载（reload）及消息互通控制
+插件默认在游戏服务端启动完成时才会自动启动房间消息接收进程，重新加载插件后，消息接收器并不会自动启动。
 
-要启动消息互通进程，请执行MCDR命令`!!msync`，游戏内和控制台上都可以使用。
+要手动启动房间消息接收进程，请执行MCDR命令`!!msync start`，游戏内和控制台上都可以使用。
+
+要关闭房间消息接收进程，可以在控制台使用`!!msync stop`，直到下次服务器启动完成前消息接收器都必须手动重启。
+
+插件会自动在解析到游戏内的消息时尝试转发到配置好的Matrix房间内，暂时无法禁用。
 
 该指令没有权限要求，但设置了进程锁（安全机制），重复执行会警告提示，不会影响插件功能的正常运行。
 
