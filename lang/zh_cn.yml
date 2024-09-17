@@ -16,12 +16,12 @@ matrix_sync:
     get_token: Token缓存完成！
     error: 请检查你的账号密码以及网络情况，你可以在GitHub提出issue以获取任何帮助。
   manual_sync: 
-    start_sync: 已开始消息同步！
-    stop_sync: 已关闭消息同步！
-    start_error: 消息同步已在运行，非重载等特殊情况不要再次尝试启动！
-    stop_error: 关闭消息同步时发生未知错误！
+    start_sync: 已开始接收房间消息！（启动子线程MatrixReceiver）
+    stop_sync: 已停止接收房间消息，到下次服务器启动完成前都只能手动重启！
+    start_error: 已在接收房间消息，非重载等特殊情况或手动停止后，不要再次尝试启动！
+    stop_error: 关闭房间消息接收器时发生未知错误！
     stop_denied: 请在控制台执行！
-    not_running: 消息同步未在运行！
+    not_running: 房间消息接收器未在运行！
   sync_tips:
     server_stopping: "[!]服务器正在关闭……"
     server_stopped: "[×]服务器已停止运行"
