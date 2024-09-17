@@ -1,0 +1,15 @@
+{
+	"id": "msync_debugger",
+	"version": "0.0.1",
+	"name": "[MSync]plgDebugger",
+	"description": {
+		"en_us": "A subpack of MatrixSync, used to debug.",
+		"zh_cn": "MatrixSync的子包，用于调试。"
+	},
+	"dependencies": {
+		"mcdreforged": ">=2.1.0",
+        "matrix_sync": ">=2.0.2"
+	},
+	"author": "Mooling0602",
+    "link": "https://github.com/Mooling0602/MatrixSync-MCDR"
+}

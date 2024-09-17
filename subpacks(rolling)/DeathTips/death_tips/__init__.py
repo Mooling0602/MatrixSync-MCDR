@@ -22,9 +22,9 @@ translated_lang = config["translated_lang"]
 death_messages = {}
 
 def on_load(server: PluginServerInterface, old):
-    server.logger.info("MatrixSync子包: [MSync]DeathTips 已加载")
+    server.logger.info("MatrixSync子包: DeathTips 已加载")
     server.logger.info("本插件仅供简体中文用户使用")
-    server.logger.info("语言文件默认使用Geyser配置，若未使用Geyser请自行配置语言文件及其路径")
+    server.logger.info("语言文件默认使用Geyser配置，若未使用Geyser请自行获取语言文件并配置其路径")
 
 def on_info(server: PluginServerInterface, info: Info):
     global death_messages

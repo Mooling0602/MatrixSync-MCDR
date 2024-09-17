@@ -4,12 +4,15 @@ import re
 import os
 import matrix_sync.client
 import matrix_sync.config
+
 from mcdreforged.api.all import *
 from nio import AsyncClient
+from matrix_sync.token import getToken
 
 psi = ServerInterface.psi()
+report = False
 
-def formater(server: PluginServerInterface, info: Info):
+def gameMsgFormater(server: PluginServerInterface, info: Info):
     # psi.logger.info(psi.rtr("matrix_sync.sync_tips.test"))
     # Debug code: Uncomment the above to determine whether game messages have been started to be reported.
     TOKEN_FILE = matrix_sync.config.TOKEN_FILE
@@ -39,13 +42,9 @@ async def sendMsg(message) -> None:
     homeserver = matrix_sync.config.homeserver
     user_id = matrix_sync.config.user_id
     room_id = matrix_sync.config.room_id
-    TOKEN_FILE = matrix_sync.config.TOKEN_FILE
     device_id = matrix_sync.config.device_id
-    async with aiofiles.open(TOKEN_FILE, "r") as f:
-        contents = await f.read()
-    cache = json.loads(contents)
     client = AsyncClient(f"{homeserver}")
-    client.access_token = cache["token"]
+    client.access_token = await getToken()
     client.user_id = user_id
     client.device_id = device_id
 

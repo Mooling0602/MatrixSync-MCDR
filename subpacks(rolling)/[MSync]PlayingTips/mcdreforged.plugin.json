@@ -1,7 +1,7 @@
 {
-	"id": "matrix_playing_tips",
+	"id": "msync_playing_tips",
 	"version": "0.0.1",
-	"name": "MatrixSync-subpack-playing_tips",
+	"name": "[MSync]PlayingTips",
 	"description": {
 		"en_us": "A subpack of MatrixSync, send tips to the group when player joined and left the game.",
 		"zh_cn": "MatrixSync的子包，在玩家上下线时在群内进行提示。"

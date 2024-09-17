@@ -1,7 +1,7 @@
 {
     "id": "death_tips",
     "version": "0.0.1",
-    "name": "[MSync]DeathTips",
+    "name": "DeathTips",
     "description": {
 	"en_us": "A subpack of MatrixSync, send tips to the group when player finished advancements.",
 	"zh_cn": "MatrixSync的子包，在玩家死亡时在群内进行提示。"

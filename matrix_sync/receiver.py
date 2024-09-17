@@ -1,24 +1,39 @@
+# Codes sub thread MatrixReceiver running.
 import asyncio
-import aiofiles
-import json
 import matrix_sync.config
-from matrix_sync.reporter import sendMsg
+
+from matrix_sync.token import getToken
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
+from typing import Optional
 
 psi = ServerInterface.psi()
+client = None
+
+class RoomMessageEvent(PluginEvent):
+    def __init__(self, message: str, sender: str, room: Optional[str] = None):
+        super().__init__('MatrixRoomMessage')  # 使用固定的事件ID
+        self.message = message
+        self.sender = sender
+        self.room = room
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
+    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
     transfer = True
+    # Avoid echo messages.
+    if event.sender == user_id:
+        transfer = False
+    # Apply settings config
     if not matrix_sync.config.settings["allow_all_rooms_msg"]:
         roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
         if not room.display_name == room_name:
             transfer = False
-    if event.sender == user_id:
-        transfer = False
+        else:
+            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+    else:
+        psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
     if transfer:
         psi.broadcast(f"{roomMsg}")
 
@@ -32,15 +47,12 @@ def on_sync_error(response: SyncError):
         server_is_online = False
 
 async def getMsg() -> None:
-    user_id = matrix_sync.config.user_id
     homeserver = matrix_sync.config.homeserver
-    TOKEN_FILE = matrix_sync.config.TOKEN_FILE
     device_id = matrix_sync.config.device_id
-    async with aiofiles.open(TOKEN_FILE, "r") as f:
-        contents = await f.read()
-    cache = json.loads(contents)
+    user_id = matrix_sync.config.user_id
+    global client
     client = AsyncClient(f"{homeserver}")
-    client.access_token = cache["token"]
+    client.access_token = await getToken()
     client.user_id = user_id
     client.device_id = device_id
 
@@ -51,4 +63,6 @@ async def getMsg() -> None:
     try:
         await client.sync_forever(timeout=5)
     except asyncio.CancelledError:
+        await client.close()
+    finally:
         await client.close()

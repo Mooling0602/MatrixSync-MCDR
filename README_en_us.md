@@ -1,4 +1,4 @@
-- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/2.2.1/README.md)
+- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/2.3.0/README.md)
 - English
 
 # MatrixSync-MCDR
@@ -10,7 +10,7 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
-Present branch version: released@2.2.1
+Present branch version: released@2.3.0
 
 Please note that the plugin will block the MCDR main thread during loading. If MCDR is blocked and cannot continue its normal startup, please check by forcibly terminating all processes and verifying whether the plugin configuration is correct, whether the Matrix root server is online, etc., or restart after disabling the plugin.
 
@@ -44,13 +44,15 @@ If there is any issue with message forwarding in any direction during the messag
 
 ## Interface (API)
 The plugin provides a coroutine function `sendMsg()` for other developers to call to send custom content to the Matrix group. Its callback parameter is `message`. Here is the code reference:
-```
+```python
 import asyncio
 import matrix_sync.client
 import ...
+
 from mcdreforged.api.all import *
 from matrix_sync.reporter import sendMsg
 from ... import ...
+
 def main():
     pass
     clientStatus = matrix_sync.client.clientStatus
@@ -67,11 +69,15 @@ Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Py
 
 Please note that support for this interface is experimental, and it cannot be guaranteed that the message forwarding functionality of the main plugin (MatrixSync) will work when calling this interface (there may be situations where the bot is not properly configured, or existing login information and tokens cannot be used). If you want to call this interface, please ensure that the user has installed and configured the main plugin (MatrixSync).
 
-## Hot Reload
+## Hot Reload (reload) & message sync control
 
-By default, the plugin will only start the message exchange process after the game server has finished starting up. After reloading the plugin, the message exchange process will not start automatically.
+By default, the plugin will only start the room message receive process after the game server has finished starting up. After reloading the plugin, the MatrixReceiver sub thread will not start automatically.
 
-To start the message exchange process, execute the MCDR command `!!msync`, which can be used both in-game and in the console.
+To manually start the room message receive process, execute the MCDR command `!!msync start`, which can be used both in-game and in the console.
+
+To stop the room message receive process, execute the command `!!msync stop`, which can be only used in the console and need manually restart until next time the server startup.
+
+Plugin will send game messages to the matrix room configured after parsed them, you can't disable this at present.
 
 This command does not require any permissions, but it sets up a process lock (a safety mechanism). Repeated execution will trigger a warning prompt, but it will not affect the normal operation of the plugin.
 
