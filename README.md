@@ -6,7 +6,7 @@
 
 关于[Matrix](https://matrix.org/): 一个开放的去中心化通讯协议，用于聊天软件。
 
-开发过程中用到的项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
+开发过程中用到的pypi项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
 当前分支版本：已发布@2.3.0
 
