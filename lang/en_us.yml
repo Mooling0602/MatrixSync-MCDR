@@ -17,9 +17,13 @@ matrix_sync:
     error: Please check your account, password and network conditions, you can issue in GitHub for any help.
   manual_sync: 
     start_sync: Message sync started!
+    stop_sync: Message sync stopped!
     error: Message sync is already running, do not restart it in cases not special such as non-reloading!
+    stop_error: Unknown errors happened when stop message sync!
+    not_running: Message sync is not running!
   sync_tips:
     server_stopping: MC Server is stopping now...
+    server_stopped: MC Server stopped.
     server_started: MC Server started successfully!
     server_crashed: MC Server crashed or not stopped normally!
     reporter_status: Message sync has inited on MC Server!
@@ -29,3 +33,7 @@ matrix_sync:
     hs: Homeserver
     ac: Account
     cs: Console
+  help_tips:
+    title: "!!msync Command Help"
+    start_command: "!!msync start - Start message sync process. (will automatically start when server startup) "
+    stop_command: "!!msync stop - Stop message sync process. (will automatically stop when server stopped)"
