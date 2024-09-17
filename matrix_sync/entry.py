@@ -72,14 +72,17 @@ def manualSync():
 # Manually stop sync processes.
 def stopSync():
     global sync_task
-    try:
-        if sync_task is not None:
-            sync_task.cancel()
-            return psi.rtr("matrix_sync.manual_sync.stop_sync")
-        else:
-            return psi.rtr("matrix_sync.manual_sync.not_running")
-    except Exception:
-        return psi.rtr("matrix_sync.manual_sync.stop_error")
+    if src.is_console:
+        try:
+            if sync_task is not None:
+                sync_task.cancel()
+                return psi.rtr("matrix_sync.manual_sync.stop_sync")
+            else:
+                return psi.rtr("matrix_sync.manual_sync.not_running")
+        except Exception:
+            return psi.rtr("matrix_sync.manual_sync.stop_error")
+    else:
+        return psi.rtr("matrix_sync.manual_sync.stop_denied")
     
 # Restart room message receiver, not recommend
 def restartSync():
