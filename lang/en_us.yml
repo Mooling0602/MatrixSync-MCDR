@@ -20,6 +20,7 @@ matrix_sync:
     stop_sync: Message sync stopped!
     error: Message sync is already running, do not restart it in cases not special such as non-reloading!
     stop_error: Unknown errors happened when stop message sync!
+    stop_denied: Please run in console!
     not_running: Message sync is not running!
   sync_tips:
     server_stopping: MC Server is stopping now...
