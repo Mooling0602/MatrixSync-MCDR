@@ -16,12 +16,12 @@ matrix_sync:
     get_token: Token Cached!
     error: Please check your account, password and network conditions, you can issue in GitHub for any help.
   manual_sync: 
-    start_sync: Message sync started!
-    stop_sync: Message sync stopped!
-    error: Message sync is already running, do not restart it in cases not special such as non-reloading!
-    stop_error: Unknown errors happened when stop message sync!
+    start_sync: Room message receiver (as sub thread 'MatrixReceiver') started!
+    stop_sync: Room message receiver stopped! Before next time server startup, it needs to be started manually.
+    start_error: Room message receiver is already running, do not restart it in cases not special such as non-reloading or after stopped!
+    stop_error: Unknown errors happened when stop room message receiver!
     stop_denied: Please run in console!
-    not_running: Message sync is not running!
+    not_running: Room message receiver is not running!
   sync_tips:
     server_stopping: MC Server is stopping now...
     server_stopped: MC Server stopped.
