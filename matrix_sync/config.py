@@ -16,17 +16,19 @@ account_config = {
 # Bot manage config.
 bot_config = {
     "plugin_enabled": False,
-    "allow_all_rooms_msg": False
+    "allow_all_rooms_msg": False,
+    "sync_old_msg": True
 }
 
 def load_config():
-    global config, user_id, password, room_id, room_name, settings, use_token, DATA_FOLDR, TOKEN_FILE, device_id, homeserver, load_tip
+    global config, user_id, password, room_id, room_name, settings, use_token, DATA_FOLDR, TOKEN_FILE, device_id, homeserver, load_tip, sync_old_msg
     config = psi.load_config_simple("config.json", account_config)
     user_id = config["user_id"]
     password = config["password"]
     room_id = config["room_id"]
     room_name = config["room_name"]
     settings = psi.load_config_simple("settings.json", bot_config)
+    sync_old_msg = settings["sync_old_msg"]
     DATA_FOLDER = psi.get_data_folder()
     tip_path = psi.rtr("matrix_sync.init_tips.config_path")
     load_tip = f"{tip_path}: {DATA_FOLDER}"

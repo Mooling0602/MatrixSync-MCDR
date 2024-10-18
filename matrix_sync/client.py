@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import sys
@@ -22,6 +23,13 @@ def cache_token(resp: LoginResponse):
         )
 
 # Init Matrix bot.
+@new_thread('MatrixInitClient')
+def init():
+    asyncio.run(init_task())
+
+async def init_task():
+    await init_client()
+
 async def init_client() -> None:
     TOKEN_FILE = matrix_sync.config.TOKEN_FILE
     homeserver = matrix_sync.config.homeserver

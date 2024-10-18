@@ -10,9 +10,7 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
-Present branch version: released@2.3.0
-
-Please note that the plugin will block the MCDR main thread during loading. If MCDR is blocked and cannot continue its normal startup, please check by forcibly terminating all processes and verifying whether the plugin configuration is correct, whether the Matrix root server is online, etc., or restart after disabling the plugin.
+Present branch version: released@2.3.1
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
@@ -41,6 +39,7 @@ If there is any issue with message forwarding in any direction during the messag
 | - | - |
 | plugin-enabled | Whether the plugin is enabled, please ensure the configuration file and necessary settings are modified correctly before enabling |
 | allow_all_rooms_msg | Whether to allow messages from all rooms, if enabled, messages from rooms joined by the bot account will be forwarded to the game, with the room display name specified, otherwise only messages from the configured room will be forwarded |
+| sync_old_msg | Whether to sync old messages, enabled on default, can turn it off after vaild `next_batch` appeared in token.json in config path of the plugin |
 
 ## Interface (API)
 The plugin provides a coroutine function `sendMsg()` for other developers to call to send custom content to the Matrix group. Its callback parameter is `message`. Here is the code reference:
@@ -68,6 +67,8 @@ def main():
 Add the main plugin (MatrixSync) to the dependencies of MCDR, and include its Python dependencies in your plugin as well. Then, during development, replace `message` with the custom content you want to send.
 
 Please note that support for this interface is experimental, and it cannot be guaranteed that the message forwarding functionality of the main plugin (MatrixSync) will work when calling this interface (there may be situations where the bot is not properly configured, or existing login information and tokens cannot be used). If you want to call this interface, please ensure that the user has installed and configured the main plugin (MatrixSync).
+
+Outdated after version 2.3.1, please wait new document finished.
 
 ## Hot Reload (reload) & message sync control
 

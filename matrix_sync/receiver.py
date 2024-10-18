@@ -1,13 +1,17 @@
 # Codes sub thread MatrixReceiver running.
 import asyncio
+import json
 import matrix_sync.config
 
-from matrix_sync.token import getToken
+from matrix_sync.token import getToken, get_next_batch
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
 from typing import Optional
 
 psi = ServerInterface.psi()
+homeserver_online = True
+refresh = True
+next_batch = None
 client = None
 
 class RoomMessageEvent(PluginEvent):
@@ -37,19 +41,34 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     if transfer:
         psi.broadcast(f"{roomMsg}")
 
+def sync_cache(data):
+    TOKEN_FILE = matrix_sync.config.TOKEN_FILE
+    with open(TOKEN_FILE, "r") as f:
+        existing_data = json.load(f)
+    existing_data["next_batch"] = data
+    with open(TOKEN_FILE, "w") as f:
+        json.dump(existing_data, f)
+
 def on_sync_response(response: SyncResponse):
-    global server_is_online
-    server_is_online = True
+    global refresh
+    if refresh:
+        next_batch = response.next_batch
+        sync_cache(next_batch)
+        refresh = False
+    else:
+        pass
 
 def on_sync_error(response: SyncError):
-    global server_is_online
+    global homeserver_online
+    psi.logger.error(f"Sync error: {response.status_code}")
     if response.status_code >= 500:
-        server_is_online = False
+        homeserver_online = False
 
 async def getMsg() -> None:
     homeserver = matrix_sync.config.homeserver
     device_id = matrix_sync.config.device_id
     user_id = matrix_sync.config.user_id
+    sync_old_msg = matrix_sync.config.sync_old_msg
     global client
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
@@ -61,7 +80,17 @@ async def getMsg() -> None:
     client.add_event_callback(message_callback, RoomMessageText)
     
     try:
-        await client.sync_forever(timeout=5)
+        if homeserver_online:
+            if sync_old_msg is True:
+                await client.sync_forever(timeout=5)
+            else:
+                next_batch = await get_next_batch()
+                await client.sync_forever(timeout=5, since=next_batch)
+        else:
+            psi.logger.error("Sync failed: homeserver is down or your network disconnected with it.")
+            psi.logger.info("Use !!msync start after homeserver is running or your network restored.")
+    except Exception as e:
+        psi.logger.error(f"Sync error: {e}")
     except asyncio.CancelledError:
         await client.close()
     finally:

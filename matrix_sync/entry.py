@@ -1,14 +1,16 @@
 import asyncio
 import threading
+import json
 import matrix_sync.config
 import matrix_sync.client
 import matrix_sync.receiver
 import matrix_sync.reporter
 
-from matrix_sync.client import init_client
+from matrix_sync.client import init
 from matrix_sync.config import load_config, check_config
 from matrix_sync.receiver import getMsg
-from matrix_sync.reporter import gameMsgFormater, sendMsg
+from matrix_sync.reporter import sender
+from matrix_sync.token import get_tip_read
 from mcdreforged.api.all import *
 
 # Framwork ver: 2.3.0-1
@@ -26,7 +28,7 @@ def on_load(server: PluginServerInterface, old):
     if do_unload:
         server.unload_plugin("matrix_sync")
     else:
-        asyncio.run(init_client())
+        init()
         server.register_command(
             Literal('!!msync')
             .runs(
@@ -38,16 +40,22 @@ def on_load(server: PluginServerInterface, old):
                     lambda src: src.reply(manualSync())
                 )
             )
-            .then(
-                Literal('restart')
-                .runs(
-                    lambda src: src.reply(restartSync())
-                )
-            )
+            # .then(
+            #     Literal('restart')
+            #     .runs(
+            #         lambda src: src.reply(restartSync())
+            #     )
+            # )
             .then(
                 Literal('stop')
                 .runs(
                     lambda src: src.reply(stopSync(src))
+                )
+            )
+            .then(
+                Literal('closetip')
+                .runs(
+                    lambda src: src.reply(closeTip())
                 )
             )
         )
@@ -58,14 +66,27 @@ def help() -> RTextList:
     return RTextList(
         psi.rtr("matrix_sync.help_tips.title") + "\n",
         psi.rtr("matrix_sync.help_tips.start_command") + "\n",
-        psi.rtr("matrix_sync.help_tips.stop_command") + "\n"
+        psi.rtr("matrix_sync.help_tips.stop_command") + "\n",
+        psi.rtr("matrix_sync.help_tips.closetip_command") + "\n"
     )
 
 # Manually run sync processes.
 def manualSync():
     if not tLock.locked():
         start_room_msg()
-        return psi.rtr("matrix_sync.manual_sync.start_sync")
+        psi.say(psi.rtr("matrix_sync.manual_sync.start_tip"))
+        read = asyncio.run(get_tip_read())
+        if not read:
+            return RTextList(
+                psi.rtr("matrix_sync.manual_sync.start_sync") + "\n",
+                psi.rtr("matrix_sync.old_msg_sync") + "\n",
+                psi.rtr("matrix_sync.old_msg_sync2") + "\n",
+                psi.rtr("matrix_sync.old_msg_sync3") + "\n",
+                psi.rtr("matrix_sync.old_msg_sync4") + "\n",
+                psi.rtr("matrix_sync.old_msg_sync5") + "\n"
+            )
+        else:
+            return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.start_error")
 
@@ -84,10 +105,19 @@ def stopSync(src):
     else:
         return psi.rtr("matrix_sync.manual_sync.stop_denied")
     
-# Restart room message receiver, not recommend
-def restartSync():
-    stopSync()
-    manualSync()
+def closeTip():
+    TOKEN_FILE = matrix_sync.config.TOKEN_FILE
+    with open(TOKEN_FILE, "r") as f:
+        existing_data = json.load(f)
+    existing_data["tip_read"] = True
+    with open(TOKEN_FILE, "w") as f:
+        json.dump(existing_data, f)
+    return psi.rtr("matrix_sync.on_tip_read")
+    
+# Restart room message receiver, not recommend.
+# def restartSync(src):
+#     stopSync(src)
+#     manualSync()
 
 # Automatically run sync processes.
 def on_server_startup(server: PluginServerInterface):
@@ -95,7 +125,7 @@ def on_server_startup(server: PluginServerInterface):
     if not tLock.locked():
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
-            asyncio.run(sendMsg(message))
+            sender(message)
             start_room_msg()
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.start_error"))
@@ -116,11 +146,12 @@ async def on_room_msg():
 
 # Game message reporter
 def on_user_info(server: PluginServerInterface, info: Info):
-    gameMsgFormater(server, info)
-    report = matrix_sync.reporter.report
-    if report:
-        gameMsg = matrix_sync.reporter.gameMsg
-        asyncio.run(sendMsg(gameMsg))
+    # formater(server, info)
+    if info.player is not None and not info.content.startswith("!!"):
+        playerMsg = f"<{info.player}> {info.content}"
+        clientStatus = matrix_sync.client.clientStatus
+        if clientStatus:
+            sender(playerMsg)
 
 # Exit sync process when server stop.
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
@@ -130,13 +161,13 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
         clientStatus = matrix_sync.client.clientStatus
         stopTip = server.rtr("matrix_sync.sync_tips.server_stopped")
         if clientStatus:
-            asyncio.run(sendMsg(stopTip))
+            sender(stopTip)
     else:
         server.logger.info(server.rtr("matrix_sync.on_server_crash"))
         crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
-            asyncio.run(sendMsg(crashTip))
+            sender(crashTip)
         
     if sync_task is not None:
         sync_task.cancel()
