@@ -8,7 +8,7 @@
 
 开发过程中用到的pypi项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
-当前分支版本：主分支@2.3.1
+当前分支版本：主分支@2.3.2
 
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
