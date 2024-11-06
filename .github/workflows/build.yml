@@ -34,4 +34,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: plugin
-          path: /*.mcdr  # 上传 .mcdr 文件
+          path: .
