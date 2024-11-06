@@ -29,17 +29,16 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
     # Avoid echo messages.
     if not event.sender == user_id:
-        transfer = True
-    # Apply settings config
-    if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-        roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
-        if room.display_name == room_name:
-            transfer = True
-            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
-    else:
-        psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
-    if transfer:
-        psi.broadcast(f"{roomMsg}")
+        # Apply settings config
+        if not matrix_sync.config.settings["allow_all_rooms_msg"]:
+            roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
+            if room.display_name == room_name:
+                transfer = True
+                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+        else:
+            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
+        if transfer:
+            psi.broadcast(f"{roomMsg}")
 
 
 
@@ -62,7 +61,7 @@ async def getMsg() -> None:
     device_id = matrix_sync.config.device_id
     user_id = matrix_sync.config.user_id
     sync_old_msg = matrix_sync.config.sync_old_msg
-    global client
+    global client, next_batch
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
     client.user_id = user_id
