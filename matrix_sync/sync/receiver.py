@@ -79,7 +79,7 @@ async def getMsg() -> None:
     client.add_response_callback(on_sync_error, SyncError)
     client.add_event_callback(message_callback, RoomMessageText)
 
-    client.sync(timeout=5)
+    await client.sync(timeout=5)
     
     try:
         if homeserver_online:
