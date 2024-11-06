@@ -1,0 +1,37 @@
+name: 自动打包插件
+
+on:
+  push:
+    branches:
+      - main  # 触发打包的分支，可以根据需要修改
+  pull_request:
+    branches:
+      - main  # 可以修改为触发的 PR 分支
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 运行环境
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v3
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # 设置 Python 版本
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # 安装依赖
+
+      - name: 打包插件
+        run: |
+          bash pack_plugin.sh
+
+      - name: 上传插件
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin
+          path: /*.mcdr  # 上传 .mcdr 文件

@@ -4,11 +4,11 @@ import json
 import matrix_sync.config
 
 from matrix_sync.token import getToken, get_next_batch
+from matrix_sync.globals import psi
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
 from typing import Optional
 
-psi = ServerInterface.psi()
 homeserver_online = True
 refresh = True
 next_batch = None
@@ -78,6 +78,8 @@ async def getMsg() -> None:
     client.add_response_callback(on_sync_response, SyncResponse)
     client.add_response_callback(on_sync_error, SyncError)
     client.add_event_callback(message_callback, RoomMessageText)
+
+    client.sync(timeout=5)
     
     try:
         if homeserver_online:
