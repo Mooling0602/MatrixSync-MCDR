@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import matrix_sync.config
-from matrix_sync.reporter import sendMsg
+from matrix_sync.sync.reporter import sendMsg
 from mcdreforged.api.all import *
 from nio import AsyncClient, LoginResponse
 
