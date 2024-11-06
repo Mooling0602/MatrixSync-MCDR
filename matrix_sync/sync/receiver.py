@@ -46,9 +46,10 @@ def on_sync_response(response: SyncResponse):
     global refresh, next_batch
     if refresh:
         next_batch = response.next_batch
+        psi.logger.info(f"Get 'next_batch': {next_batch}")
         refresh = False
     else:
-        pass
+        psi.logger.info("syncing...")
 
 def on_sync_error(response: SyncError):
     global homeserver_online
@@ -72,6 +73,7 @@ async def getMsg() -> None:
     client.add_event_callback(message_callback, RoomMessageText)
 
     await client.sync(timeout=5)
+    psi.logger.info("Fist sync finished!")
     
     try:
         if homeserver_online:
