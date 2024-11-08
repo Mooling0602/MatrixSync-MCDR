@@ -1,10 +1,7 @@
 import asyncio
-import json
-import matrix_sync.config
 
 from mcdreforged.api.all import *
 from matrix_sync.globals import *
-from matrix_sync.token import get_tip_read
 from matrix_sync.sync.receiver import getMsg
 
 psi = ServerInterface.psi()
@@ -31,12 +28,6 @@ def plugin_command(server: PluginServerInterface):
                 lambda src: src.reply(stopSync(src))
             )
         )
-        .then(
-            Literal('closetip')
-            .runs(
-                lambda src: src.reply(closeTip())
-            )
-        )
     )
 
 # Help tips.
@@ -52,12 +43,7 @@ def help() -> RTextList:
 def manualSync():
     if not tLock.locked():
         start_room_msg()
-        psi.say(psi.rtr("matrix_sync.manual_sync.start_tip"))
-        read = asyncio.run(get_tip_read())
-        if not read:
-            psi.rtr("matrix_sync.manual_sync.start_sync")
-        else:
-            return psi.rtr("matrix_sync.manual_sync.start_sync")
+        return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
         return psi.rtr("matrix_sync.manual_sync.start_error")
 
@@ -75,15 +61,6 @@ def stopSync(src):
             return psi.rtr("matrix_sync.manual_sync.stop_error")
     else:
         return psi.rtr("matrix_sync.manual_sync.stop_denied")
-    
-def closeTip():
-    TOKEN_FILE = matrix_sync.config.TOKEN_FILE
-    with open(TOKEN_FILE, "r") as f:
-        existing_data = json.load(f)
-    existing_data["tip_read"] = True
-    with open(TOKEN_FILE, "w") as f:
-        json.dump(existing_data, f)
-    return psi.rtr("matrix_sync.on_tip_read")
 
 # Sub thread to receive room messages from matrix without block main MCDR thread.
 @new_thread('MatrixReceiver')
