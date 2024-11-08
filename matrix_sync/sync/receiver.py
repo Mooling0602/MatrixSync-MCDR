@@ -79,7 +79,6 @@ async def getMsg() -> None:
                 await client.sync_forever(timeout=5)
             else:
                 if next_batch is not None:
-                    next_batch = await get_next_batch()
                     await client.sync_forever(timeout=5, since=next_batch)
                 else:
                     psi.logger.error("Sync failed: can't get 'next_batch' when sync.")
