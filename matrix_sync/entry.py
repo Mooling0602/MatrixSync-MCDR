@@ -25,12 +25,12 @@ def on_load(server: PluginServerInterface, old):
         server.register_help_message("!!msync", help())
         server.register_command(
             Literal('!!msync')
-            .then(
-                Literal('test')
-                .runs(
-                    lambda: test_starter()
-                )
-            )
+            # .then(
+            #     Literal('test')
+            #     .runs(
+            #         lambda: test_starter()
+            #     )
+            # )
             .then(
                 Literal('start')
                 .runs(

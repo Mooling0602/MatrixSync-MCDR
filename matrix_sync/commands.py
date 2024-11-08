@@ -76,17 +76,17 @@ async def on_room_msg():
     sync_task = asyncio.create_task(getMsg())
     await sync_task
 
-def test_starter():
-    start_sync_test()
+# def test_starter():
+#     start_sync_test()
 
-@new_thread('MatrixReceiver-Test')
-def start_sync_test():
-    asyncio.run(on_sync_test())
+# @new_thread('MatrixReceiver-Test')
+# def start_sync_test():
+#     asyncio.run(on_sync_test())
 
-async def on_sync_test():
-    global sync_task
-    if sync_task is not None and not sync_task.done():
-        psi.logger.warning("Can't do test now!")
-    else:
-        sync_task = asyncio.create_task(testSync())
-        await sync_task
+# async def on_sync_test():
+#     global sync_task
+#     if sync_task is not None and not sync_task.done():
+#         psi.logger.warning("Can't do test now!")
+#     else:
+#         sync_task = asyncio.create_task(testSync())
+#         await sync_task
