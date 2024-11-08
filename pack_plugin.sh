@@ -19,7 +19,7 @@ main_ver=$(package_config "$config_file" "main" "ver")
 is_stable=$(package_config "$config_file" "release" "test")
 
 if [ "$is_stable" -eq 1 ]; then
-    zip -r "MatrixSync-v${main_ver}-${framework_ver}.mcdr" README.md README_en_us.md mcdreforged.plugin.json requirements.txt LICENSE lang matrix_sync
+    zip -r "MatrixSync-v${main_ver}-${framework_ver}.mcdr" mcdreforged.plugin.json requirements.txt LICENSE lang matrix_sync
 else
     zip -r "MatrixSync-v${main_ver}.mcdr" README.md README_en_us.md mcdreforged.plugin.json requirements.txt LICENSE lang matrix_sync
 fi
