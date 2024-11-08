@@ -76,6 +76,9 @@ async def on_room_msg():
     sync_task = asyncio.create_task(getMsg())
     await sync_task
 
+def test_starter():
+    start_sync_test()
+
 @new_thread('MatrixReceiver-Test')
 def start_sync_test():
     asyncio.run(on_sync_test())
