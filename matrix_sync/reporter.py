@@ -1,6 +1,6 @@
 import asyncio
 import matrix_sync.client
-import matrix_sync.utils.config
+import matrix_sync.config
 
 from mcdreforged.api.all import *
 from nio import AsyncClient

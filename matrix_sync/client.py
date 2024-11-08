@@ -2,7 +2,7 @@ import asyncio
 import json
 import os
 import sys
-import matrix_sync.utils.config
+import matrix_sync.config
 from matrix_sync.reporter import sendMsg
 from mcdreforged.api.all import *
 from nio import AsyncClient, LoginResponse

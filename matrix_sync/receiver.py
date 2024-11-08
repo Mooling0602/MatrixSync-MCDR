@@ -1,6 +1,6 @@
 # thread MatrixReceiver
 import asyncio
-import matrix_sync.utils.config
+import matrix_sync.config
 
 from matrix_sync.utils.token import getToken
 from matrix_sync.utils.globals import psi
