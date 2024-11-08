@@ -1,6 +1,6 @@
 import threading
 
-from . import config
+from .. import config
 from mcdreforged.api.all import *
 
 psi = ServerInterface.psi()

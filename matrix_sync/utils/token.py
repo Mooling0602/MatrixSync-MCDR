@@ -1,7 +1,7 @@
 import aiofiles
 import json
 
-from . import config
+from .. import config
 
 async def getToken():
     TOKEN_FILE = config.TOKEN_FILE
