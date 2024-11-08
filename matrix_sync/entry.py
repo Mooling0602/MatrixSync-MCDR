@@ -28,7 +28,7 @@ def on_load(server: PluginServerInterface, old):
             .then(
                 Literal('test')
                 .runs(
-                    test_starter()
+                    lambda: test_starter()
                 )
             )
             .then(
