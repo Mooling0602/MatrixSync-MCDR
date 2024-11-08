@@ -8,7 +8,7 @@ from matrix_sync.utils.globals import psi
 
 # Game Message reporter.
 @new_thread('MatrixReporter')
-def sender(message):
+def send_matrix(message):
     asyncio.run(send(message))
 
 async def send(message):

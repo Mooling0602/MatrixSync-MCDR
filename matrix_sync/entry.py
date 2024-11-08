@@ -8,7 +8,7 @@ from matrix_sync.utils.globals import *
 from matrix_sync.client import init
 from matrix_sync.config import load_config, check_config
 from matrix_sync.utils.commands import *
-from matrix_sync.reporter import sender
+from matrix_sync.reporter import send_matrix
 from mcdreforged.api.all import *
 
 # Framwork ver: 2.4.0-3
@@ -35,7 +35,7 @@ def on_server_startup(server: PluginServerInterface):
     if not tLock.locked():
         if clientStatus:
             message = psi.rtr("matrix_sync.sync_tips.server_started")
-            sender(message)
+            send_matrix(message)
             start_room_msg()
     else:
         server.logger.info(server.rtr("matrix_sync.manual_sync.start_error"))
@@ -47,7 +47,7 @@ def on_user_info(server: PluginServerInterface, info: Info):
         playerMsg = f"<{info.player}> {info.content}"
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
-            sender(playerMsg)
+            send_matrix(playerMsg)
 
 # Exit sync process when server stop.
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
@@ -57,13 +57,13 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
         clientStatus = matrix_sync.client.clientStatus
         stopTip = server.rtr("matrix_sync.sync_tips.server_stopped")
         if clientStatus:
-            sender(stopTip)
+            send_matrix(stopTip)
     else:
         server.logger.info(server.rtr("matrix_sync.on_server_crash"))
         crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
         clientStatus = matrix_sync.client.clientStatus
         if clientStatus:
-            sender(crashTip)
+            send_matrix(crashTip)
         
     if sync_task is not None:
         sync_task.cancel()
