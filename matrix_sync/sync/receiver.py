@@ -2,7 +2,7 @@
 import asyncio
 import matrix_sync.config
 
-from matrix_sync.token import getToken, get_next_batch
+from matrix_sync.token import getToken
 from matrix_sync.globals import psi
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
@@ -54,6 +54,22 @@ def on_sync_error(response: SyncError):
     psi.logger.error(f"Sync error: {response.status_code}")
     if response.status_code >= 500:
         homeserver_online = False
+
+async def testSync() -> None:
+    homeserver = matrix_sync.config.homeserver
+    device_id = matrix_sync.config.device_id
+    user_id = matrix_sync.config.user_id
+    client = AsyncClient(f"{homeserver}")
+    client.access_token = await getToken()
+    client.user_id = user_id
+    client.device_id = device_id
+
+    client.add_response_callback(on_sync_response, SyncResponse)
+    client.add_response_callback(on_sync_error, SyncError)
+    client.add_event_callback(message_callback, RoomMessageText)
+
+    await client.sync(timeout=5)
+    psi.logger.info("Sync test finished!")
 
 async def getMsg() -> None:
     global next_batch

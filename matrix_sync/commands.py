@@ -5,7 +5,7 @@ import matrix_sync.config
 from mcdreforged.api.all import *
 from matrix_sync.globals import *
 from matrix_sync.token import get_tip_read
-from matrix_sync.sync.receiver import getMsg
+from matrix_sync.sync.receiver import getMsg, testSync
 
 psi = ServerInterface.psi()
 
@@ -75,3 +75,15 @@ async def on_room_msg():
         await sync_task
     sync_task = asyncio.create_task(getMsg())
     await sync_task
+
+@new_thread('MatrixReceiver-Test')
+def start_sync_test():
+    asyncio.run(on_sync_test())
+
+async def on_sync_test():
+    global sync_task
+    if sync_task is not None and not sync_task.done():
+        psi.logger.warning("Can't do test now!")
+    else:
+        sync_task = asyncio.create_task(testSync())
+        await sync_task

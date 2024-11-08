@@ -26,6 +26,12 @@ def on_load(server: PluginServerInterface, old):
         server.register_command(
             Literal('!!msync')
             .then(
+                Literal('test')
+                .runs(
+                    start_sync_test()
+                )
+            )
+            .then(
                 Literal('start')
                 .runs(
                     lambda src: src.reply(manualSync())
