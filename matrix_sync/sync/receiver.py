@@ -101,7 +101,7 @@ async def getMsg() -> None:
                 psi.logger.info("Sync is starting.")
                 await client.sync(timeout=5)
                 msg_callback = True
-                psi.logger.info("Ready to receive new messages.")
+                psi.logger.info("Ready to receive new messages")
                 await client.sync_forever(timeout=5)
                 # else:
                 #     psi.logger.error("Sync failed: can't get 'next_batch' when sync.")
