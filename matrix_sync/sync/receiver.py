@@ -56,11 +56,11 @@ def on_sync_error(response: SyncError):
         homeserver_online = False
 
 async def getMsg() -> None:
+    global next_batch
     homeserver = matrix_sync.config.homeserver
     device_id = matrix_sync.config.device_id
     user_id = matrix_sync.config.user_id
     sync_old_msg = matrix_sync.config.sync_old_msg
-    global next_batch
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
     client.user_id = user_id
