@@ -5,7 +5,7 @@ import matrix_sync.config
 from matrix_sync.token import getToken
 from matrix_sync.globals import psi
 from mcdreforged.api.all import *
-from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncResponse, SyncError
+from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
 
 homeserver_online = True
@@ -21,24 +21,24 @@ class RoomMessageEvent(PluginEvent):
         self.room = room
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    global msg_callback
+    # global msg_callback
     transfer = False
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
     roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
     # Avoid echo messages.
-    if msg_callback:
-        if not event.sender == user_id:
-            # Apply settings config
-            if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-                roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
-                if room.display_name == room_name:
-                    transfer = True
-                    psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
-            else:
-                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
-            if transfer:
-                psi.broadcast(f"{roomMsg}")
+    # if msg_callback:
+    if not event.sender == user_id:
+        # Apply settings config
+        if not matrix_sync.config.settings["allow_all_rooms_msg"]:
+            roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
+            if room.display_name == room_name:
+                transfer = True
+                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+        else:
+            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
+        if transfer:
+            psi.broadcast(f"{roomMsg}")
 
 
 
@@ -98,8 +98,10 @@ async def getMsg() -> None:
             else:
                 # if next_batch is not None:
                 msg_callback = False
+                psi.logger.info("Sync is starting.")
                 await client.sync(timeout=5)
                 msg_callback = True
+                psi.logger.info("Ready to receive new messages.")
                 await client.sync_forever(timeout=5)
                 # else:
                 #     psi.logger.error("Sync failed: can't get 'next_batch' when sync.")
