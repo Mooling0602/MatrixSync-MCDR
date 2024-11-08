@@ -1,18 +1,17 @@
 import asyncio
-import matrix_sync.config
+import matrix_sync.utils.config
 import matrix_sync.client
-import matrix_sync.sync.receiver
-import matrix_sync.sync.reporter
+import matrix_sync.receiver
+import matrix_sync.reporter
 
-from matrix_sync.globals import *
+from matrix_sync.utils.globals import *
 from matrix_sync.client import init
-from matrix_sync.config import load_config, check_config
-from matrix_sync.commands import *
-from matrix_sync.sync.reporter import sender
+from matrix_sync.utils.config import load_config, check_config
+from matrix_sync.utils.commands import *
+from matrix_sync.reporter import sender
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.4.0-2
-
+# Framwork ver: 2.4.0-3
 def on_load(server: PluginServerInterface, old):
     load_config()
     server.logger.info(matrix_sync.config.load_tip)

@@ -1,9 +1,9 @@
 # thread MatrixReceiver
 import asyncio
-import matrix_sync.config
+import matrix_sync.utils.config
 
-from matrix_sync.token import getToken
-from matrix_sync.globals import psi
+from matrix_sync.utils.token import getToken
+from matrix_sync.utils.globals import psi
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional

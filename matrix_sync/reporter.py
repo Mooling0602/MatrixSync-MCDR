@@ -1,12 +1,11 @@
 import asyncio
 import matrix_sync.client
-import matrix_sync.config
+import matrix_sync.utils.config
 
 from mcdreforged.api.all import *
 from nio import AsyncClient
-from matrix_sync.token import getToken
-
-psi = ServerInterface.psi()
+from matrix_sync.utils.token import getToken
+from matrix_sync.utils.globals import psi
 
 # Game Message reporter.
 @new_thread('MatrixReporter')

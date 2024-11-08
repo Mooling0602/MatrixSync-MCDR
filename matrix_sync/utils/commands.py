@@ -1,8 +1,8 @@
 import asyncio
 
 from mcdreforged.api.all import *
-from matrix_sync.globals import *
-from matrix_sync.sync.receiver import getMsg
+from matrix_sync.utils.globals import *
+from matrix_sync.receiver import getMsg
 
 psi = ServerInterface.psi()
 
