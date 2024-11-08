@@ -11,7 +11,7 @@ from matrix_sync.commands import *
 from matrix_sync.sync.reporter import sender
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.4.0-1
+# Framwork ver: 2.4.0-2
 
 def on_load(server: PluginServerInterface, old):
     load_config()
@@ -22,40 +22,7 @@ def on_load(server: PluginServerInterface, old):
         server.unload_plugin("matrix_sync")
     else:
         init()
-        server.register_help_message("!!msync", help())
-        server.register_command(
-            Literal('!!msync')
-            # .then(
-            #     Literal('test')
-            #     .runs(
-            #         lambda: test_starter()
-            #     )
-            # )
-            .then(
-                Literal('start')
-                .runs(
-                    lambda src: src.reply(manualSync())
-                )
-            )
-            # .then(
-            #     Literal('restart')
-            #     .runs(
-            #         lambda src: src.reply(restartSync())
-            #     )
-            # )
-            .then(
-                Literal('stop')
-                .runs(
-                    lambda src: src.reply(stopSync(src))
-                )
-            )
-            .then(
-                Literal('closetip')
-                .runs(
-                    lambda src: src.reply(closeTip())
-                )
-            )
-        )
+        plugin_command(server)
         server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
     
 # Restart room message receiver, not recommend.

@@ -3,18 +3,12 @@ matrix_sync:
     config_path: Config path
     need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugin_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
-    hotload_tip: If reloading plugin needs to enable message sync manually, to transfer messages from matrix to the game, please execute !!msync
+    hotload_tip: If reloading plugin needs to enable message sync manually, to transfer messages from matrix to the game, please execute `!!msync start`
   on_console:
     commands: Excute command
   on_server_stop: Server stopped, stopping messages sync.
   on_server_crash: Server crashed or not stopped normally, stopping messages sync, unknown errors may happen. 
   on_unload: Unloading plugin, waiting for message sync process to exit...
-  old_msg_sync: If there are no errors, you can now modify the "sync_old_msg" item in the settings.json file in the plugin configuration directory to false, which will prevent the plugin from syncing old messages that have already been sent.
-  old_msg_sync2: Please note that messages sent in the chat room when message synchronization is not running will not be sent out anymore.
-  old_msg_sync3: This is an experimental feature. If there are any issues, please report them via GitHub Issues.
-  old_msg_sync4: If there are any errors, please first change the "sync_old_msg" item to true, and once the message receiver is functioning correctly, check if the token.json file in the plugin configuration directory contains a valid "next_batch" item. If it does, you can follow the steps mentioned above to retry.
-  old_msg_sync5: This prompt text is quite lengthy. If you have read and understood it, you can use !!msync closetip to close this prompt.
-  on_tip_read: Tips closed, you can see these in GitHub page after.
   run_tips:
     failed: Failed to login!
     first_time_login: First login, continuing with password...

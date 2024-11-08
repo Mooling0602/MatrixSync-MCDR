@@ -9,6 +9,36 @@ from matrix_sync.sync.receiver import getMsg
 
 psi = ServerInterface.psi()
 
+def plugin_command(server: PluginServerInterface):
+    server.register_help_message("!!msync", help())
+    server.register_command(
+        Literal('!!msync')
+        .then(
+            Literal('start')
+            .runs(
+                lambda src: src.reply(manualSync())
+            )
+        )
+        # .then(
+        #     Literal('restart')
+        #     .runs(
+        #         lambda src: src.reply(restartSync())
+        #     )
+        # )
+        .then(
+            Literal('stop')
+            .runs(
+                lambda src: src.reply(stopSync(src))
+            )
+        )
+        .then(
+            Literal('closetip')
+            .runs(
+                lambda src: src.reply(closeTip())
+            )
+        )
+    )
+
 # Help tips.
 def help() -> RTextList:
     return RTextList(
@@ -25,14 +55,7 @@ def manualSync():
         psi.say(psi.rtr("matrix_sync.manual_sync.start_tip"))
         read = asyncio.run(get_tip_read())
         if not read:
-            return RTextList(
-                psi.rtr("matrix_sync.manual_sync.start_sync") + "\n",
-                psi.rtr("matrix_sync.old_msg_sync") + "\n",
-                psi.rtr("matrix_sync.old_msg_sync2") + "\n",
-                psi.rtr("matrix_sync.old_msg_sync3") + "\n",
-                psi.rtr("matrix_sync.old_msg_sync4") + "\n",
-                psi.rtr("matrix_sync.old_msg_sync5") + "\n"
-            )
+            psi.rtr("matrix_sync.manual_sync.start_sync")
         else:
             return psi.rtr("matrix_sync.manual_sync.start_sync")
     else:
@@ -75,18 +98,3 @@ async def on_room_msg():
         await sync_task
     sync_task = asyncio.create_task(getMsg())
     await sync_task
-
-# def test_starter():
-#     start_sync_test()
-
-# @new_thread('MatrixReceiver-Test')
-# def start_sync_test():
-#     asyncio.run(on_sync_test())
-
-# async def on_sync_test():
-#     global sync_task
-#     if sync_task is not None and not sync_task.done():
-#         psi.logger.warning("Can't do test now!")
-#     else:
-#         sync_task = asyncio.create_task(testSync())
-#         await sync_task
