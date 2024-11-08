@@ -1,6 +1,5 @@
-# Codes sub thread MatrixReceiver running.
+# thread MatrixReceiver
 import asyncio
-import json
 import matrix_sync.config
 
 from matrix_sync.token import getToken, get_next_batch
@@ -12,7 +11,6 @@ from typing import Optional
 homeserver_online = True
 refresh = True
 next_batch = None
-client = None
 transfer = False
 
 class RoomMessageEvent(PluginEvent):
@@ -62,7 +60,7 @@ async def getMsg() -> None:
     device_id = matrix_sync.config.device_id
     user_id = matrix_sync.config.user_id
     sync_old_msg = matrix_sync.config.sync_old_msg
-    global client, next_batch
+    global next_batch
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
     client.user_id = user_id
@@ -73,7 +71,7 @@ async def getMsg() -> None:
     client.add_event_callback(message_callback, RoomMessageText)
 
     await client.sync(timeout=5)
-    psi.logger.info("Fist sync finished!")
+    psi.logger.info("First sync finished!")
     
     try:
         if homeserver_online:
