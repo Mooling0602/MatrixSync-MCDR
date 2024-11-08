@@ -16,16 +16,6 @@ jobs:
       - name: Checkout 代码
         uses: actions/checkout@v3
 
-      - name: 设置 Python 环境
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'  # 设置 Python 版本
-
-      - name: 安装依赖
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt  # 安装依赖
-
       - name: 打包插件
         run: |
           bash pack_plugin.sh
