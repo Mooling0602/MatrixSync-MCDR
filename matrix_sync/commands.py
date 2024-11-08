@@ -5,7 +5,7 @@ import matrix_sync.config
 from mcdreforged.api.all import *
 from matrix_sync.globals import *
 from matrix_sync.token import get_tip_read
-from matrix_sync.sync.receiver import getMsg, testSync
+from matrix_sync.sync.receiver import getMsg
 
 psi = ServerInterface.psi()
 
