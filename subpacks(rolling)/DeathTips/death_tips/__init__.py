@@ -4,7 +4,7 @@ import json
 import matrix_sync.client
 
 from mcdreforged.api.all import *
-from atl_api import parseKey, parseValue
+from gtl_api import parseKey, parseValue
 from matrix_sync.reporter import sendMsg
 
 psi = ServerInterface.psi()

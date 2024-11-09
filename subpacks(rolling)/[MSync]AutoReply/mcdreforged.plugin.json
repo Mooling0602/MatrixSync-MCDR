@@ -1,6 +1,6 @@
 {
 	"id": "msync_auto_reply",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"name": "[MSync]AutoReply",
 	"description": {
 		"en_us": "A subpack of MatrixSync, automatically reply messages from room.",

@@ -1,6 +1,6 @@
 {
 	"id": "msync_more_msg",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"name": "[MSync]MoreMessages",
 	"description": {
 		"en_us": "A subpack of MatrixSync, transfer more kinds of messages from the game.",
