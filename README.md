@@ -1,5 +1,5 @@
 - 中文
-- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/dev/README_en_us.md)
+- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/README_en_us.md)
 
 # MatrixSync-MCDR
 一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和《我的世界》服务器的线上游戏之间的消息。
@@ -8,7 +8,7 @@
 
 开发过程中用到的pypi项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
 
-当前分支版本：开发中@2.4.0
+当前分支版本：主分支@2.4.0
 
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。

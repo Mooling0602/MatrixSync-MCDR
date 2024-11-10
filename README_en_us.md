@@ -1,4 +1,4 @@
-- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/dev/README.md)
+- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/README.md)
 - English
 
 # MatrixSync-MCDR
@@ -10,7 +10,7 @@ The following project is used in the development process: [matrix-nio](https://p
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
 
-Present branch version: dev@2.4.0
+Present branch version: main@2.4.0
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
@@ -43,7 +43,7 @@ Multi-config is not supported, will add API support for developers from v3.
 | sync_old_msg | Whether to sync old messages, enabled on default, disable to see old messages when plugin is just loaded |
 
 ## Interface (API)
-See "接口（API）" [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/dev/README.md) README.
+See "接口（API）" [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/README.md) README.
 
 ## Hot Reload (reload) & message sync control
 By default, the plugin automatically starts the room message reception process when the game server starts and automatically stops the process when the game server shuts down.
