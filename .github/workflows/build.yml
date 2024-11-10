@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: plugin
-          path: MatrixSync-*.mcdr
+          path: MatrixSync-*.mcdr MSync.*.mcdr
