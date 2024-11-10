@@ -32,7 +32,7 @@ if [ "$build_subpack" -eq 1 ]; then
     zip -r "MSync.AutoReply.mcdr" msync_auto_reply mcdreforged.plugin.json requirements.txt
     popd >> /dev/null
     pushd "subpacks(rolling)/[MSync]MoreMessages" >> /dev/null
-    zip -r "MSync.MoreMessages.mcdr" msync_more_messages mcdreforged.plugin.json
+    zip -r "MSync.MoreMessages.mcdr" msync_more_msg mcdreforged.plugin.json
     popd >> /dev/null
     pushd "subpacks(rolling)/[MSync]PlayingTips" >> /dev/null
     zip -r "MSync.PlayingTips.mcdr" msync_playing_tips mcdreforged.plugin.json
