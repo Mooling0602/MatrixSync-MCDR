@@ -27,7 +27,7 @@ jobs:
 
       - name: 移动构建
         run: |
-          mv "subpacks(rolling)/*/MSync.*.mcdr" .
+          mv "subpacks\(rolling\)/*/MSync.*.mcdr" .
 
       - name: 上传插件
         uses: actions/upload-artifact@v3
@@ -35,4 +35,4 @@ jobs:
           name: plugin
           path: |
             MatrixSync-*.mcdr
-            subpacks(rolling)/*/MSync.*.mcdr
+            MSync.*.mcdr
