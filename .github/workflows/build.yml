@@ -23,7 +23,7 @@ jobs:
       - name: 检查构建
         run: |
           ls
-          tree subpacks(rolling)
+          tree "subpacks(rolling)"
 
       - name: 上传插件
         uses: actions/upload-artifact@v3
