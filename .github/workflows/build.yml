@@ -31,4 +31,4 @@ jobs:
           name: plugin
           path: |
             MatrixSync-*.mcdr
-            subpacks(rolling)/[MSync]*/MSync.*.mcdr
+            subpacks(rolling)/*/MSync.*.mcdr
