@@ -1,6 +1,6 @@
 import re
 
-from matrix_sync.reporter import sender
+from matrix_sync.reporter import send_matrix
 from mcdreforged.api.all import *
 
 psi = ServerInterface.psi()
@@ -11,7 +11,7 @@ def on_load(server: PluginServerInterface, old):
 def on_user_info(server: PluginServerInterface, info: Info):
     formatter(info)
     if gameMsg is not None:
-        sender(gameMsg)
+        send_matrix(gameMsg)
 
 
 def formatter(info: Info):

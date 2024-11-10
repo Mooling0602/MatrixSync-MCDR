@@ -1,3 +1,4 @@
 matrix-nio
 aiofiles
 asyncio
+mcdreforged

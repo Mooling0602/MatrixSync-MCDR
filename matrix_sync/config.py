@@ -17,7 +17,7 @@ account_config = {
 bot_config = {
     "plugin_enabled": False,
     "allow_all_rooms_msg": False,
-    "sync_old_msg": True
+    "sync_old_msg": False
 }
 
 def load_config():
