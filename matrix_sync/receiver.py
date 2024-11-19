@@ -21,12 +21,14 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     transfer = False
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
-    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
+    msg_format = matrix_sync.config.settings["room_msg_format"]["multi_room"]
+    roomMsg = msg_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
     # Avoid echo messages.
     if not event.sender == user_id:
         # Apply settings config
         if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-            roomMsg = f"§7[MSync] §b{room.user_name(event.sender)} §6>>§r {event.body}"
+            msg_format = matrix_sync.config.settings["room_msg_format"]["single_room"]
+            roomMsg = msg_format.replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
             if room.display_name == room_name:
                 transfer = True
                 psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
