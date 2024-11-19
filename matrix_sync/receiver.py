@@ -18,7 +18,6 @@ class RoomMessageEvent(PluginEvent):
         self.room = room
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    global msg_callback
     transfer = False
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
