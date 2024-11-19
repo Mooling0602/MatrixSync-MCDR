@@ -1,4 +1,5 @@
 import asyncio
+import re
 import matrix_sync.config
 
 from mcdreforged.api.all import *
@@ -24,11 +25,13 @@ async def sendMsg(message) -> None:
     client.user_id = user_id
     client.device_id = device_id
 
+    pattern = re.compile(r'§[0-9a-v]')
+
     try:
         await client.room_send(
             room_id,
             message_type="m.room.message",
-            content={"msgtype": "m.text", "body": f"{message}"},
+            content={"msgtype": "m.text", "body": re.sub(pattern, '', message)},
         )
 
         await client.close()
