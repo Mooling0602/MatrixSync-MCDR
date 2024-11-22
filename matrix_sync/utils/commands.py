@@ -5,6 +5,7 @@ from matrix_sync.utils.globals import *
 from matrix_sync.receiver import getMsg
 
 psi = ServerInterface.psi()
+sync_task = None
 
 def plugin_command(server: PluginServerInterface):
     server.register_help_message("!!msync", help())
@@ -47,18 +48,23 @@ def manualSync():
     else:
         return psi.rtr("matrix_sync.manual_sync.start_error")
 
+def exit_sync():
+    global sync_task
+    try:
+        if sync_task is not None:
+            sync_task.cancel()
+            sync_task = None
+            return psi.rtr("matrix_sync.manual_sync.stop_sync")
+        else:
+            return psi.rtr("matrix_sync.manual_sync.not_running")
+    except Exception:
+        return psi.rtr("matrix_sync.manual_sync.stop_error")
+    
+
 # Manually stop sync processes.
 def stopSync(src):
-    global sync_task
     if src.is_console:
-        try:
-            if sync_task is not None:
-                sync_task.cancel()
-                return psi.rtr("matrix_sync.manual_sync.stop_sync")
-            else:
-                return psi.rtr("matrix_sync.manual_sync.not_running")
-        except Exception:
-            return psi.rtr("matrix_sync.manual_sync.stop_error")
+        return exit_sync()
     else:
         return psi.rtr("matrix_sync.manual_sync.stop_denied")
 

@@ -9,7 +9,6 @@ from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
 
 homeserver_online = True
-msg_callback = False
 
 class RoomMessageEvent(PluginEvent):
     def __init__(self, message: str, sender: str, room: Optional[str] = None):
@@ -19,24 +18,24 @@ class RoomMessageEvent(PluginEvent):
         self.room = room
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    global msg_callback
     transfer = False
     user_id = matrix_sync.config.user_id
     room_name = matrix_sync.config.room_name
-    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
-    if msg_callback:
-        # Avoid echo messages.
-        if not event.sender == user_id:
-            # Apply settings config
-            if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-                roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
-                if room.display_name == room_name:
-                    transfer = True
-                    psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
-            else:
-                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
-            if transfer:
-                psi.broadcast(f"{roomMsg}")
+    msg_format = matrix_sync.config.settings["room_msg_format"]["multi_room"]
+    roomMsg = msg_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
+    # Avoid echo messages.
+    if not event.sender == user_id:
+        # Apply settings config
+        if not matrix_sync.config.settings["allow_all_rooms_msg"]:
+            msg_format = matrix_sync.config.settings["room_msg_format"]["single_room"]
+            roomMsg = msg_format.replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
+            if room.display_name == room_name:
+                transfer = True
+                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+        else:
+            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
+        if transfer:
+            psi.broadcast(f"{roomMsg}")
 
 def on_sync_error(response: SyncError):
     global homeserver_online
@@ -56,16 +55,14 @@ async def getMsg() -> None:
     client.device_id = device_id
 
     client.add_response_callback(on_sync_error, SyncError)
-    client.add_event_callback(message_callback, RoomMessageText)
     
     try:
         if homeserver_online:
             if sync_old_msg is True:
                 await client.sync_forever(timeout=5)
             else:
-                msg_callback = False
                 await client.sync(timeout=5)
-                msg_callback = True
+                client.add_event_callback(message_callback, RoomMessageText)
                 await client.sync_forever(timeout=5)
         else:
             psi.logger.error("Sync failed: homeserver is down or your network disconnected with it.")

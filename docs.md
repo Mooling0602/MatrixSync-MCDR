@@ -18,6 +18,9 @@ import ...
 from matrix_sync.reporter import send_matrix
 
 def main():
+    # 若message为MCDR.ServerInterface.rtr()，你需要将其转换为str类型，或改用MCDR.ServerInterface.tr()，否则会发生错误。
+    # 该问题的产生原因未知，暂时无法解决。
+    message = "你要发送的消息"
     send_matrix(message)
 ```
 目前仍无法获取发送结果，但如果主插件在加载时没有成功初始化客户端，你可以通过以下方式获取到相关报错：

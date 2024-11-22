@@ -17,7 +17,11 @@ account_config = {
 bot_config = {
     "plugin_enabled": False,
     "allow_all_rooms_msg": False,
-    "sync_old_msg": False
+    "sync_old_msg": False,
+    "room_msg_format": {
+        "single_room": "[MSync] %sender%: %message%",
+        "multi_room": "[MSync|%room_display_name%] %sender%: %message%"
+    }
 }
 
 def load_config():
