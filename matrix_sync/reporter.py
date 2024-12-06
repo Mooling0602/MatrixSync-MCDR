@@ -27,13 +27,11 @@ async def sendMsg(message) -> None:
 
     pattern = re.compile(r'§[0-9a-v]')
 
-    try:
-        await client.room_send(
-            room_id,
-            message_type="m.room.message",
-            content={"msgtype": "m.text", "body": re.sub(pattern, '', message)},
-        )
 
-        await client.close()
-    except Exception as e:
-        psi.logger.error(f"Send to matrix error: {e}")
+    await client.room_send(
+        room_id,
+        message_type="m.room.message",
+        content={"msgtype": "m.text", "body": re.sub(pattern, '', message)},
+    )
+
+    await client.close()
