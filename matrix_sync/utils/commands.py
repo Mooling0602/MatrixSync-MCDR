@@ -1,11 +1,11 @@
 import asyncio
-from . import tr
 
+from . import tr, globals
 from mcdreforged.api.all import *
-from .globals import *
+from . import psi, plgSelf
+from ..reporter import send_matrix
 from ..receiver import getMsg
 
-sync_task = None
 
 def plugin_command(server: PluginServerInterface):
     server.register_help_message("!!msync", help())
@@ -18,12 +18,31 @@ def plugin_command(server: PluginServerInterface):
             )
         )
         .then(
+            Literal('status')
+            .runs(
+                lambda src: src.reply(statusSync())
+            )
+        )
+        .then(
             Literal('stop')
             .runs(
                 lambda src: src.reply(stopSync(src))
             )
         )
+        .then(
+            Literal('send')
+            .then(
+                QuotableText('message')
+                .runs(
+                    lambda src, ctx: src.reply(send_command(ctx["message"]))
+                )
+            )
+        )
     )
+
+def send_command(message: str):
+    send_matrix(message)
+    return tr("debug.send_command")
 
 # Help tips.
 def help() -> RTextList:
@@ -36,18 +55,25 @@ def help() -> RTextList:
 
 # Manually run sync processes.
 def manualSync():
-    if not tLock.locked():
+    if not globals.tLock.locked():
+        globals.report_matrix = True
         start_room_msg()
         return tr("manual_sync.start_sync")
     else:
         return tr("manual_sync.start_error")
 
+def statusSync():
+    if globals.report_matrix is True:
+        return tr("sync_tips.msync_running")
+    else:
+        return tr("sync_tips.msync_stopped")
+
 def exit_sync():
-    global sync_task
     try:
-        if sync_task is not None:
-            sync_task.cancel()
-            sync_task = None
+        if globals.sync_task is not None:
+            globals.sync_task.cancel()
+            globals.report_matrix = False
+            globals.sync_task = None
             return tr("manual_sync.stop_sync")
         else:
             return tr("manual_sync.not_running")
@@ -65,13 +91,13 @@ def stopSync(src):
 # Sub thread to receive room messages from matrix without block main MCDR thread.
 @new_thread('MatrixReceiver')
 def start_room_msg():
-    with tLock:
+    with globals.tLock:
+        globals.report_matrix = True
         asyncio.run(on_room_msg())
 
 async def on_room_msg():
-    global sync_task
-    if sync_task is not None and not sync_task.done():
-        sync_task.cancel()
-        await sync_task
-    sync_task = asyncio.create_task(getMsg())
-    await sync_task
+    if globals.sync_task is not None and not globals.sync_task.done():
+        globals.sync_task.cancel()
+        await globals.sync_task
+    globals.sync_task = asyncio.create_task(getMsg())
+    await globals.sync_task

@@ -3,8 +3,8 @@ import asyncio
 import matrix_sync.config
 
 from .utils.token import getToken
-from .utils.globals import psi
-from mcdreforged.api.all import *
+from .utils import psi, plgSelf
+from mcdreforged.api.event import PluginEvent
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
 
@@ -47,9 +47,15 @@ async def getMsg() -> None:
     global next_batch, msg_callback
     from .config import homeserver, device_id, user_id, sync_old_msg
     client = AsyncClient(f"{homeserver}")
-    client.access_token = await getToken()
-    client.user_id = user_id
-    client.device_id = device_id
+    user, token = await getToken()
+    client.access_token = token
+    if user != user_id:
+        psi.logger.error("检测到当前配置的机器人账号和token缓存不符，请删除插件配置目录下的token.json或使用与token缓存相符的机器人账号！")
+        psi.logger.info("插件将卸载，请在处理完成后手动重载插件！")
+        psi.unload_plugin(plgSelf.id)
+    else:
+        client.user_id = user_id
+        client.device_id = device_id
 
     client.add_response_callback(on_sync_error, SyncError)
     

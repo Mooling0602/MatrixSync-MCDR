@@ -3,22 +3,22 @@ import json
 import os
 import sys
 
-from .utils import tr
+from .utils import psi, plgSelf, tr
+from .utils.token import getToken
 from .reporter import sendMsg
-from mcdreforged.api.all import *
+from mcdreforged.api.decorator import new_thread
 from nio import AsyncClient, LoginResponse
 
-
-psi = ServerInterface.psi()
 
 clientStatus = False
 
 # Cache Token.
 def cache_token(resp: LoginResponse):
-    from .config import TOKEN_FILE
+    from .config import TOKEN_FILE, user_id
     with open(TOKEN_FILE, "w") as f:
         json.dump(
             {
+                "user_id": user_id,
                 "token": resp.access_token
             },
             f,
@@ -34,7 +34,6 @@ async def init_task():
 
 async def init_client() -> None:
     from .config import TOKEN_FILE, homeserver, user_id, password, device_id
-    psi.logger.info(user_id)
     if not os.path.exists(TOKEN_FILE):
         psi.logger.info(tr("run_tips.first_time_login"))
         client = AsyncClient(homeserver, user_id)
@@ -53,7 +52,13 @@ async def init_client() -> None:
             psi.logger.info(tr("run_tips.error"))
             sys.exit(1)
     else:
-        await test_client()
+        user, token = await getToken()
+        if user != user_id:
+            psi.logger.error(tr("init_tips.user_mismatch"))
+            psi.logger.info(tr("init_tips.do_unload"))
+            psi.unload_plugin(plgSelf.id)
+        else:
+            await test_client()
 
 # Send test messages.
 async def test_client():

@@ -1,9 +1,13 @@
 matrix_sync:
+  debug:
+    send_command: 已将你输入的消息发送到Matrix
   init_tips:
     config_path: 配置文件所在目录
     need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugin_enabled项后重启插件！
     read_config: 正在应用当前配置，请稍等……
     hotload_tip: 若重载插件需要手动开启消息同步，以将Matrix的消息转发到游戏中，请执行!!msync start
+    user_mismatch: 检测到当前配置的机器人账号和token缓存不符，请删除插件配置目录下的token.json或使用与token缓存相符的机器人账号！
+    do_unload: 插件将卸载，请在处理完成后手动重载插件！
   on_console:
     commands: 执行命令
   on_server_stop: 服务器已关闭，停止消息同步。
@@ -13,7 +17,7 @@ matrix_sync:
     on_clean: 执行清理进程
     start_clean: 正在准备清理...
   run_tips:
-    failed: 登录失败！
+    failed: 登录失败
     first_time_login: 首次登录，将使用密码继续……
     login_success: 登录成功，正在缓存Token以供后续使用。
     get_token: Token缓存完成！
@@ -31,6 +35,8 @@ matrix_sync:
     server_started: "[√] 服务器启动完成！"
     server_crashed: "[×] 服务器崩溃或非正常退出！"
     reporter_status: "[!] 消息互通已在游戏服务器上初始化完成"
+    msync_running: 消息互通正在运行
+    msync_stopped: 消息互通未在运行
     start_report: 机器人登录成功，已发送测试消息。
     test: 检测到玩家消息，正在尝试发送到Matrix群组……
   tr:

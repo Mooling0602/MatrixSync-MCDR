@@ -1,9 +1,13 @@
 matrix_sync:
+  debug:
+    send_command: Message you typed has sent to matrix.
   init_tips:
     config_path: Config path
     need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugin_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
     hotload_tip: If reloading plugin needs to enable message sync manually, to transfer messages from matrix to the game, please execute `!!msync start`
+    user_mismatch: Detected wrong bot account with token cached, please delete token.json in config path of plugin, or use bot account match token cached!
+    do_unload: Plugin will be unloaded, please reload manually after you're done.
   on_console:
     commands: Excute command
   on_server_stop: Server stopped, stopping messages sync.
@@ -13,7 +17,7 @@ matrix_sync:
     on_clean: Execute clean process.
     start_clean: Preparing clean...
   run_tips:
-    failed: Failed to login!
+    failed: Failed to login
     first_time_login: First login, continuing with password...
     login_success: Login successfully, caching token for later uses.
     get_token: Token Cached!
@@ -31,6 +35,8 @@ matrix_sync:
     server_started: MC Server started successfully!
     server_crashed: MC Server crashed or not stopped normally!
     reporter_status: Message sync has inited on MC Server!
+    msync_running: Message sync is running
+    msync_stopped: Message sync is stopped
     start_report: Bot login successfully, sent a test message.
     test: Player message detected, trying to send to Matrix group...
   tr:
