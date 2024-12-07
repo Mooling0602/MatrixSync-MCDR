@@ -9,6 +9,9 @@ matrix_sync:
   on_server_stop: 服务器已关闭，停止消息同步。
   on_server_crash: 服务器崩溃或者非正常退出，已停止消息同步，可能出现未知报错。
   on_unload: 正在卸载插件，等待消息同步进程退出……
+  unload_tips:
+    on_clean: 执行清理进程
+    start_clean: 正在准备清理...
   run_tips:
     failed: 登录失败！
     first_time_login: 首次登录，将使用密码继续……

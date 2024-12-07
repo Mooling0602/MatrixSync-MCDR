@@ -1,10 +1,10 @@
 import asyncio
+from . import tr
 
 from mcdreforged.api.all import *
-from matrix_sync.utils.globals import *
-from matrix_sync.receiver import getMsg
+from .globals import *
+from ..receiver import getMsg
 
-psi = ServerInterface.psi()
 sync_task = None
 
 def plugin_command(server: PluginServerInterface):
@@ -17,12 +17,6 @@ def plugin_command(server: PluginServerInterface):
                 lambda src: src.reply(manualSync())
             )
         )
-        # .then(
-        #     Literal('restart')
-        #     .runs(
-        #         lambda src: src.reply(restartSync())
-        #     )
-        # )
         .then(
             Literal('stop')
             .runs(
@@ -34,19 +28,19 @@ def plugin_command(server: PluginServerInterface):
 # Help tips.
 def help() -> RTextList:
     return RTextList(
-        psi.rtr("matrix_sync.help_tips.title") + "\n",
-        psi.rtr("matrix_sync.help_tips.start_command") + "\n",
-        psi.rtr("matrix_sync.help_tips.stop_command") + "\n",
-        psi.rtr("matrix_sync.help_tips.closetip_command") + "\n"
+        psi.rtr(f"{plgSelf.id}.help_tips.title") + "\n",
+        psi.rtr(f"{plgSelf.id}.help_tips.start_command") + "\n",
+        psi.rtr(f"{plgSelf.id}.help_tips.stop_command") + "\n",
+        psi.rtr(f"{plgSelf.id}.help_tips.closetip_command") + "\n"
     )
 
 # Manually run sync processes.
 def manualSync():
     if not tLock.locked():
         start_room_msg()
-        return psi.rtr("matrix_sync.manual_sync.start_sync")
+        return tr("manual_sync.start_sync")
     else:
-        return psi.rtr("matrix_sync.manual_sync.start_error")
+        return tr("manual_sync.start_error")
 
 def exit_sync():
     global sync_task
@@ -54,11 +48,11 @@ def exit_sync():
         if sync_task is not None:
             sync_task.cancel()
             sync_task = None
-            return psi.rtr("matrix_sync.manual_sync.stop_sync")
+            return tr("manual_sync.stop_sync")
         else:
-            return psi.rtr("matrix_sync.manual_sync.not_running")
+            return tr("manual_sync.not_running")
     except Exception:
-        return psi.rtr("matrix_sync.manual_sync.stop_error")
+        return tr("manual_sync.stop_error")
     
 
 # Manually stop sync processes.
@@ -66,7 +60,7 @@ def stopSync(src):
     if src.is_console:
         return exit_sync()
     else:
-        return psi.rtr("matrix_sync.manual_sync.stop_denied")
+        return tr("manual_sync.stop_denied")
 
 # Sub thread to receive room messages from matrix without block main MCDR thread.
 @new_thread('MatrixReceiver')

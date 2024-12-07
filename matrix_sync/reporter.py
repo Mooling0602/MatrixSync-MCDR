@@ -1,11 +1,10 @@
 import asyncio
 import re
-import matrix_sync.config
 
 from mcdreforged.api.all import *
 from nio import AsyncClient
-from matrix_sync.utils.token import getToken
-from matrix_sync.utils.globals import psi
+from .utils.token import getToken
+
 
 # Game Message reporter.
 @new_thread('MatrixReporter')
@@ -16,10 +15,7 @@ async def send(message):
     await sendMsg(message)
 
 async def sendMsg(message) -> None:
-    homeserver = matrix_sync.config.homeserver
-    user_id = matrix_sync.config.user_id
-    room_id = matrix_sync.config.room_id
-    device_id = matrix_sync.config.device_id
+    from .config import homeserver, user_id, room_id, device_id
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
     client.user_id = user_id
@@ -27,11 +23,12 @@ async def sendMsg(message) -> None:
 
     pattern = re.compile(r'§[0-9a-v]')
 
+    message_to_send = re.sub(pattern, '', message)
 
     await client.room_send(
         room_id,
         message_type="m.room.message",
-        content={"msgtype": "m.text", "body": re.sub(pattern, '', message)},
+        content={"msgtype": "m.text", "body": message_to_send},
     )
 
     await client.close()

@@ -9,6 +9,9 @@ matrix_sync:
   on_server_stop: Server stopped, stopping messages sync.
   on_server_crash: Server crashed or not stopped normally, stopping messages sync, unknown errors may happen. 
   on_unload: Unloading plugin, waiting for message sync process to exit...
+  unload_tips:
+    on_clean: Execute clean process.
+    start_clean: Preparing clean...
   run_tips:
     failed: Failed to login!
     first_time_login: First login, continuing with password...

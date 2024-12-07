@@ -2,11 +2,12 @@
 import asyncio
 import matrix_sync.config
 
-from matrix_sync.utils.token import getToken
-from matrix_sync.utils.globals import psi
+from .utils.token import getToken
+from .utils.globals import psi
 from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
+
 
 homeserver_online = True
 
@@ -19,9 +20,8 @@ class RoomMessageEvent(PluginEvent):
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     transfer = False
-    user_id = matrix_sync.config.user_id
-    room_name = matrix_sync.config.room_name
-    msg_format = matrix_sync.config.settings["room_msg_format"]["multi_room"]
+    from .config import user_id, room_name, settings
+    msg_format = settings["room_msg_format"]["multi_room"]
     roomMsg = msg_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
     # Avoid echo messages.
     if not event.sender == user_id:
@@ -45,10 +45,7 @@ def on_sync_error(response: SyncError):
 
 async def getMsg() -> None:
     global next_batch, msg_callback
-    homeserver = matrix_sync.config.homeserver
-    device_id = matrix_sync.config.device_id
-    user_id = matrix_sync.config.user_id
-    sync_old_msg = matrix_sync.config.sync_old_msg
+    from .config import homeserver, device_id, user_id, sync_old_msg
     client = AsyncClient(f"{homeserver}")
     client.access_token = await getToken()
     client.user_id = user_id
