@@ -3,7 +3,8 @@ name: 自动打包插件
 on:
   push:
     branches:
-      - dev, mdf  # 触发打包的分支，可以根据需要修改
+      - mdf
+      - dev  # 触发打包的分支，可以根据需要修改
 
 jobs:
   build:
