@@ -9,7 +9,7 @@ from .reporter import send_matrix
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.4.1-2
+# Framwork ver: 2.4.1-3
 def on_load(server: PluginServerInterface, prev_module):
     load_config()
     from .config import load_tip
