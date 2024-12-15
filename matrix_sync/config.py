@@ -1,6 +1,5 @@
-from mcdreforged.api.all import *
+from .utils import psi
 
-psi = ServerInterface.psi()
 lock_is_None = True
 
 # Default config.
