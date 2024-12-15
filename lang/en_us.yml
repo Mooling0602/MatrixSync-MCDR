@@ -5,6 +5,7 @@ matrix_sync:
     config_path: Config path
     need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugin_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
+    token_invaild: Please manually delete the old version's token, then reload this plugin!
     user_mismatch: Detected token cached mismatch present bot account (%user_id%), please delete token or use correct bot account!
     do_unload: Plugin is unloading, please reload manually after you configured right.
   on_console:
