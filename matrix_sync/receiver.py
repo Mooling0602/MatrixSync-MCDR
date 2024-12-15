@@ -3,7 +3,7 @@ import asyncio
 import matrix_sync.config
 
 from .utils.token import getToken
-from .utils import psi, plgSelf
+from .utils import psi, plgSelf, tr
 from mcdreforged.api.event import PluginEvent
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
@@ -50,9 +50,11 @@ async def getMsg() -> None:
     user, token = await getToken()
     client.access_token = token
     if user != user_id:
-        psi.logger.error("检测到当前配置的机器人账号和token缓存不符，请删除插件配置目录下的token.json或使用与token缓存相符的机器人账号！")
-        psi.logger.info("插件将卸载，请在处理完成后手动重载插件！")
-        psi.unload_plugin(plgSelf.id)
+        if user is not None:
+            tip = tr("init_tips.user_mismatch")
+            psi.logger.error(tip.replace("%user_id%", user_id))
+            psi.logger.info(tr("init_tips.do_unload"))
+            psi.unload_plugin(plgSelf.id)
     else:
         client.user_id = user_id
         client.device_id = device_id
@@ -69,7 +71,7 @@ async def getMsg() -> None:
                 await client.sync_forever(timeout=5)
         else:
             psi.logger.error("Sync failed: homeserver is down or your network disconnected with it.")
-            psi.logger.info("Use !!msync start after homeserver is running or your network restored.")
+            psi.logger.info("Use §7!!msync start §rafter homeserver is running or your network restored.")
     except Exception as e:
         psi.logger.error(f"Sync error: {e}")
     except asyncio.CancelledError:

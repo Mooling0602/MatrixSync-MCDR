@@ -1,5 +1,6 @@
 import time
 
+from typing import Optional
 from .utils import tr
 from .client import init
 from .config import load_config, check_config
@@ -9,7 +10,7 @@ from .reporter import send_matrix
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.4.1-3
+# Framwork ver: 2.4.1
 def on_load(server: PluginServerInterface, prev_module):
     load_config()
     from .config import load_tip
@@ -21,17 +22,22 @@ def on_load(server: PluginServerInterface, prev_module):
     else:
         init()
         plugin_command(server)
-        server.logger.info(tr("init_tips.hotload_tip"))
+        if server.is_server_startup():
+            start_sync()
 
 # Automatically run sync processes.
-def on_server_startup(server: PluginServerInterface):
+def start_sync(on_reload: Optional[bool] = True):
     if not globals.tLock.locked():
-        message = tr("sync_tips.server_started")
         start_room_msg()
-        time.sleep(1)
-        send_matrix(message)
+        if not on_reload:
+            time.sleep(1)
+            message = tr("sync_tips.server_started")
+            send_matrix(message)
     else:
-        server.logger.info(tr("manual_sync.start_error"))
+        psi.logger.info(tr("manual_sync.start_error"))
+
+def on_server_startup(server: PluginServerInterface):
+    start_sync(False)
 
 # Game message reporter
 def on_user_info(server: PluginServerInterface, info: Info):
@@ -48,7 +54,11 @@ def on_server_stop(server: PluginServerInterface, server_return_code: int):
         server.logger.info(tr("on_server_crash"))
         exit_message = tr("sync_tips.server_crashed")
 
-    send_matrix(exit_message)
+    # 鉴于有用户反馈关服时消息发送不到Matrix，这里卡一个协程用于发送
+    # 为了防止卡住MCDR主线程出现无响应提示影响用户体验，一般都在子线程中发送消息，但是直接用协程正常情况下也没啥问题
+    # 有bug的话应该会有人在issues提出，暂时先这么解决
+    from .reporter import sendMsg
+    asyncio.run(sendMsg(exit_message))
     
     globals.cleaned = True
 

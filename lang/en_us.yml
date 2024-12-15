@@ -5,9 +5,8 @@ matrix_sync:
     config_path: Config path
     need_edit_config: Please edit the default config.json to the correct configuration information, and then restart the plugin after enabling the plugin_enabled item in settings.json!
     read_config: Applying precent config, please waiting...
-    hotload_tip: If reloading plugin needs to enable message sync manually, to transfer messages from matrix to the game, please execute `!!msync start`
-    user_mismatch: Detected wrong bot account with token cached, please delete token.json in config path of plugin, or use bot account match token cached!
-    do_unload: Plugin will be unloaded, please reload manually after you're done.
+    user_mismatch: Detected token cached mismatch present bot account (%user_id%), please delete token or use correct bot account!
+    do_unload: Plugin is unloading, please reload manually after you configured right.
   on_console:
     commands: Excute command
   on_server_stop: Server stopped, stopping messages sync.
@@ -44,7 +43,10 @@ matrix_sync:
     ac: Account
     cs: Console
   help_tips:
-    title: "!!msync Command Help"
-    start_command: "!!msync start - Start message sync process. (will automatically start when server startup) "
-    stop_command: "!!msync stop - Stop message sync process. (will automatically stop when server stopped)"
-    closetip_command: Use !!msync closetip to close the numerous prompts that appear after starting message sync. It is recommended to read and understand them carefully before closing.
+    message: "See command help page for §7!!msync§r "
+    title: "----- MatrixSync command help page -----"
+    root_command: "§7!!msync §rShow this help page"
+    start_command: "§7!!msync start §rStart message sync（Auto executes when server startup.）"
+    stop_command: "§7!!msync stop §rStop message sync（Auto stops when server exit.）"
+    send_command: "§7!!msync send §rSend a text message to the matrix room, can be quote by \"\" if spaces are included in the text."
+    status_command: "§7!!msync status §rSee the present status of message sync"

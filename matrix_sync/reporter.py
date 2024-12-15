@@ -29,7 +29,8 @@ async def sendMsg(message) -> None:
     user, token = await getToken()
     client.access_token = token
     if user != user_id:
-        psi.logger.error(tr("init_tips.user_mismatch"))
+        tip = tr("init_tips.user_mismatch")
+        psi.logger.error(tip.replace("%user_id%", user_id))
         psi.logger.info(tr("init_tips.do_unload"))
         psi.unload_plugin(plgSelf.id)
     else:
