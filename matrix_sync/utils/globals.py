@@ -1,6 +1,10 @@
 import threading
 
+from .. import config
+from mcdreforged.api.all import *
+
+psi = ServerInterface.psi()
 tLock = threading.Lock()
-report_matrix = False
+lock_is_None = config.lock_is_None
 cleaned = False
 sync_task = None

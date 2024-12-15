@@ -8,6 +8,4 @@ async def getToken():
     async with aiofiles.open(TOKEN_FILE, "r") as f:
         contents = await f.read()
     cache = json.loads(contents)
-    user_id = cache.get("user_id", None)
-    token = cache.get("token", None)
-    return user_id, token
+    return cache["token"]
