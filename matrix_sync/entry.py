@@ -2,7 +2,7 @@ import time
 
 from typing import Optional
 from .utils import tr
-from .client import init
+from .client import init, clientStatus
 from .config import load_config, check_config
 from .utils import psi, globals
 from .utils.commands import *
@@ -22,7 +22,7 @@ def on_load(server: PluginServerInterface, prev_module):
     else:
         init()
         plugin_command(server)
-        if server.is_server_startup():
+        if server.is_server_startup() and clientStatus:
             start_sync()
 
 # Automatically run sync processes.
