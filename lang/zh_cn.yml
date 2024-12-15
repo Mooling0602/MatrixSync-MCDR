@@ -50,3 +50,4 @@ matrix_sync:
     stop_command: "§7!!msync stop §r关闭消息同步（服务端停止运行后会自动关闭）"
     send_command: "§7!!msync send §r向Matrix房间发送指定消息，若含有空格请使用\"\"括起来"
     status_command: "§7!!msync status §r查看当前消息同步状态"
+    reload_command: "§7!!msync reload §r重载插件并刷新插件配置"

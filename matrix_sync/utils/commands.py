@@ -29,7 +29,8 @@ def show_help(src: CommandSource):
         tr(f"{pfx}.start_command", False) + "\n",
         tr(f"{pfx}.stop_command", False) + "\n",
         tr(f"{pfx}.send_command", False) + "\n",
-        tr(f"{pfx}.status_command", False) + "\n"
+        tr(f"{pfx}.status_command", False) + "\n",
+        tr(f"{pfx}.reload_command", False) + "\n"
     ))
 
 # Manually run sync processes.
@@ -70,6 +71,10 @@ def stopSync(src):
         src.reply(response)
     else:
         src.reply(tr("manual_sync.stop_denied"))
+
+@builder.command("!!msync reload")
+def reload_plugin():
+    psi.reload_plugin(plgSelf.id)
 
 # Sub thread to receive room messages from matrix without block main MCDR thread.
 @new_thread('MatrixReceiver')

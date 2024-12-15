@@ -50,3 +50,4 @@ matrix_sync:
     stop_command: "§7!!msync stop §rStop message sync（Auto stops when server exit.）"
     send_command: "§7!!msync send §rSend a text message to the matrix room, can be quote by \"\" if spaces are included in the text."
     status_command: "§7!!msync status §rSee the present status of message sync"
+    reload_command: "§7!!msync reload §rReload this plugin and apply config changes"
