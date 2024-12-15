@@ -1,11 +1,10 @@
 import asyncio
-import re
+import matrix_sync.config
 
-from mcdreforged.api.decorator import new_thread
+from mcdreforged.api.all import *
 from nio import AsyncClient
-from .utils import psi, plgSelf, tr, globals
-from .utils.token import getToken
-
+from matrix_sync.utils.token import getToken
+from matrix_sync.utils.globals import psi
 
 # Game Message reporter.
 @new_thread('MatrixReporter')
@@ -13,38 +12,25 @@ def send_matrix(message):
     asyncio.run(send(message))
 
 async def send(message):
-    from .client import clientStatus
-    if clientStatus:
-        if globals.report_matrix:
-            await sendMsg(message)
-            psi.logger.debug("消息已发送！")
-        else:
-            psi.logger.debug("消息未发送：同步未启动")
-    else:
-        psi.logger.debug("消息未发送：bot未初始化成功")
+    await sendMsg(message)
 
 async def sendMsg(message) -> None:
-    from .config import homeserver, user_id, room_id, device_id
+    homeserver = matrix_sync.config.homeserver
+    user_id = matrix_sync.config.user_id
+    room_id = matrix_sync.config.room_id
+    device_id = matrix_sync.config.device_id
     client = AsyncClient(f"{homeserver}")
-    user, token = await getToken()
-    client.access_token = token
-    if user != user_id:
-        tip = tr("init_tips.user_mismatch")
-        psi.logger.error(tip.replace("%user_id%", user_id))
-        psi.logger.info(tr("init_tips.do_unload"))
-        psi.unload_plugin(plgSelf.id)
-    else:
-        client.user_id = user_id
-        client.device_id = device_id
+    client.access_token = await getToken()
+    client.user_id = user_id
+    client.device_id = device_id
 
-    pattern = re.compile(r'§[0-9a-v]')
+    try:
+        await client.room_send(
+            room_id,
+            message_type="m.room.message",
+            content={"msgtype": "m.text", "body": f"{message}"},
+        )
 
-    message_to_send = re.sub(pattern, '', message)
-
-    await client.room_send(
-        room_id,
-        message_type="m.room.message",
-        content={"msgtype": "m.text", "body": message_to_send},
-    )
-
-    await client.close()
+        await client.close()
+    except Exception as e:
+        psi.logger.error(f"Send to matrix error: {e}")

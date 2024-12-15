@@ -3,8 +3,10 @@ name: 自动打包插件
 on:
   push:
     branches:
-      - mdf
       - dev  # 触发打包的分支，可以根据需要修改
+  pull_request:
+    branches:
+      - dev  # 可以修改为触发的 PR 分支
 
 jobs:
   build:
@@ -21,6 +23,11 @@ jobs:
       - name: 检查构建
         run: |
           ls
+          tree "subpacks(rolling)"
+
+      - name: 移动构建
+        run: |
+          find subpacks\(rolling\) -type f -name 'MSync.*.mcdr' -exec mv {} . \;
 
       - name: 上传插件
         uses: actions/upload-artifact@v3
@@ -28,3 +35,4 @@ jobs:
           name: plugin
           path: |
             MatrixSync-*.mcdr
+            MSync.*.mcdr

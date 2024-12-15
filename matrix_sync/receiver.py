@@ -2,14 +2,14 @@
 import asyncio
 import matrix_sync.config
 
-from .utils.token import getToken
-from .utils import psi, plgSelf, tr
-from mcdreforged.api.event import PluginEvent
+from matrix_sync.utils.token import getToken
+from matrix_sync.utils.globals import psi
+from mcdreforged.api.all import *
 from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
 from typing import Optional
 
-
 homeserver_online = True
+msg_callback = False
 
 class RoomMessageEvent(PluginEvent):
     def __init__(self, message: str, sender: str, room: Optional[str] = None):
@@ -19,23 +19,24 @@ class RoomMessageEvent(PluginEvent):
         self.room = room
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
+    global msg_callback
     transfer = False
-    from .config import user_id, room_name, settings
-    msg_format = settings["room_msg_format"]["multi_room"]
-    roomMsg = msg_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
-    # Avoid echo messages.
-    if not event.sender == user_id:
-        # Apply settings config
-        if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-            msg_format = matrix_sync.config.settings["room_msg_format"]["single_room"]
-            roomMsg = msg_format.replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
-            if room.display_name == room_name:
-                transfer = True
-                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
-        else:
-            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
-        if transfer:
-            psi.broadcast(f"{roomMsg}")
+    user_id = matrix_sync.config.user_id
+    room_name = matrix_sync.config.room_name
+    roomMsg = f"[MSync|{room.display_name}] {room.user_name(event.sender)}: {event.body}"
+    if msg_callback:
+        # Avoid echo messages.
+        if not event.sender == user_id:
+            # Apply settings config
+            if not matrix_sync.config.settings["allow_all_rooms_msg"]:
+                roomMsg = f"[MSync] {room.user_name(event.sender)}: {event.body}"
+                if room.display_name == room_name:
+                    transfer = True
+                    psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+            else:
+                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
+            if transfer:
+                psi.broadcast(f"{roomMsg}")
 
 def on_sync_error(response: SyncError):
     global homeserver_online
@@ -45,33 +46,30 @@ def on_sync_error(response: SyncError):
 
 async def getMsg() -> None:
     global next_batch, msg_callback
-    from .config import homeserver, device_id, user_id, sync_old_msg
+    homeserver = matrix_sync.config.homeserver
+    device_id = matrix_sync.config.device_id
+    user_id = matrix_sync.config.user_id
+    sync_old_msg = matrix_sync.config.sync_old_msg
     client = AsyncClient(f"{homeserver}")
-    user, token = await getToken()
-    client.access_token = token
-    if user != user_id:
-        if user is not None:
-            tip = tr("init_tips.user_mismatch")
-            psi.logger.error(tip.replace("%user_id%", user_id))
-            psi.logger.info(tr("init_tips.do_unload"))
-            psi.unload_plugin(plgSelf.id)
-    else:
-        client.user_id = user_id
-        client.device_id = device_id
+    client.access_token = await getToken()
+    client.user_id = user_id
+    client.device_id = device_id
 
     client.add_response_callback(on_sync_error, SyncError)
+    client.add_event_callback(message_callback, RoomMessageText)
     
     try:
         if homeserver_online:
             if sync_old_msg is True:
                 await client.sync_forever(timeout=5)
             else:
+                msg_callback = False
                 await client.sync(timeout=5)
-                client.add_event_callback(message_callback, RoomMessageText)
+                msg_callback = True
                 await client.sync_forever(timeout=5)
         else:
             psi.logger.error("Sync failed: homeserver is down or your network disconnected with it.")
-            psi.logger.info("Use §7!!msync start §rafter homeserver is running or your network restored.")
+            psi.logger.info("Use !!msync start after homeserver is running or your network restored.")
     except Exception as e:
         psi.logger.error(f"Sync error: {e}")
     except asyncio.CancelledError:
