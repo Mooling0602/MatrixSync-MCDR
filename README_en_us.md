@@ -1,5 +1,6 @@
 - [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README.md)
 - English
+> To avoid incorrect links after merging into the main branch, all URLs should use the main branch's address. If you are accessing other branches, please make sure to manually adjust the link's target location.
 
 # MatrixSync-MCDR
 A MCDR (full name [MCDReforged](https://mcdreforged.com/)) plugin, use to sync messages between Matrix groups and online gaming in Minecraft servers.
@@ -9,8 +10,6 @@ About [Matrix](https://matrix.org/): an open decentralized network communication
 The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/)。
 
 Thanks for ChatGPT and Google Translate's help to translate the content from Chinese, if anything wrong, please issue to feedback or PR to `/lang`.
-
-Present branch version: main@2.4.0
 
 ## Usage
 Download the latest version from the release, install the necessary Python dependencies in the MCDReforged startup environment, and then throw it into the plugins folder.
@@ -26,7 +25,7 @@ If there is any issue with message forwarding in any direction during the messag
 
 | Configuration Item | Content |
 | - | - |
-| **homeserver** | The home server used to log in to the bot account |
+| **homeserver** | The homeserver address used to log in to the bot account |
 | **user_id** | The bot account ID, formatted as @username:example.com |
 | **password** | The password of the bot account, generally only used for the initial login |
 | **room_id** | The ID of the room to receive game messages |
@@ -43,22 +42,12 @@ Multi-config is not supported, will add API support for developers from v3.
 | sync_old_msg | Whether to sync old messages, enabled on default, disable to see old messages when plugin is just loaded |
 
 ## Interface (API)
-See "接口（API）" [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/README.md) README.
+See the docs in [中文文档](https://github.com/Mooling0602/MatrixSync-MCDR/blob/docs.md) at present.
 
 ## Hot Reload (reload) & message sync control
-By default, the plugin automatically starts the room message reception process when the game server starts and automatically stops the process when the game server shuts down.
-
-To manually start the room message receiver (e.g., after reloading the plugin), execute the MCDR command !!msync start, which can be used both in-game and in the console.
-
-To stop the room message receiver in advance, you can use !!msync stop in the console. The message receiver must be manually restarted with !!msync start before the next server startup.
-
-The plugin will automatically attempt to forward in-game messages to the configured Matrix room when parsing them. This feature cannot be disabled at the moment but will be resolved in version 2.4.0 (v2.4.x) by syncing the open/close status with the room message receiver.
-
-This command has no permission requirements but is protected by a process lock (security mechanism). Repeated execution will trigger a warning but will not affect the normal operation of the plugin.
-
-Please note that this feature is still unstable. If any errors occur, please report them promptly via GitHub Issues to the plugin author. Additionally, before reloading the plugin, it's recommended to close the room message receiver, as failing to do so may leave residual processes that could only be cleared by restarting the entire MCDR.
-
 It is advisable not to use hot reload in a stable environment.
+
+Execute `!!msync` to see the usage.
 
 ## Note
 ### First-time Use
