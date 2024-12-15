@@ -1,90 +1,74 @@
-import asyncio
-import matrix_sync.config
-import matrix_sync.client
-import matrix_sync.receiver
-import matrix_sync.reporter
+import time
 
-from matrix_sync.utils.globals import *
-from matrix_sync.client import init
-from matrix_sync.config import load_config, check_config
-from matrix_sync.utils.commands import *
-from matrix_sync.reporter import send_matrix
+from typing import Optional
+from .utils import tr
+from .client import init
+from .config import load_config, check_config
+from .utils import psi, globals
+from .utils.commands import *
+from .reporter import send_matrix
 from mcdreforged.api.all import *
 
-# Framwork ver: 2.4.0-3
-def on_load(server: PluginServerInterface, old):
+
+# Framwork ver: 2.4.1
+def on_load(server: PluginServerInterface, prev_module):
     load_config()
-    server.logger.info(matrix_sync.config.load_tip)
+    from .config import load_tip
+    server.logger.info(load_tip)
     check_config()
-    do_unload = matrix_sync.config.do_unload
+    from .config import do_unload
     if do_unload:
-        server.unload_plugin("matrix_sync")
+        server.unload_plugin(plgSelf.id)
     else:
         init()
         plugin_command(server)
-        server.logger.info(psi.rtr("matrix_sync.init_tips.hotload_tip"))
-    
-# Restart room message receiver, not recommend.
-# def restartSync(src):
-#     stopSync(src)
-#     manualSync()
+        if server.is_server_startup():
+            start_sync()
 
 # Automatically run sync processes.
-def on_server_startup(server: PluginServerInterface):
-    clientStatus = matrix_sync.client.clientStatus
-    if not tLock.locked():
-        if clientStatus:
-            message = psi.rtr("matrix_sync.sync_tips.server_started")
+def start_sync(on_reload: Optional[bool] = True):
+    if not globals.tLock.locked():
+        start_room_msg()
+        if not on_reload:
+            time.sleep(1)
+            message = tr("sync_tips.server_started")
             send_matrix(message)
-            start_room_msg()
     else:
-        server.logger.info(server.rtr("matrix_sync.manual_sync.start_error"))
+        psi.logger.info(tr("manual_sync.start_error"))
+
+def on_server_startup(server: PluginServerInterface):
+    start_sync(False)
 
 # Game message reporter
 def on_user_info(server: PluginServerInterface, info: Info):
-    # formater(server, info)
     if info.player is not None and not info.content.startswith("!!"):
         playerMsg = f"<{info.player}> {info.content}"
-        clientStatus = matrix_sync.client.clientStatus
-        if clientStatus:
-            send_matrix(playerMsg)
+        send_matrix(playerMsg)
 
 # Exit sync process when server stop.
 def on_server_stop(server: PluginServerInterface, server_return_code: int):
-    global cleaned, sync_task
     if server_return_code == 0:
-        server.logger.info(server.rtr("matrix_sync.on_server_stop"))
-        clientStatus = matrix_sync.client.clientStatus
-        stopTip = server.rtr("matrix_sync.sync_tips.server_stopped")
-        if clientStatus:
-            send_matrix(stopTip)
+        server.logger.info(tr("on_server_stop"))
+        exit_message = tr("sync_tips.server_stopped")
     else:
-        server.logger.info(server.rtr("matrix_sync.on_server_crash"))
-        crashTip = server.rtr("matrix_sync.sync_tips.server_crashed")
-        clientStatus = matrix_sync.client.clientStatus
-        if clientStatus:
-            send_matrix(crashTip)
-        
-    if sync_task is not None:
-        sync_task.cancel()
-        try:
-            pass
-        except asyncio.TimeoutError:
-            server.logger.warning("Timed out waiting for sync_task to finish.")
+        server.logger.info(tr("on_server_crash"))
+        exit_message = tr("sync_tips.server_crashed")
+
+    # 鉴于有用户反馈关服时消息发送不到Matrix，这里卡一个协程用于发送
+    # 为了防止卡住MCDR主线程出现无响应提示影响用户体验，一般都在子线程中发送消息，但是直接用协程正常情况下也没啥问题
+    # 有bug的话应该会有人在issues提出，暂时先这么解决
+    from .reporter import sendMsg
+    asyncio.run(sendMsg(exit_message))
     
-    cleaned = True
+    globals.cleaned = True
 
 def on_unload(server: PluginServerInterface):
-    global sync_task, cleaned
-    if cleaned:
-        server.logger.info(server.rtr("matrix_sync.on_unload"))
+    server.logger.info(tr("unload_tips.on_clean"))
+    if globals.cleaned:
+        server.logger.info(tr("on_unload"))
     else:
-        if sync_task is not None:
-            sync_task.cancel()
-            try:
-                pass
-            except asyncio.TimeoutError:
-               server.logger.warning("Timed out waiting for sync_task to finish.")
-        sync_task = None
+        psi.logger.info(tr("unload_tips.start_clean"))
+        psi.logger.info(exit_sync())
+        from .config import lock_is_None
         if not lock_is_None:
-            server.logger.info(server.rtr("matrix_sync.on_unload"))
+            server.logger.info(tr("on_unload"))

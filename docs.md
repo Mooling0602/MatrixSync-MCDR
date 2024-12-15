@@ -1,8 +1,8 @@
 - 中文
-- English (Unsupported yet, please use translate tools.)
+- English (Unsupported yet, please use translate tools at present.)
 
 # MatrixSync-MCDR 文档
-这里是MCDReforged插件MatrixSync的文档。
+这里是MCDReforged插件MatrixSync的API文档。
 
 插件配置部分仍保留在README。
 
@@ -18,22 +18,17 @@ import ...
 from matrix_sync.reporter import send_matrix
 
 def main():
+    # 若message为MCDR.ServerInterface.rtr()，你需要将其转换为str类型，或改用MCDR.ServerInterface.tr()，否则会发生错误。
+    # 该问题的产生原因未知，暂时无法解决。
+    message = "你要发送的消息"
     send_matrix(message)
 ```
-目前仍无法获取发送结果，但如果主插件在加载时没有成功初始化客户端，你可以通过以下方式获取到相关报错：
-```python
-import ...
-from matrix_sync.reporter import sender
+目前发送结果可以通过启用MCDR配置中的debug.plugin项获取。
 
-def main():
-    response = send_matrix(message)
-    if response is not None:
-        print(response)
-```
 > 在MCDR中，常用`server.logger.info`或`psi.logger.info`代替`print`，以进行更标准化的日志格式输出。
 
 ### 旧版接口（v2.2-）
-旧版接口含有较大缺陷（会阻塞MCDR主线程，消息发不出去等故障情况将导致MCDR卡死），且已不具备实用的应用场景，但仍然可用。
+旧版接口具有体验问题和潜在错误（会阻塞MCDR主线程，消息发不出去等故障情况将导致MCDR卡死），且一般情况下已不具备实用的应用场景，但仍然可用。
 ```python
 import ...
 import asyncio
@@ -55,4 +50,4 @@ async def async_main():
 
 任何情况下，都不要再尝试使用这个接口！
 
-另外，建议停止使用v2.3.x版本。
+另外，建议马上停止使用v2.3.x版本，如果你正在使用！
