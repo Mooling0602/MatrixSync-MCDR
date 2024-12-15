@@ -55,6 +55,10 @@ async def getMsg() -> None:
             psi.logger.error(tip.replace("%user_id%", user_id))
             psi.logger.info(tr("init_tips.do_unload"))
             psi.unload_plugin(plgSelf.id)
+        else:
+            psi.logger.error(tr("init_tips.token_invaild"))
+            psi.logger.info(tr("init_tips.do_unload"))
+            psi.unload_plugin(plgSelf.id)
     else:
         client.user_id = user_id
         client.device_id = device_id

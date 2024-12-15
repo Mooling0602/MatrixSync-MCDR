@@ -5,6 +5,7 @@ matrix_sync:
     config_path: 配置文件所在目录
     need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugin_enabled项后重启插件！
     read_config: 正在应用当前配置，请稍等……
+    token_invaild: 请手动删除旧版本的token，然后重载插件！
     user_mismatch: 检测到当前配置的机器人账号（%user_id%）与缓存的token不符，请删除当前token.json或使用正确的账号！
     do_unload: 插件将卸载，请在处理完成后手动重载插件！
   on_console:
