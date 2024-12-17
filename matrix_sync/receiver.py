@@ -5,11 +5,15 @@ import matrix_sync.config
 from .utils.token import getToken
 from .utils import psi, plgSelf, tr
 from mcdreforged.api.event import PluginEvent
-from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError
+from nio import AsyncClient, MatrixRoom, RoomMessageText, SyncError, RoomMessagesResponse
 from typing import Optional
 
 
 homeserver_online = True
+
+def load_msg_filter(room_id: str):
+    msg_filter = {"room_id": room_id}
+    return msg_filter
 
 class RoomMessageEvent(PluginEvent):
     def __init__(self, message: str, sender: str, room: Optional[str] = None):
@@ -20,18 +24,18 @@ class RoomMessageEvent(PluginEvent):
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     transfer = False
-    from .config import user_id, room_name, settings
+    from .config import user_id, settings
     msg_format = settings["room_msg_format"]["multi_room"]
     roomMsg = msg_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
     # Avoid echo messages.
     if not event.sender == user_id:
         # Apply settings config
-        if not matrix_sync.config.settings["allow_all_rooms_msg"]:
-            msg_format = matrix_sync.config.settings["room_msg_format"]["single_room"]
+        if not settings["allow_all_rooms_msg"]:
+            msg_format = settings["room_msg_format"]["single_room"]
             roomMsg = msg_format.replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
-            if room.display_name == room_name:
-                transfer = True
-                psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
+            # if response.room_id == room_id:
+            transfer = True
+            psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender)), (event.body, room.user_name(event.sender)))
         else:
             psi.dispatch_event(RoomMessageEvent(event.body, room.user_name(event.sender), room.display_name), (event.body, room.user_name(event.sender), room.display_name))
         if transfer:
@@ -45,7 +49,8 @@ def on_sync_error(response: SyncError):
 
 async def getMsg() -> None:
     global next_batch, msg_callback
-    from .config import homeserver, device_id, user_id, sync_old_msg
+    from .config import homeserver, device_id, user_id, sync_old_msg, allow_all_rooms_msg
+    from .config import room_id as cfg_room_id
     client = AsyncClient(f"{homeserver}")
     user, token = await getToken()
     client.access_token = token
@@ -63,6 +68,9 @@ async def getMsg() -> None:
         client.user_id = user_id
         client.device_id = device_id
 
+    if not allow_all_rooms_msg:
+        print("ok.")
+        await client.upload_filter(room={"rooms": [cfg_room_id]})
     client.add_response_callback(on_sync_error, SyncError)
     
     try:
