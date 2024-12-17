@@ -28,8 +28,7 @@ If there is any issue with message forwarding in any direction during the messag
 | **homeserver** | The homeserver address used to log in to the bot account |
 | **user_id** | The bot account ID, formatted as @username:example.com |
 | **password** | The password of the bot account, generally only used for the initial login |
-| **room_id** | The ID of the room to receive game messages |
-| **room_name** | The display name of the room to forward messages to the game (must be accurate, if updated, it also needs to be modified synchronously, otherwise you will not see any messages) |
+| **room_id** | The ID of the room to sync game messages |
 | **device_id** | The device name used for login, generally no need to modify, can be customized |
 
 Multi-config is not supported, will add API support for developers from v3.

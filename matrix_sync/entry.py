@@ -1,8 +1,9 @@
 import time
+import os
 
 from typing import Optional
 from .utils import tr
-from .client import init, clientStatus
+from .client import init
 from .config import load_config, check_config
 from .utils import psi, globals
 from .utils.commands import *
@@ -10,7 +11,7 @@ from .reporter import send_matrix
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.4.1
+# Framwork ver: 2.4.2
 def on_load(server: PluginServerInterface, prev_module):
     load_config()
     from .config import load_tip
@@ -22,7 +23,8 @@ def on_load(server: PluginServerInterface, prev_module):
     else:
         init()
         plugin_command(server)
-        if server.is_server_startup() and clientStatus:
+        from .config import TOKEN_FILE
+        if server.is_server_startup() and os.path.exists(TOKEN_FILE):
             start_sync()
 
 # Automatically run sync processes.
@@ -30,7 +32,6 @@ def start_sync(on_reload: Optional[bool] = True):
     if not globals.tLock.locked():
         start_room_msg()
         if not on_reload:
-            time.sleep(1)
             message = tr("sync_tips.server_started")
             send_matrix(message)
     else:
