@@ -50,6 +50,10 @@ def syncStatus(src: CommandSource):
     else:
         src.reply(tr("sync_tips.msync_stopped"))
 
+@builder.command("!!msync debug")
+def debug(src: CommandSource):
+    src.reply(asyncio.get_running_loop())
+
 def exit_sync():
     try:
         if globals.sync_task is not None:
