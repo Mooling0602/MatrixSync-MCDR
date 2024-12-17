@@ -8,7 +8,6 @@ account_config = {
     "user_id": "@username:matrix.example.org",
     "password": "your_password",
     "room_id": "!your-room_id:matrix.example.org",
-    "room_name": "your-room-display-name",
     "device_id": "mcdr"
 }
 
@@ -24,14 +23,14 @@ bot_config = {
 }
 
 def load_config():
-    global config, user_id, password, room_id, room_name, settings, use_token, DATA_FOLDR, TOKEN_FILE, device_id, homeserver, load_tip, sync_old_msg
+    global config, user_id, password, room_id, room_name, settings, use_token, DATA_FOLDR, TOKEN_FILE, device_id, homeserver, load_tip, sync_old_msg, allow_all_rooms_msg
     config = psi.load_config_simple("config.json", account_config)
     user_id = config["user_id"]
     password = config["password"]
     room_id = config["room_id"]
-    room_name = config["room_name"]
     settings = psi.load_config_simple("settings.json", bot_config)
     sync_old_msg = settings["sync_old_msg"]
+    allow_all_rooms_msg = settings["allow_all_rooms_msg"]
     DATA_FOLDER = psi.get_data_folder()
     tip_path = psi.rtr("matrix_sync.init_tips.config_path")
     load_tip = f"{tip_path}: {DATA_FOLDER}"

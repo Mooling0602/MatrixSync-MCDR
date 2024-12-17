@@ -5,12 +5,11 @@ import sys
 
 from .utils import psi, plgSelf, tr
 from .utils.token import getToken
+from .utils.globals import clientStatus
 from .reporter import sendMsg
 from mcdreforged.api.decorator import new_thread
 from nio import AsyncClient, LoginResponse
 
-
-clientStatus = False
 
 # Cache Token.
 def cache_token(resp: LoginResponse):
@@ -58,11 +57,13 @@ async def init_client() -> None:
             psi.logger.info(tr("init_tips.do_unload"))
             psi.unload_plugin(plgSelf.id)
         else:
+            psi.logger.info("MatrixClient inited.")
             await test_client()
 
 # Send test messages.
 async def test_client():
     global clientStatus
     message = tr("sync_tips.reporter_status")
+    psi.logger.info("Reporting on_load tip to matrix...")
     await sendMsg(message)
     clientStatus = True
