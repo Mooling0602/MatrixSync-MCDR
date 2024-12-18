@@ -1,3 +1,5 @@
+import matrix_sync.globals as globals
+
 from typing import Optional
 from mcdreforged.api.all import *
 
