@@ -19,6 +19,6 @@ default_settings = {
     },
     "log_style": {
         "mcdr": False,
-        "debug": True
+        "debug": False
     }
 }

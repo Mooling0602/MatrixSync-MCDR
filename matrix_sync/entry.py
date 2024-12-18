@@ -9,7 +9,7 @@ from .commands import *
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.5.0-1
+# Framwork ver: 2.5.0-2
 def on_load(server: PluginServerInterface, prev_module):
     asyncio.run(load_config(server))
     command_register(server)
@@ -18,10 +18,10 @@ def on_load(server: PluginServerInterface, prev_module):
 def on_server_startup(server: PluginServerInterface):
     start_sync(False)
 
-async def on_user_info(server: PluginServerInterface, info: Info):
+def on_user_info(server: PluginServerInterface, info: Info):
     if info.player is not None and not info.content.startswith("!!"):
-        playerMsg = f"[MC] <{info.player}> {info.content}"
-        await send_to_matrix(playerMsg)
+        player_message = f"[MC] <{info.player}> {info.content}"
+        matrix_reporter(player_message)
 
 # Exit sync process when server stop.
 async def on_server_stop(server: PluginServerInterface, server_return_code: int):
