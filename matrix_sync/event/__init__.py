@@ -9,12 +9,6 @@ class MatrixMessageEvent(PluginEvent):
         self.sender = sender
         self.room_id = room_id
 
-class SendToMatrixEvent(PluginEvent):
-    def __init__(self, user_id, room_id):
-        super().__init__('MessageSendToMatrix')
-        self.user_id = user_id
-        self.room_id = room_id
-
 def event_dispatcher(event: type[PluginEvent], *args, **kwargs):
     event_instance = event(*args, **kwargs)
     psi.dispatch_event(event_instance, args)

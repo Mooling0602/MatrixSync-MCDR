@@ -8,7 +8,6 @@ from .client.receiver import get_messages, stop_sync
 from .client import *
 from .utils import tr
 from .utils.logger import *
-from .event import SendToMatrixEvent, event_dispatcher
 
 
 builder = SimpleCommandBuilder()
@@ -34,7 +33,6 @@ async def add_sync_task():
 @new_thread('MatrixReporter')
 def matrix_reporter(message: str):
     asyncio.run(add_report_task(message))
-    event_dispatcher(SendToMatrixEvent, user_id=plg_globals.config["user_id"], room_id=plg_globals.config["room_id"])
 
 async def add_report_task(message: str):
     report_task = asyncio.create_task(send_to_matrix(message))
