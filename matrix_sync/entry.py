@@ -1,5 +1,8 @@
+import os
+
 from .utils import tr
 from .utils.logger import *
+from .client.init import login_by_password
 from .client.reporter import send_to_matrix
 from .client.receiver import stop_sync
 from .config import load_config
@@ -7,10 +10,12 @@ from .commands import *
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.5.0-2
+# Framwork ver: 2.5.0-4
 async def on_load(server: PluginServerInterface, prev_module):
     await load_config(server)
     command_register(server)
+    if not os.path.exists(f"{configDir}/token.json"):
+        await login_by_password()
     start_sync()
 
 def on_server_start(server: PluginServerInterface):

@@ -28,7 +28,8 @@ async def login_by_password():
         await cache_token(resp)
         log_info(tr("login.save_token"))
     else:
-        log_error(f"{tr("login.failed")}: {resp}")
+        tip = tr("login.failed")
+        log_error(f"{tip}: {resp}")
         homeserver = get_homeserver(plg_globals.config["homeserver"])
         log_info(f'homeserver: "{homeserver}", bot: "{plg_globals.config["user_id"]}"')
         log_error(tr("check_config"))
