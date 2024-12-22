@@ -1,0 +1,19 @@
+matrix_sync: 
+  check_config: Please recheck your config, if you confirm it's correct, issue this in GitHub.
+  login:
+    failed: Failed to login your bot
+    success: Login by password successfully!
+    save_token: Saving token for the bot account...
+  on_receiver_cancelled: Receiver task was cancelled.
+  on_sync_running: Already running message sync!
+  on_sync_start: Starting message sync...
+  on_unload: Unloading MatrixSync...
+  server_status:
+    starting: MC server is starting...
+    on_startup: MC server started!
+    on_stop: MC server stopped.
+    on_crash: MC server crashed!
+  sync_status:
+    running: MSync is running...
+    not_running: MSync is not running.
+  token_mismatch: The token mismatches present bot account! Sync tasks will not continue.

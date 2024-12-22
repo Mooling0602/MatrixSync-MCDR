@@ -9,4 +9,4 @@ About [Matrix](https://matrix.org/): an open decentralized network communication
 
 The following project is used in the development process: [matrix-nio](https://pypi.org/project/matrix-nio/).
 
-v2.5.0+ need new translations, but not prepared yet, you can use translation tools to read "中文" README at present. I would be grateful if you could help translation by commit PRs.
+README v2.5.0+ need new translations, but not prepared yet, you can use translation tools to read "中文" README at present. I would be grateful if you could help translation by commit PRs.

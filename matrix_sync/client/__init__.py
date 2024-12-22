@@ -10,10 +10,10 @@ def get_homeserver(url: str):
     return correct_url
 
 async def get_client_instance():
-    import matrix_sync.globals as globals
-    homeserver = get_homeserver(globals.config["homeserver"])
-    user = globals.config["user_id"]
-    device_id = globals.config["device_id"]
+    import matrix_sync.plg_globals as plg_globals
+    homeserver = get_homeserver(plg_globals.config["homeserver"])
+    user = plg_globals.config["user_id"]
+    device_id = plg_globals.config["device_id"]
     client_instance = AsyncClient(homeserver, user, device_id)
     user, token = await getToken()
     client_instance.access_token = token

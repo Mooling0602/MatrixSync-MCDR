@@ -9,7 +9,7 @@ account_config = {
 
 # Default settings.
 default_settings = {
-    "sync": {
+    "listen": {
         "all_rooms": True,
         "old_messages": False
     },
@@ -20,5 +20,6 @@ default_settings = {
     "log_style": {
         "mcdr": False,
         "debug": False
-    }
+    },
+    "ver": "2.5.0"
 }

@@ -1,0 +1,19 @@
+matrix_sync: 
+  check_config: 请重新检查你的配置，如果你确信其准确无误，请前往GitHub Issues页面反馈相关问题！
+  login:
+    failed: 无法登录你的机器人
+    success: 成功使用密码完成登录！
+    save_token: 正在为机器人账号保存Token...
+  on_receiver_cancelled: 接收器任务已经取消。
+  on_sync_running: 消息同步已在运行！
+  on_sync_start: 开始消息同步...
+  on_unload: 正在卸载 MatrixSync...
+  server_status:
+    starting: MC服务器启动中...
+    on_startup: MC服务器启动完成！
+    on_stop: MC服务器已关闭
+    on_crash: MC服务器发生崩溃！
+  sync_status:
+    running: "[MSync] 消息同步正在运行..."
+    not_running: "[MSync] 消息同步未在运行！"
+  token_mismatch: Token和现有的账号不匹配！同步任务将不会继续进行。

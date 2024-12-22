@@ -1,8 +1,10 @@
+import matrix_sync.plg_globals as plg_globals
+
 from . import *
 
 
 def log_tool(log_text: str, color: RColor, pfx: str, prefix: Optional[str] = None):
-    if globals.settings["log_style"]["mcdr"]:
+    if plg_globals.settings["log_style"]["mcdr"]:
         if pfx == "Info":
             if prefix == "Message":
                 log_text = "[MSync] " + log_text
