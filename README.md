@@ -13,6 +13,8 @@
 
 版本进度：`v2.5.0`
 
+关于子包（扩展功能支持）请查看此源码仓库：https://github.com/Mooling0602/MSyncSubpacks
+
 ## 用法
 从release下载最新版本，在MCDReforged的启动环境中安装好需要的Python依赖，然后扔到plugins文件夹里面即可。
 
