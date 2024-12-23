@@ -1,4 +1,4 @@
 matrix-nio
 aiofiles
 asyncio
-mcdreforged
+mcdreforged>=2.14
