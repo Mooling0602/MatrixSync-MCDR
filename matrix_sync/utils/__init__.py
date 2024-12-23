@@ -6,11 +6,11 @@ MCDRConfig = psi.get_mcdr_config()
 plgSelf = psi.get_self_metadata()
 serverDir = MCDRConfig["working_directory"]
 configDir = psi.get_data_folder()
-builder = SimpleCommandBuilder()
+
 
 def tr(tr_key: str, return_str: Optional[bool] = True):
     '''
-    对`ServerInterface.rtr()`进行优化，提高翻译效率。
+    对`PluginServerInterface.rtr()`进行优化，提高翻译效率。
 
     参数:
         tr_key (str): 原始或简化后的翻译键名称

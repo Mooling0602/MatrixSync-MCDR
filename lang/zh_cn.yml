@@ -1,54 +1,31 @@
-matrix_sync:
-  debug:
-    send_command: 已将你输入的消息发送到Matrix
-  init_tips:
-    config_path: 配置文件所在目录
-    need_edit_config: 请将默认配置config.json修改为正确的配置信息，然后启用settings.json中的plugin_enabled项后重启插件！
-    read_config: 正在应用当前配置，请稍等……
-    token_invaild: 请手动删除旧版本的token，然后重载插件！
-    user_mismatch: 检测到当前配置的机器人账号（%user_id%）与缓存的token不符，请删除当前token.json或使用正确的账号！
-    do_unload: 插件将卸载，请在处理完成后手动重载插件！
-  on_console:
-    commands: 执行命令
-  on_server_stop: 服务器已关闭，停止消息同步。
-  on_server_crash: 服务器崩溃或者非正常退出，已停止消息同步，可能出现未知报错。
-  on_unload: 正在卸载插件，等待消息同步进程退出……
-  unload_tips:
-    on_clean: 执行清理进程
-    start_clean: 正在准备清理...
-  run_tips:
-    failed: 登录失败
-    first_time_login: 首次登录，将使用密码继续……
-    login_success: 登录成功，正在缓存Token以供后续使用。
-    get_token: Token缓存完成！
-    error: 请检查你的账号密码以及网络情况，你可以在GitHub提出issue以获取任何帮助。
-  manual_sync: 
-    start_sync: 已开始接收房间消息！（启动子线程MatrixReceiver）
-    stop_sync: 已停止接收房间消息，到下次服务器启动完成前都只能手动重启！
-    start_error: 已在接收房间消息，非重载等特殊情况或手动停止后，不要再次尝试启动！
-    stop_error: 关闭房间消息接收器时发生未知错误！
-    stop_denied: 请在控制台执行！
-    not_running: 房间消息接收器未在运行！
-  sync_tips:
-    server_stopping: "[!] 服务器正在关闭……"
-    server_stopped: "[×] 服务器已停止运行"
-    server_started: "[√] 服务器启动完成！"
-    server_crashed: "[×] 服务器崩溃或非正常退出！"
-    reporter_status: "[!] 消息互通已在游戏服务器上初始化完成"
-    msync_running: 消息互通正在运行
-    msync_stopped: 消息互通未在运行
-    start_report: 机器人登录成功，已发送测试消息。
-    test: 检测到玩家消息，正在尝试发送到Matrix群组……
-  tr:
-    hs: 根服务器
-    ac: 账户
-    cs: 控制台
-  help_tips:
-    message: "查看指令 §7!!msync §r的帮助"
+matrix_sync: 
+  check_config: 请重新检查你的配置，如果你确信其准确无误，请前往GitHub Issues页面反馈相关问题！
+  help:
+    message: "查看指令 §7!!msync§r 的帮助页面"
     title: "----- MatrixSync 指令帮助 -----"
-    root_command: "§7!!msync §r显示此帮助页面"
-    start_command: "§7!!msync start §r开始消息同步（服务器启动完成时会自动开始）"
-    stop_command: "§7!!msync stop §r关闭消息同步（服务端停止运行后会自动关闭）"
-    send_command: "§7!!msync send §r向Matrix房间发送指定消息，若含有空格请使用\"\"括起来"
-    status_command: "§7!!msync status §r查看当前消息同步状态"
-    reload_command: "§7!!msync reload §r重载插件并刷新插件配置"
+    root: "§7!!msync§r 显示此帮助页面"
+    start: "§7!!msync start§r 开始消息同步（在插件加载完成后和服务器启动完成后会自动开始）"
+    stop: "§7!!msync stop§r 停止消息同步"
+    send: "§7!!msync send <message>§r 向Matrix发送一条指定消息，可以用\"\"括起来"
+    status: "§7!!msync status§r 查看消息同步的状态"
+    reload: 
+      plugin: "§7!!msync reload§r 重载此插件并刷新其配置"
+      subpack: "§7!!msync reload <pack_name>§r 重载一个子包并刷新其配置"
+  login:
+    failed: 无法登录你的机器人
+    success: 成功使用密码完成登录！
+    save_token: 正在为机器人账号保存Token...
+  on_receiver_cancelled: 接收器任务已经取消。
+  on_send_command: 消息正在发送到Matrix...
+  on_sync_running: 消息同步已在运行！
+  on_sync_start: 开始消息同步...
+  on_unload: 正在卸载 MatrixSync...
+  server_status:
+    starting: MC服务器启动中...
+    on_startup: MC服务器启动完成！
+    on_stop: MC服务器已关闭
+    on_crash: MC服务器发生崩溃！
+  sync_status:
+    running: "[MSync] 消息同步正在运行..."
+    not_running: "[MSync] 消息同步未在运行！"
+  token_mismatch: Token和现有的账号不匹配！同步任务将不会继续进行。
