@@ -5,6 +5,8 @@
 # MatrixSync-MCDR
 一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和《我的世界》服务器的线上游戏之间的消息。
 
+> 注意：不再支持`mcdreforged<2.14`
+
 关于[Matrix](https://matrix.org/): 一个开放的去中心化通讯协议，用于聊天软件。
 
 开发过程中用到的pypi项目：[matrix-nio](https://pypi.org/project/matrix-nio/)。
@@ -41,17 +43,18 @@
 
 | 配置项 | 配置内容 |
 | - | - |
-| `sync.all_rooms` | 是否接收来自机器人加入的所有房间的消息，默认全部接收 |
-| `sync.old_messages` | 是否在启动接收器时加载历史消息，默认不加载 |
+| `listen.all_rooms` | 是否接收来自机器人加入的所有房间的消息，默认全部接收 |
+| `listen.old_messages` | 是否在启动接收器时加载历史消息，默认不加载 |
 | `message_format.single_room` | 只接收当前配置的房间的消息时，消息的显示格式 |
 | `message_format.all_room` | 接收机器人加入的所有房间的消息时，消息的显示格式 |
 | `log_style.mcdr` | 是否使用MCDR的日志样式，默认为否（使用插件自己的日志样式） |
 | `log_style.debug` | 是否显示调试日志，默认为否 |
+| `ver` | 配置文件版本，请不要进行修改 |
 
 ## 接口（API）
 请前往[docs](https://github.com/Mooling0602/MatrixSync-MCDR/blob/dev/docs.md)查看。
 
-v2.5.0进行了一次彻底的代码重构，并且此版本开始进行长期支持，此前的所有API全部失效。
+v2.5.0进行了一次彻底的代码重构，并且此版本开始进行长期支持，此前的所有API全部失效，并且此前的配置文件不再受支持。
 
 ## 热重载（reload）及消息互通控制
 始终建议在运行环境稳定时，尽量不使用热重载，减少出错概率

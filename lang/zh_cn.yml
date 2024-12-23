@@ -1,10 +1,22 @@
 matrix_sync: 
   check_config: 请重新检查你的配置，如果你确信其准确无误，请前往GitHub Issues页面反馈相关问题！
+  help:
+    message: "查看指令 §7!!msync§r 的帮助页面"
+    title: "----- MatrixSync 指令帮助 -----"
+    root: "§7!!msync§r 显示此帮助页面"
+    start: "§7!!msync start§r 开始消息同步（在插件加载完成后和服务器启动完成后会自动开始）"
+    stop: "§7!!msync stop§r 停止消息同步"
+    send: "§7!!msync send <message>§r 向Matrix发送一条指定消息，可以用\"\"括起来"
+    status: "§7!!msync status§r 查看消息同步的状态"
+    reload: 
+      plugin: "§7!!msync reload§r 重载此插件并刷新其配置"
+      subpack: "§7!!msync reload <pack_name>§r 重载一个子包并刷新其配置"
   login:
     failed: 无法登录你的机器人
     success: 成功使用密码完成登录！
     save_token: 正在为机器人账号保存Token...
   on_receiver_cancelled: 接收器任务已经取消。
+  on_send_command: 消息正在发送到Matrix...
   on_sync_running: 消息同步已在运行！
   on_sync_start: 开始消息同步...
   on_unload: 正在卸载 MatrixSync...

@@ -1,10 +1,22 @@
 matrix_sync: 
   check_config: Please recheck your config, if you confirm it's correct, issue this in GitHub.
+  help:
+    message: "See the help page for §7!!msync§r commands."
+    title: "----- MatrixSync Command Help -----"
+    root: "§7!!msync§r Show this help page."
+    start: "§7!!msync start§r Start message sync(will automatically start when loaded plugin and server startup)."
+    stop: "§7!!msync stop§r Stop message sync."
+    send: "§7!!msync send <message>§r Send a specified message to matrix, can be quoted by \"\"."
+    status: "§7!!msync status§r Check the status of message sync."
+    reload: 
+      plugin: "§7!!msync reload§r Reload this plugin and refresh its config."
+      subpack: "§7!!msync reload <pack_name>§r Reload a subpack and refresh its config."
   login:
     failed: Failed to login your bot
     success: Login by password successfully!
     save_token: Saving token for the bot account...
   on_receiver_cancelled: Receiver task was cancelled.
+  on_send_command: Message is sending to matrix...
   on_sync_running: Already running message sync!
   on_sync_start: Starting message sync...
   on_unload: Unloading MatrixSync...
