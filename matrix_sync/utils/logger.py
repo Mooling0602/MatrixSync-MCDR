@@ -45,9 +45,4 @@ class CustomFormatter(logging.Formatter):
         self._style._fmt = format_string
         return super().format(record)
 
-formatter = CustomFormatter()
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-
-logger = logging.getLogger("MSync")
-logger.addHandler(handler)
+logger = None
