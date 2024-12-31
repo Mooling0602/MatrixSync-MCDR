@@ -1,31 +1,53 @@
+import logging
+import re
 import matrix_sync.plg_globals as plg_globals
 
-from . import *
+from mcdreforged.api.rtext import RText, RColor, RColorRGB
+from datetime import datetime
+from matrix_sync.utils.text import mc_to_ansi
 
 
-def log_tool(log_text: str, color: RColor, pfx: str, prefix: Optional[str] = None):
-    if plg_globals.settings["log_style"]["mcdr"]:
-        if pfx == "Info":
-            if prefix == "Message":
-                log_text = "[MSync] " + log_text
-            psi.logger.info(log_text)
-        elif pfx == "Warning":
-            psi.logger.warning(log_text)
-        elif pfx == "Error":
-            psi.logger.error(log_text)
+mc_code_pattern = re.compile(r'§[0-9a-v]')
+
+def ansi_colored_text(text: str, color: type[RColor]) -> str:
+    return RText(text, color).to_colored_text()
+
+class CustomFormatter(logging.Formatter):
+    def format(self, record):
+
+        record.custom_time = datetime.now().strftime("%H:%M:%S")
+
+        if record.levelname == "INFO":
+            record.colored_levelname = f"{ansi_colored_text(record.levelname, RColor.green)}"
+        elif record.levelname == "ERROR":
+            record.colored_levelname = f"{ansi_colored_text(record.levelname, RColor.red)}"
+        elif record.levelname == "WARNING":
+            record.colored_levelname = f"{ansi_colored_text(record.levelname, RColorRGB.from_rgb(255, 165, 0))}"
+        elif record.levelname == "DEBUG":
+            record.colored_levelname = f"{ansi_colored_text(record.levelname, RColor.dark_blue)}"
         else:
-            psi.logger.info(log_text)
-    else:
-        pfx_with_color = RText(pfx, color).to_colored_text()
-        if prefix is not None:
-            pfx_with_color = f"{prefix}/" + pfx_with_color
-        print(f"[MSync - {pfx_with_color}] {log_text}")
+            record.colored_levelname = record.levelname
 
-def log_info(log_text: str, prefix: Optional[str] = None):
-    log_tool(log_text, RColor.green, "Info", prefix)
+        if mc_code_pattern.search(record.msg):
+            record.msg = mc_to_ansi(record.msg)
+        
+        if hasattr(record, "module_name") and record.module_name:
+            if plg_globals.settings["log_style"]["show_time"]:
+                format_string = "[MSync - %(module_name)s] [%(custom_time)s %(colored_levelname)s] %(message)s"
+            else:
+                format_string = "[MSync - %(module_name)s/%(colored_levelname)s] %(message)s"
+        else:
+            if plg_globals.settings["log_style"]["show_time"]:
+                format_string = "[MSync - %(custom_time)s %(colored_levelname)s] %(message)s"
+            else:
+                format_string = "[MSync - %(colored_levelname)s] %(message)s"
+        
+        self._style._fmt = format_string
+        return super().format(record)
 
-def log_warning(log_text: str, prefix: Optional[str] = None):
-    log_tool(log_text, RColorRGB.from_rgb(255, 165, 0), "Warning", prefix)
-    
-def log_error(log_text: str, prefix: Optional[str] = None):
-    log_tool(log_text, RColor.red, "Error", prefix)
+formatter = CustomFormatter()
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+
+logger = logging.getLogger("MSync")
+logger.addHandler(handler)

@@ -19,7 +19,8 @@ default_settings = {
     },
     "log_style": {
         "mcdr": False,
-        "debug": False
+        "debug": False,
+        "show_time": False
     },
-    "ver": "2.5.0"
+    "ver": "2.5.1"
 }
