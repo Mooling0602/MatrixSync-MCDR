@@ -15,18 +15,10 @@ homeserver_online = True
 receiver = None
 
 async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
-    logger = get_logger()
-    message_format = plg_globals.settings["message_format"]["all_room"]
-    room_message = message_format.replace('%room_display_name%', room.display_name).replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
-    # Avoid echo messages.
-    if not event.sender == plg_globals.config["user_id"]:
-        # Apply settings config
-        if not plg_globals.settings["listen"]["all_rooms"]:
-            message_format = plg_globals.settings["message_format"]["single_room"]
-            room_message = message_format.replace('%sender%', room.user_name(event.sender)).replace('%message%', event.body)
-        event_dispatcher(MatrixMessageEvent, event.body, room.user_name(event.sender), room.room_id)
-        logger.info(room_message, extra={"module_name": "Message"})
-        psi.say(room_message)
+    room_info.id = room.room_id
+    room_info.display_name= room.display_name
+    if event.sender != plg_globals.config["user_id"]:
+        event_dispatcher(MatrixMessageEvent, event.body, room.user_name(event.sender), room)
 
 def on_sync_error(response: SyncError):
     logger = get_logger()

@@ -5,6 +5,7 @@ from .client.reporter import send_to_matrix
 from .client.receiver import stop_sync
 from .config import load_config
 from .commands import *
+from .event.receiver import listen_message
 from mcdreforged.api.all import *
 
 
@@ -16,6 +17,7 @@ async def on_load(server: PluginServerInterface, prev_module):
     if not os.path.exists(f"{configDir}/token.json"):
         from .client.init import login_by_password
         await login_by_password()
+    listen_message(server)
     start_sync()
 
 def on_server_start(server: PluginServerInterface):
