@@ -16,7 +16,9 @@ matrix_sync:
     success: Login by password successfully!
     save_token: Saving token for the bot account...
   on_receiver_cancelled: Receiver task was cancelled.
-  on_send_command: Message is sending to matrix...
+  on_send_command:
+    sending: Message is sending to matrix...
+    failed: Error when sending message
   on_sync_running: Already running message sync!
   on_sync_start: Starting message sync...
   on_unload: Unloading MatrixSync...
@@ -25,6 +27,8 @@ matrix_sync:
     on_startup: MC server started!
     on_stop: MC server stopped.
     on_crash: MC server crashed!
+  settings_comp_check:
+    failed: "Compatibility check failed! Backup old settings as \"settings.json.bak\"."
   sync_status:
     running: MSync is running...
     not_running: MSync is not running.

@@ -16,7 +16,9 @@ matrix_sync:
     success: 成功使用密码完成登录！
     save_token: 正在为机器人账号保存Token...
   on_receiver_cancelled: 接收器任务已经取消。
-  on_send_command: 消息正在发送到Matrix...
+  on_send_command:
+    sending: 消息正在发送到Matrix...
+    failed: 发送消息时发生错误
   on_sync_running: 消息同步已在运行！
   on_sync_start: 开始消息同步...
   on_unload: 正在卸载 MatrixSync...
@@ -25,6 +27,8 @@ matrix_sync:
     on_startup: MC服务器启动完成！
     on_stop: MC服务器已关闭
     on_crash: MC服务器发生崩溃！
+  settings_comp_check:
+    failed: "兼容性检查失败！旧有的设置项将备份为\"settings.json.bak\"。"
   sync_status:
     running: "[MSync] 消息同步正在运行..."
     not_running: "[MSync] 消息同步未在运行！"

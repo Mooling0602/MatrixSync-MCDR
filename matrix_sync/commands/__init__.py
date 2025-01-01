@@ -1,13 +1,13 @@
 import asyncio
 import threading
+import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
 from mcdreforged.api.all import *
 from ..client.reporter import send_to_matrix
 from ..client.receiver import get_messages, stop_sync
 from ..client import *
-from ..utils import tr
-from ..utils.logger import *
+from ..utils import *
 from .help import *
 
 
@@ -16,17 +16,23 @@ builder = SimpleCommandBuilder()
 plg_globals.tLock = threading.Lock()
 
 def start_sync():
+    logger = get_logger()
     if not plg_globals.tLock.locked():
         run_sync_task()
-        log_info(tr("on_sync_start"))
     else:
-        log_warning(tr("on_sync_running"))
+        logger.warning(tr("on_sync_running"))
 
 @new_thread('MatrixReceiver')
 def run_sync_task():
+    logger = get_logger()
     plg_globals.sync = True
-    with plg_globals.tLock:
-        asyncio.run(add_sync_task())
+    if plg_globals.token_vaild:
+        with plg_globals.tLock:
+            logger.info(tr("on_sync_start"))
+            asyncio.run(add_sync_task())
+    else:
+        logger.error(tr("token_mismatch"))
+        plg_globals.sync = False
 
 async def add_sync_task():
     await get_messages()
@@ -55,16 +61,20 @@ async def on_command_stop():
 
 @builder.command("!!msync status")
 def show_status():
-    log_info(f"Receiver: {plg_globals.sync}")
+    logger = get_logger()
+    logger.info(f"Receiver: {plg_globals.sync}")
     if plg_globals.sync:
-        log_info(tr("sync_status.running"))
+        logger.info(tr("sync_status.running"))
     else:
-        log_info(tr("sync_status.not_running"))
+        logger.info(tr("sync_status.not_running"))
 
 @builder.command("!!msync send <message>")
 def on_command_send(src: CommandSource, ctx: CommandContext):
-    matrix_reporter(ctx["message"])
-    src.reply(tr("on_send_command"))
+    if plg_globals.token_vaild:
+        matrix_reporter(ctx["message"])
+        src.reply(tr("on_send_command.sending"))
+    else:
+        src.reply(tr("on_send_command.failed") + ": " + tr("token_mismatch"))
 
 @builder.command("!!msync reload")
 def on_command_reload():
