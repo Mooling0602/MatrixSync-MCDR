@@ -18,7 +18,7 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
     room_info.id = room.room_id
     room_info.display_name= room.display_name
     if event.sender != plg_globals.config["user_id"]:
-        event_dispatcher(MatrixMessageEvent, event.body, room.user_name(event.sender), room)
+        event_dispatcher(MatrixMessageEvent, event.body, room.user_name(event.sender), room_info)
 
 def on_sync_error(response: SyncError):
     logger = get_logger()
