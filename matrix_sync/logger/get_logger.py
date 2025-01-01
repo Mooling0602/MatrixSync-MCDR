@@ -15,6 +15,9 @@ class psiLogger:
     def error(self, *args):
         psi.logger.error(args[0])
 
+    def debug(self, *args):
+        psi.logger.debug(args[0])
+
 def get_logger():
     if plg_globals.settings["log_style"]["mcdr"]:
         logger = psiLogger()
