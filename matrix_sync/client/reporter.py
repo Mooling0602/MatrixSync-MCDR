@@ -3,17 +3,14 @@ import re
 import matrix_sync.plg_globals as plg_globals
 
 from . import get_homeserver
-from .init import check_token
 from ..utils import *
-from ..utils.logger import *
 from ..utils.token import getToken
 from nio import AsyncClient
 
 
 async def send_to_matrix(message) -> None:
     client = AsyncClient(get_homeserver(plg_globals.config["homeserver"]))
-    token_vaild = await check_token()
-    if token_vaild:
+    if plg_globals.token_vaild:
         user, token = await getToken()
 
         client.user_id = plg_globals.config["user_id"]
