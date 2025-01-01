@@ -10,7 +10,7 @@ from .event.receiver import listen_message
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.5.1-2
+# Framwork ver: 2.5.1-3
 async def on_load(server: PluginServerInterface, prev_module):
     await load_config(server)
     # await check_settings(server)
