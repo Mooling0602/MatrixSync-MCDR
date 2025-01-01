@@ -1,6 +1,6 @@
 # thread MatrixReceiver
 import asyncio
-import matrix_sync.utils.get_logger as get_logger
+import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
 from . import *
@@ -39,12 +39,12 @@ async def get_messages() -> None:
     client.device_id = plg_globals.config["device_id"]
 
     if not plg_globals.settings["listen"]["all_rooms"]:
-        logger.info("ok.", extra={"module_name": "Receiver"})
+        logger.info("ok.", "Receiver")
         cfg_room_id = plg_globals.config["room_id"]
-        logger.info(f"Listening: {cfg_room_id}", extra={"module_name": "Receiver"})
+        logger.info(f"Listening: {cfg_room_id}", "Receiver")
         resp = await client.upload_filter(room={"rooms": [cfg_room_id]})
         if isinstance(resp, UploadFilterError):
-            logger.error(resp, extra={"module_name": "Receiver"})
+            logger.error(resp, "Receiver")
 
     client.add_response_callback(on_sync_error, SyncError)
     
@@ -61,15 +61,15 @@ async def get_messages() -> None:
                 client.add_event_callback(message_callback, RoomMessageText)
                 receiver = asyncio.create_task(client.sync_forever(timeout=5))
     else:
-        logger.error("Sync failed: homeserver is down or your network disconnected with it.", extra={"module_name": "Receiver"})
-        logger.info("Use !!msync start after homeserver is running or your network restored.", extra={"module_name": "Receiver"})
+        logger.error("Sync failed: homeserver is down or your network disconnected with it.", "Receiver")
+        logger.info("Use !!msync start after homeserver is running or your network restored.", "Receiver")
         
     try:
         await receiver
     except asyncio.CancelledError:
-        logger.warning(tr("on_receiver_cancelled"), extra={"module_name": "Receiver"})
+        logger.warning(tr("on_receiver_cancelled"), "Receiver")
     except Exception as e:
-        logger.error(f"Receiver sync error: {e}", extra={"module_name": "Receiver"})
+        logger.error(f"Receiver sync error: {e}", "Receiver")
         receiver.cancel()
     finally:
         if receiver:

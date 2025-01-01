@@ -1,4 +1,4 @@
-import matrix_sync.utils.get_logger as get_logger
+import matrix_sync.logger.get_logger as get_logger
 
 from mcdreforged.api.all import *
 from ..utils import psi

@@ -1,7 +1,7 @@
 import json
 import sys
 import aiofiles
-import matrix_sync.utils.get_logger as get_logger
+import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
 from . import *
@@ -26,16 +26,16 @@ async def login_by_password():
     )
     resp = await client.login(plg_globals.config["password"], device_name=plg_globals.config["device_id"])
     if isinstance(resp, LoginResponse):
-        logger.info(tr("login.success"), extra={"module_name": "FirstLogin"})
+        logger.info(tr("login.success"), "FirstLogin")
         await cache_token(resp)
         plg_globals.token_vaild = True
-        logger.info(tr("login.save_token"), extra={"module_name": "FirstLogin"})
+        logger.info(tr("login.save_token"), "FirstLogin")
     else:
         tip = tr("login.failed")
-        logger.error(f"{tip}: {resp}", extra={"module_name": "FirstLogin"})
+        logger.error(f"{tip}: {resp}", "FirstLogin")
         homeserver = get_homeserver(plg_globals.config["homeserver"])
-        logger.info(f'homeserver: "{homeserver}", bot: "{plg_globals.config["user_id"]}"', extra={"module_name": "FirstLogin"})
-        logger.error(tr("check_config"), extra={"module_name": "FirstLogin"})
+        logger.info(f'homeserver: "{homeserver}", bot: "{plg_globals.config["user_id"]}"', "FirstLogin")
+        logger.error(tr("check_config"), "FirstLogin")
         sys.exit(1)
 
 async def check_token() -> bool:

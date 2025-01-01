@@ -1,6 +1,7 @@
 import os
+import matrix_sync.logger.get_logger as get_logger
 
-from .utils import tr
+from .utils import tr, configDir
 from .client.reporter import send_to_matrix
 from .client.receiver import stop_sync
 from .config import load_config

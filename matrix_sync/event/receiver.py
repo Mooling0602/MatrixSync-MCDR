@@ -1,4 +1,4 @@
-import matrix_sync.utils.get_logger as get_logger
+import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
 from mcdreforged.api.types import PluginServerInterface
@@ -15,5 +15,5 @@ def on_matrix_message(server, message: str, sender: str, room):
     else:
         message_format = plg_globals.settings["message_format"]["single_room"]
         room_message = message_format.replace('%sender%', sender).replace('%message%', message)
-    logger.info(room_message, extra={"module_name": "Message"})
+    logger.info(room_message, "Message")
     server.say(room_message)
