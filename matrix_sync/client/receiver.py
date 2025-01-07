@@ -23,7 +23,7 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
 def on_sync_error(response: SyncError):
     logger = get_logger()
     global homeserver_online
-    logger.error(f"Sync error: {response.status_code}")
+    logger.error(f"Sync error: {response.status_code}", "Receiver")
     if response.status_code >= 500:
         homeserver_online = False
 

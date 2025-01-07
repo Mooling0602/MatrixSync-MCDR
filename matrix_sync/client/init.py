@@ -1,6 +1,8 @@
+import asyncio
 import json
 import sys
 import aiofiles
+from matrix_sync.commands import start_sync
 import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
@@ -8,6 +10,7 @@ from . import *
 from ..utils import configDir, tr
 from ..utils.token import getToken
 from nio import LoginResponse
+from mcdreforged.api.decorator import new_thread
 
 
 async def cache_token(resp: LoginResponse):
@@ -30,6 +33,7 @@ async def login_by_password():
         await cache_token(resp)
         plg_globals.token_vaild = True
         logger.info(tr("login.save_token"), "FirstLogin")
+        start_sync()
     else:
         tip = tr("login.failed")
         logger.error(f"{tip}: {resp}", "FirstLogin")
@@ -37,6 +41,13 @@ async def login_by_password():
         logger.info(f'homeserver: "{homeserver}", bot: "{plg_globals.config["user_id"]}"', "FirstLogin")
         logger.error(tr("check_config"), "FirstLogin")
         sys.exit(1)
+
+async def add_init_ask():
+    await login_by_password()
+
+@new_thread()
+def first_login():
+    asyncio.run(add_init_ask())
 
 async def check_token() -> bool:
     user, token = await getToken()

@@ -11,15 +11,15 @@ from mcdreforged.api.all import *
 
 
 # Framwork ver: 2.5.1-3
-async def on_load(server: PluginServerInterface, prev_module):
-    await load_config(server)
-    # await check_settings(server)
+def on_load(server: PluginServerInterface, prev_module):
+    load_config(server)
     command_register(server)
     if not os.path.exists(f"{configDir}/token.json"):
-        from .client.init import login_by_password
-        await login_by_password()
-    listen_message(server)
-    start_sync()
+        from .client.init import first_login
+        first_login()
+    else:
+        listen_message(server)
+        start_sync()
 
 def on_server_start(server: PluginServerInterface):
     matrix_reporter(tr("server_status.starting"))
