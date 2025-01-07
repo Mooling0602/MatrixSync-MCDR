@@ -1,6 +1,6 @@
 {
 	"id": "matrix_sync",
-	"version": "2.5.2",
+	"version": "2.5.3",
 	"name": "MatrixSync",
 	"description": {
 		"en_us": "Sync messages between online game and Matrix groups.",
