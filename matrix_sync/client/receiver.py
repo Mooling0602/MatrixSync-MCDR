@@ -1,6 +1,6 @@
 # thread MatrixReceiver
 import asyncio
-import matrix_sync.logger.get_logger as get_logger
+from ..logger.get_logger import console_logger
 import matrix_sync.plg_globals as plg_globals
 
 from . import *
@@ -21,14 +21,14 @@ async def message_callback(room: MatrixRoom, event: RoomMessageText) -> None:
         event_dispatcher(MatrixMessageEvent, event.body, room.user_name(event.sender), room_info)
 
 def on_sync_error(response: SyncError):
-    logger = get_logger()
+    logger = console_logger()
     global homeserver_online
     logger.error(f"Sync error: {response.status_code}", "Receiver")
     if response.status_code >= 500:
         homeserver_online = False
 
 async def get_messages() -> None:
-    logger = get_logger()
+    logger = console_logger()
     global receiver
     resp = None
     client = AsyncClient(homeserver=get_homeserver(plg_globals.config["homeserver"]))

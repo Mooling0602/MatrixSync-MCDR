@@ -1,6 +1,8 @@
 import os
-import matrix_sync.logger.get_logger as get_logger
+import logging
+import matrix_sync.plg_globals as plg_globals
 
+from .logger.get_logger import console_logger
 from .utils import tr, configDir
 from .client.reporter import send_to_matrix
 from .client.receiver import stop_sync
@@ -10,10 +12,15 @@ from .event.receiver import listen_message
 from mcdreforged.api.all import *
 
 
-# Framwork ver: 2.5.1-3
+# Globally hide useless log outputs.
+# logging.getLogger('nio').setLevel(logging.WARNING)
+
+# Framwork ver: 2.5.3-1
 def on_load(server: PluginServerInterface, prev_module):
     load_config(server)
     command_register(server)
+    if plg_globals.settings["log_style"]["debug"] is False:
+        logging.getLogger('nio').setLevel(logging.WARNING)
     if not os.path.exists(f"{configDir}/token.json"):
         from .client.init import first_login
         first_login()
@@ -46,6 +53,6 @@ async def on_server_stop(server: PluginServerInterface, server_return_code: int)
 
 # Wait for receiver sync exited, then unload plugin.
 async def on_unload(server: PluginServerInterface):
-    logger = get_logger()
+    logger = console_logger()
     logger.info(tr("on_unload"))
     await stop_sync()

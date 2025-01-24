@@ -1,9 +1,10 @@
 import asyncio
 import threading
-import matrix_sync.logger.get_logger as get_logger
+from ..logger.get_logger import console_logger, reply_logger
 import matrix_sync.plg_globals as plg_globals
 
 from mcdreforged.api.all import *
+from ..logger.get_logger import reply_logger
 from ..client.reporter import send_to_matrix
 from ..client.receiver import get_messages, stop_sync
 from ..client import *
@@ -16,7 +17,7 @@ builder = SimpleCommandBuilder()
 plg_globals.tLock = threading.Lock()
 
 def start_sync():
-    logger = get_logger()
+    logger = console_logger()
     if not plg_globals.tLock.locked():
         run_sync_task()
     else:
@@ -24,7 +25,7 @@ def start_sync():
 
 @new_thread('MatrixReceiver')
 def run_sync_task():
-    logger = get_logger()
+    logger = console_logger()
     plg_globals.sync = True
     if plg_globals.token_vaild:
         with plg_globals.tLock:
@@ -52,42 +53,86 @@ def command_register(server: PluginServerInterface):
     builder.register(server)
 
 @builder.command("!!msync start")
-def on_command_start():
-    start_sync()
+def on_command_start(src: CommandSource):
+    if src.has_permission_higher_than(2):
+        start_sync()
+    else:
+        src.reply(tr("no_permission"))
 
 @builder.command("!!msync stop")
-async def on_command_stop():
-    await stop_sync()
+async def on_command_stop(src: CommandSource):
+    if src.has_permission_higher_than(2):
+        await stop_sync()
+    else:
+        src.reply(tr("no_permission"))
 
 @builder.command("!!msync status")
-def show_status():
-    logger = get_logger()
-    logger.info(f"Receiver: {plg_globals.sync}")
-    if plg_globals.sync:
-        logger.info(tr("sync_status.running"))
-    else:
-        logger.info(tr("sync_status.not_running"))
+def show_status(src: CommandSource):
+    logger = console_logger()
+    def return_result():
+        if plg_globals.sync:
+            logger.info(tr("sync_status.running"))
+        else:
+            logger.info(tr("sync_status.not_running"))
+    if src.is_console:
+        logger = console_logger()
+        logger.info(f"Receiver: {plg_globals.sync}")
+        return_result()
+    if src.is_player:
+        try:
+            from rc_api import cmdReply
+            reply = cmdReply()
+            reply.log(src, f"Receiver: {plg_globals.sync}", logger)
+            if plg_globals.sync:
+                reply.log(src, tr("sync_status.running"), logger)
+            else:
+                reply.log(src, tr("sync_status.not_running"), logger)
+        except ModuleNotFoundError:
+            reply = reply_logger()
+            reply(src, f"Receiver: {plg_globals.sync}")
+            if plg_globals.sync:
+                reply(src, tr("sync_status.running"))
+            else:
+                reply(src, tr("sync_status.not_running"))
 
 @builder.command("!!msync send <message>")
 def on_command_send(src: CommandSource, ctx: CommandContext):
-    if plg_globals.token_vaild:
-        matrix_reporter(ctx["message"])
-        src.reply(tr("on_send_command.sending"))
+    if src.has_permission_higher_than(2):
+        if plg_globals.token_vaild:
+            matrix_reporter(ctx["message"])
+            src.reply(tr("on_send_command.sending"))
+        else:
+            src.reply(tr("on_send_command.failed") + ": " + tr("token_mismatch"))
     else:
-        src.reply(tr("on_send_command.failed") + ": " + tr("token_mismatch"))
+        src.reply(tr("no_permission"))
 
 @builder.command("!!msync reload")
-def on_command_reload():
-    psi.reload_plugin(plgSelf.id)
+def on_command_reload(src: CommandSource):
+    if src.has_permission_higher_than(2):
+        psi.reload_plugin(plgSelf.id)
+    else:
+        try:
+            from rc_api import cmdReply
+            reply = cmdReply()
+            logger = console_logger()
+            reply.log(src, tr("no_permission"), logger)
+            # reply.log(src, tr("no_permission")) if you don't use any modified logger instance.
+        except ModuleNotFoundError:
+            src.reply(tr("no_permission"))
 
 @builder.command("!!msync reload <pack_name>")
 def on_command_reload_subpack(src: CommandSource, ctx: CommandContext):
-    plugin_list = psi.get_plugin_list()
-    subpack_id = "msync_" + ctx["pack_name"]
-    if subpack_id in plugin_list:
-        psi.reload_plugin(subpack_id)
+    if src.has_permission_higher_than(2):
+        plugin_list = psi.get_plugin_list()
+        subpack_id = ctx["pack_name"]
+        if not subpack_id.startswith("msync_"):
+            subpack_id = "msync_" + ctx["pack_name"]
+        if subpack_id in plugin_list:
+            psi.reload_plugin(subpack_id)
+        else:
+            src.reply("Reload subpack error: Invaild name or target subpack is not loaded!")
     else:
-        src.reply("Reload subpack error: Invaild name!")
+        src.reply(tr("no_permission"))
 
 @builder.command("!!msync")
 @builder.command("!!msync help")
