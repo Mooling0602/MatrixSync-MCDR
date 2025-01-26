@@ -3,12 +3,12 @@ import json
 import sys
 import aiofiles
 from matrix_sync.commands import start_sync
-from ..logger.get_logger import console_logger
 import matrix_sync.plg_globals as plg_globals
 
 from . import *
 from ..utils import configDir, tr
 from ..utils.token import getToken
+from ..utils.get_logger import console_logger
 from nio import LoginResponse
 from mcdreforged.api.decorator import new_thread
 

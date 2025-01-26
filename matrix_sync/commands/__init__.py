@@ -1,14 +1,13 @@
 import asyncio
 import threading
-from ..logger.get_logger import console_logger, reply_logger
 import matrix_sync.plg_globals as plg_globals
 
 from mcdreforged.api.all import *
-from ..logger.get_logger import reply_logger
+from ..utils.get_logger import console_logger, reply_logger
 from ..client.reporter import send_to_matrix
 from ..client.receiver import get_messages, stop_sync
-from ..client import *
-from ..utils import *
+from ..utils import psi, plgSelf
+from mutils import tr
 from .help import *
 
 
@@ -79,21 +78,12 @@ def show_status(src: CommandSource):
         logger.info(f"Receiver: {plg_globals.sync}")
         return_result()
     if src.is_player:
-        try:
-            from rc_api import cmdReply
-            reply = cmdReply()
-            reply.log(src, f"Receiver: {plg_globals.sync}", logger)
-            if plg_globals.sync:
-                reply.log(src, tr("sync_status.running"), logger)
-            else:
-                reply.log(src, tr("sync_status.not_running"), logger)
-        except ModuleNotFoundError:
-            reply = reply_logger()
-            reply(src, f"Receiver: {plg_globals.sync}")
-            if plg_globals.sync:
-                reply(src, tr("sync_status.running"))
-            else:
-                reply(src, tr("sync_status.not_running"))
+        reply = reply_logger()
+        reply.log(src, f"Receiver: {plg_globals.sync}", logger)
+        if plg_globals.sync:
+            reply.log(src, tr("sync_status.running"), logger)
+        else:
+            reply.log(src, tr("sync_status.not_running"), logger)
 
 @builder.command("!!msync send <message>")
 def on_command_send(src: CommandSource, ctx: CommandContext):
@@ -111,14 +101,9 @@ def on_command_reload(src: CommandSource):
     if src.has_permission_higher_than(2):
         psi.reload_plugin(plgSelf.id)
     else:
-        try:
-            from rc_api import cmdReply
-            reply = cmdReply()
-            logger = console_logger()
-            reply.log(src, tr("no_permission"), logger)
-            # reply.log(src, tr("no_permission")) if you don't use any modified logger instance.
-        except ModuleNotFoundError:
-            src.reply(tr("no_permission"))
+        reply = reply_logger()
+        logger = console_logger()
+        reply.log(src, tr("no_permission"), logger)
 
 @builder.command("!!msync reload <pack_name>")
 def on_command_reload_subpack(src: CommandSource, ctx: CommandContext):

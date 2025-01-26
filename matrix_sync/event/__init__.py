@@ -1,4 +1,4 @@
-from ..logger.get_logger import console_logger
+from ..utils.get_logger import console_logger
 from mcdreforged.api.all import *
 from ..utils import psi
 

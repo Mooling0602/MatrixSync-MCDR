@@ -1,6 +1,5 @@
 import asyncio
 import os
-import matrix_sync.utils.tr as tr
 import matrix_sync.plg_globals as plg_globals
 
 from .default import *

@@ -1,4 +1,4 @@
-from ..logger.get_logger import console_logger
+from ..utils.get_logger import console_logger
 import matrix_sync.plg_globals as plg_globals
 
 from mcdreforged.api.types import PluginServerInterface

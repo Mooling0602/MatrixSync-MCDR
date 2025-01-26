@@ -7,7 +7,8 @@
 		"zh_cn": "同步Matrix群组和线上游戏的消息。"
 	},
 	"dependencies": {
-		"mcdreforged": ">=2.14.0"
+		"mcdreforged": ">=2.14.0",
+		"mutils": ">=0.0.1"
 	},
 	"author": "Mooling0602",
     "link": "https://github.com/Mooling0602/MatrixSync-MCDR",

@@ -1,5 +1,5 @@
 from mcdreforged.api.types import ServerInterface
-
+from mutils import tr
 
 psi = ServerInterface.psi()
 MCDRConfig = psi.get_mcdr_config()

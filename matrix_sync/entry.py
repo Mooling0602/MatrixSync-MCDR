@@ -2,7 +2,7 @@ import os
 import logging
 import matrix_sync.plg_globals as plg_globals
 
-from .logger.get_logger import console_logger
+from .utils.get_logger import console_logger
 from .utils import tr, configDir
 from .client.reporter import send_to_matrix
 from .client.receiver import stop_sync
