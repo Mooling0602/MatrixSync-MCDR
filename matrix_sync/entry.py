@@ -15,7 +15,7 @@ from mcdreforged.api.all import *
 # Globally hide useless log outputs.
 # logging.getLogger('nio').setLevel(logging.WARNING)
 
-# Framwork ver: 2.5.3-1
+# Framwork ver: 2.5.4-1
 def on_load(server: PluginServerInterface, prev_module):
     load_config(server)
     command_register(server)
