@@ -5,7 +5,7 @@ from nio import AsyncClient
 
 def get_homeserver(url: str):
     correct_url = url
-    if not url.startswith("https://") or url.startswith("http://"):
+    if not (url.startswith("https://") or url.startswith("http://")):
         correct_url = "https://" + url
     return correct_url
 
