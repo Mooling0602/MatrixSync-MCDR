@@ -6,8 +6,7 @@ from mcdreforged.api.all import *
 from ..utils.get_logger import console_logger, reply_logger
 from ..client.reporter import send_to_matrix
 from ..client.receiver import get_messages, stop_sync
-from ..utils import psi, plgSelf
-from mutils import tr
+from ..utils import psi, plgSelf, tr
 from .help import *
 
 

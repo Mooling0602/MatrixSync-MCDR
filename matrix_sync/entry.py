@@ -13,7 +13,7 @@ from mcdreforged.api.all import *
 
 
 # Globally hide useless log outputs.
-# logging.getLogger('nio').setLevel(logging.WARNING)
+logging.getLogger('nio').setLevel(logging.WARNING)
 
 # Framwork ver: 2.5.4-1
 def on_load(server: PluginServerInterface, prev_module):
@@ -38,7 +38,7 @@ def on_server_startup(server: PluginServerInterface):
 # Built-in game message reporter.
 def on_user_info(server: PluginServerInterface, info: Info):
     if info.player is not None and not info.content.startswith("!!"):
-        player_message = f"[MC] <{info.player}> {info.content}"
+        player_message = plg_globals.settings["message_format"]["game_chat"].replace("%player_name%", info.player).replace("%message%", info.content)
         if plg_globals.sync:
             matrix_reporter(player_message)
 

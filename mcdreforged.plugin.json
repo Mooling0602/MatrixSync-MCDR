@@ -12,5 +12,6 @@
 	},
 	"author": "Mooling0602",
     "link": "https://github.com/Mooling0602/MatrixSync-MCDR",
-	"entrypoint": "matrix_sync.entry"
+	"entrypoint": "matrix_sync.entry",
+	"resources": ["lang"]
 }

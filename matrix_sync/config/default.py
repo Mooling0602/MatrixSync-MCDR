@@ -15,12 +15,13 @@ default_settings = {
     },
     "message_format": {
         "single_room": "%sender%: %message%",
-        "all_room": "[%room_display_name%] %sender%: %message%"
+        "all_room": "[%room_display_name%] %sender%: %message%",
+        "game_chat": "[MC] <%player_name%> %message%"
     },
     "log_style": {
         "mcdr": False,
         "debug": False,
         "show_time": False
     },
-    "ver": "2.5.1"
+    "ver": "2.5.4"
 }

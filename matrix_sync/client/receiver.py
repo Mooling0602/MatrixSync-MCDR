@@ -5,7 +5,7 @@ import matrix_sync.plg_globals as plg_globals
 from . import *
 from ..utils.token import getToken
 from ..utils.get_logger import console_logger
-from mutils import tr
+from ..utils import tr
 from ..event import *
 from nio import MatrixRoom, RoomMessageText, SyncError, UploadFilterError
 
