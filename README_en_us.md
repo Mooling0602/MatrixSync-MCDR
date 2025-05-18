@@ -1,6 +1,5 @@
-- [中文](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README.md)
+- [简体中文](README.md)
 - English
-> To avoid incorrect links after merging into the main branch, all URLs should use the main branch's address. If you are accessing other branches, please make sure to manually adjust the link's target location.
 
 # MatrixSync-MCDR
 A MCDR (full name [MCDReforged](https://mcdreforged.com/)) plugin, can sync messages between Matrix groups and online gaming in Minecraft servers.

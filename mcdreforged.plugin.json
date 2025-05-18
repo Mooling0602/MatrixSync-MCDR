@@ -1,15 +1,17 @@
 {
 	"id": "matrix_sync",
-	"version": "2.5.3",
+	"version": "2.5.4",
 	"name": "MatrixSync",
 	"description": {
 		"en_us": "Sync messages between online game and Matrix groups.",
 		"zh_cn": "同步Matrix群组和线上游戏的消息。"
 	},
 	"dependencies": {
-		"mcdreforged": ">=2.14.0"
+		"mcdreforged": ">=2.14.0",
+		"mutils": ">=0.0.1"
 	},
 	"author": "Mooling0602",
     "link": "https://github.com/Mooling0602/MatrixSync-MCDR",
-	"entrypoint": "matrix_sync.entry"
+	"entrypoint": "matrix_sync.entry",
+	"resources": ["lang"]
 }

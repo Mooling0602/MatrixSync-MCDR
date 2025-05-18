@@ -1,6 +1,5 @@
 - 中文
-- [English](https://github.com/Mooling0602/MatrixSync-MCDR/blob/main/README_en_us.md)
-> 为避免合并入主分支后链接指向错误，URL一律使用主分支的地址。如果你正在访问其他分支，请注意自行定位链接跳转位置。
+- [English](README_en_us.md)
 
 # MatrixSync-MCDR
 一个MCDR（全称[MCDReforged](https://mcdreforged.com/)）插件，用于同步Matrix群组和《我的世界》服务器的线上游戏之间的消息。
