@@ -3,12 +3,12 @@ import json
 import sys
 import aiofiles
 from matrix_sync.commands import start_sync
-import matrix_sync.logger.get_logger as get_logger
 import matrix_sync.plg_globals as plg_globals
 
 from . import *
 from ..utils import configDir, tr
 from ..utils.token import getToken
+from ..utils.get_logger import console_logger
 from nio import LoginResponse
 from mcdreforged.api.decorator import new_thread
 
@@ -21,7 +21,7 @@ async def cache_token(resp: LoginResponse):
         }))
 
 async def login_by_password():
-    logger = get_logger()
+    logger = console_logger()
     client = AsyncClient(
         get_homeserver(plg_globals.config["homeserver"]),
         plg_globals.config["user_id"],

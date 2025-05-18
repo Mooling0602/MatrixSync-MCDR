@@ -15,6 +15,7 @@ matrix_sync:
     failed: Failed to login your bot
     success: Login by password successfully!
     save_token: Saving token for the bot account...
+  no_permission: Permission level is too low!
   on_receiver_cancelled: Receiver task was cancelled.
   on_send_command:
     sending: Message is sending to matrix...

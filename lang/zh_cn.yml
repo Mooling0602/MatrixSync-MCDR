@@ -15,6 +15,7 @@ matrix_sync:
     failed: 无法登录你的机器人
     success: 成功使用密码完成登录！
     save_token: 正在为机器人账号保存Token...
+  no_permission: 权限等级过低！
   on_receiver_cancelled: 接收器任务已经取消。
   on_send_command:
     sending: 消息正在发送到Matrix...
@@ -30,6 +31,6 @@ matrix_sync:
   settings_comp_check:
     failed: "兼容性检查失败！旧有的设置项将备份为\"settings.json.bak\"。"
   sync_status:
-    running: "[MSync] 消息同步正在运行..."
-    not_running: "[MSync] 消息同步未在运行！"
+    running: "消息同步正在运行..."
+    not_running: "消息同步未在运行！"
   token_mismatch: Token和现有的账号不匹配！同步任务将不会继续进行。
